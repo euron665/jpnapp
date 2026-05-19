@@ -39,10 +39,10 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
 .home-divider{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--text-dim);
   text-align:center;padding:4px 0;font-family:'DM Sans',sans-serif;}
 
-.btn-primary{background:var(--accent);color:#fff;border:none;border-radius:var(--r);
+.btn-primary{background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:var(--r);
   padding:16px 32px;font-family:'DM Sans',sans-serif;font-size:13px;letter-spacing:0.08em;
   text-transform:uppercase;font-weight:500;cursor:pointer;transition:all 0.15s;}
-.btn-primary:hover{opacity:0.9;} .btn-primary:active{transform:scale(0.98);}
+.btn-primary:hover{border-color:var(--text-dim);background:var(--surface);} .btn-primary:active{transform:scale(0.98);}
 .btn-secondary{background:transparent;color:var(--text);border:1px solid var(--border);
   border-radius:var(--r);padding:14px 32px;font-family:var(--font-ui);font-size:13px;
   letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all 0.15s;}
@@ -451,7 +451,7 @@ body.search-collapsed #search-results{top:0;}
   <div style="text-align:center">
     <div class="home-kanji">刻</div>
     <div class="home-sub">Kanji Drill — Level 24</div>
-    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.08em;">updated 2026-05-18 22:41</div>
+    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.08em;">updated 2026-05-19 00:10</div>
   </div>
   <div class="home-buttons">
     <div class="home-divider">Study</div>
@@ -2042,6 +2042,8 @@ let _srCollapsed = false;
 document.addEventListener('scroll', function(e) {
   const el = e.target;
   if (!el || el.id === 'search-results') return;
+  // Ignore horizontal-only scrollers (e.g. conjugation tables)
+  if (el.scrollHeight <= el.clientHeight + 5) return;
   const st = el.scrollTop || 0;
   if (st > 30 && !_srCollapsed) {
     _srCollapsed = true;
@@ -2947,6 +2949,39 @@ function checkConj(val) {
 }
 
 showScreen('home');
+
+// ── SKG SWIPE NAVIGATION ──────────────────────────────────────────────────
+function navigateSKG(dir) {
+  if (!currentSKG || !SKGS) return;
+  const idx = SKGS.findIndex(s => s.id === currentSKG.id);
+  if (idx === -1) return;
+  const next = SKGS[idx + dir];
+  if (!next) return;
+  selectSKG(next);
+}
+
+(function() {
+  let _tx = 0, _ty = 0, _swiping = false;
+  ['study-kanji','study-vocab'].forEach(function(screenId) {
+    // We attach on document and filter by active screen to avoid stale refs
+  });
+  document.addEventListener('touchstart', function(e) {
+    const t = e.touches[0];
+    _tx = t.clientX; _ty = t.clientY; _swiping = true;
+  }, {passive:true});
+  document.addEventListener('touchend', function(e) {
+    if (!_swiping) return;
+    _swiping = false;
+    const active = document.querySelector('.screen.active');
+    if (!active || (active.id !== 'study-kanji' && active.id !== 'study-vocab')) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - _tx;
+    const dy = t.clientY - _ty;
+    if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return; // not a clear horizontal swipe
+    navigateSKG(dx < 0 ? 1 : -1); // swipe left = next, swipe right = prev
+  }, {passive:true});
+})();
+
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('/jpnapp/sw.js');
 </script>
 </html>
