@@ -2972,4 +2972,17 @@ function navigateSKG(dir) {
   document.addEventListener('touchend', function(e) {
     if (!_swiping) return;
     _swiping = false;
-    const active = document.querySelector('.screen.active
+    const active = document.querySelector('.screen.active');
+    if (!active || (active.id !== 'study-kanji' && active.id !== 'study-vocab')) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - _tx;
+    const dy = t.clientY - _ty;
+    if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    navigateSKG(dx < 0 ? 1 : -1);
+  }, {passive:true});
+})();
+
+if ('serviceWorker' in navigator)
+  navigator.serviceWorker.register('/jpnapp/sw.js');
+</script>
+</html>
