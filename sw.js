@@ -1,4 +1,4 @@
-const CACHE = 'koku-v10';
+const CACHE = 'koku-v11';
 const ASSETS = [
   '/jpnapp/',
   '/jpnapp/index.html',
@@ -21,6 +21,4 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   e.respondWith(
-    caches.match(e.request).then(r => r || fetch(e.request))
-  );
-});
+    caches.match(e.request).then(r => r || fet
