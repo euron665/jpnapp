@@ -2649,7 +2649,8 @@ function makeVerbTableHTML(verb) {
       +'<span class="vc-vr">('+d.rom+')</span></div></div>';
   }
 
-  const rows = verb.rows.map(r => {
+  const ROW_ORDER = {present_aff:0, past_aff:1, present_neg:2, past_neg:3};
+  const rows = [...verb.rows].sort((a,b)=>(ROW_ORDER[a.tense+'_'+a.pol]??99)-(ROW_ORDER[b.tense+'_'+b.pol]??99)).map(r => {
     const pl = r.pol==='aff'?'affirmative':'negative';
     return '<tr>'
       +'<td class="vc-rl"><span class="vc-tb" style="background:'+TC[r.tense]+';color:'+TT[r.tense]+';">'+r.tense+'</span><br>'+pl+'</td>'
