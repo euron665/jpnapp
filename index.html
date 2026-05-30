@@ -451,7 +451,7 @@ body.search-collapsed #search-results{top:0;}
   <div style="text-align:center">
     <div class="home-kanji">刻</div>
     <div class="home-sub">Kanji Drill — Level 24</div>
-    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.08em;">updated 2026-05-21 11:53</div>
+    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.08em;">updated 2026-05-30 22:20</div>
   </div>
   <div class="home-buttons">
     <div class="home-divider">Study</div>
@@ -777,7 +777,7 @@ body.search-collapsed #search-results{top:0;}
         <label class="cp-row"><input type="checkbox" class="cp-type-cb" value="na-adj" onchange="updateConjGoBtn()"> な-adjectives</label>
       </div>
 
-      <!-- RIGHT: Forms + Formality -->
+      <!-- RIGHT: Forms + Register -->
       <div>
         <div class="cp-heading">FORM</div>
         <label class="cp-row"><input type="checkbox" class="cp-form-cb" value="present-aff" onchange="updateConjGoBtn()"> Present Affirmative</label>
@@ -785,10 +785,10 @@ body.search-collapsed #search-results{top:0;}
         <label class="cp-row"><input type="checkbox" class="cp-form-cb" value="past-aff" onchange="updateConjGoBtn()"> Past Affirmative</label>
         <label class="cp-row"><input type="checkbox" class="cp-form-cb" value="past-neg" onchange="updateConjGoBtn()"> Past Negative</label>
         <label class="cp-row"><input type="checkbox" class="cp-form-cb" value="te" onchange="updateConjGoBtn()"> て-form</label>
-        <div class="cp-heading" style="margin-top:20px;">FORMALITY</div>
+        <div class="cp-heading" style="margin-top:20px;">REGISTER</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="cp-form-btn active" id="cp-plain"  onclick="setConjFormality('plain')">Plain</button>
-          <button class="cp-form-btn"        id="cp-polite" onclick="setConjFormality('polite')">Polite</button>
+          <button class="cp-form-btn active" id="cp-plain"  onclick="setConjFormality('plain')">Plain Register</button>
+          <button class="cp-form-btn"        id="cp-polite" onclick="setConjFormality('polite')">Polite Register</button>
           <button class="cp-form-btn"        id="cp-both"   onclick="setConjFormality('both')">Both</button>
         </div>
       </div>
@@ -1537,7 +1537,7 @@ function loadItem() {
   if (currentItem.type === 'conj') {
     reviewStep = 'conj';
     const FL = {'present-aff':'Present Affirmative','present-neg':'Present Negative','past-aff':'Past Affirmative','past-neg':'Past Negative','te':'て-form'};
-    const fLabel = currentItem.formality==='plain' ? 'Plain' : 'Polite';
+    const fLabel = currentItem.formality==='plain' ? 'Plain Register' : 'Polite Register';
     conjTopLabel.textContent = fLabel+' — '+FL[currentItem.form];
     conjTopLabel.style.display = 'block';
     botLabel.style.display = 'none';
@@ -2651,9 +2651,11 @@ function makeVerbTableHTML(verb) {
 
   const ROW_ORDER = {present_aff:0, past_aff:1, present_neg:2, past_neg:3};
   const rows = [...verb.rows].sort((a,b)=>(ROW_ORDER[a.tense+'_'+a.pol]??99)-(ROW_ORDER[b.tense+'_'+b.pol]??99)).map(r => {
-    const pl = r.pol==='aff'?'affirmative':'negative';
+    const plLabel = r.pol==='aff'
+      ? '<span style="color:#4af080;font-weight:600;">AFFIRMATIVE</span>'
+      : '<span style="color:#f04a4a;font-weight:600;">NEGATIVE</span>';
     return '<tr>'
-      +'<td class="vc-rl"><span class="vc-tb" style="background:'+TC[r.tense]+';color:'+TT[r.tense]+';">'+r.tense+'</span><br>'+pl+'</td>'
+      +'<td class="vc-rl"><span class="vc-tb" style="background:'+TC[r.tense]+';color:'+TT[r.tense]+';">'+r.tense.toUpperCase()+'</span><br>'+plLabel+'</td>'
       +'<td>'+cellHTML(r.plain, false)+'</td>'
       +'<td>'+cellHTML(r.polite, true)+'</td>'
       +'</tr>';
@@ -2677,7 +2679,7 @@ function makeVerbTableHTML(verb) {
     +'<div class="vc-title">'+verb.title+' <span class="vc-title-sub">'+(verb.titleSub||'')+'</span></div>'
     +'<div class="vc-desc">'+verb.desc+'</div>'
     +'<table class="vc-table'+(verb.widePolite?' vc-adj':'')+(verb.naAdj?' vc-na-adj':'')+'"><colgroup><col class="vc-col-l"><col><col></colgroup>'
-    +'<thead><tr><th></th><th>Plain</th><th>Polite</th></tr></thead>'
+    +'<thead><tr><th></th><th style="color:#c09040;letter-spacing:0.08em;">PLAIN REGISTER</th><th style="color:#5090d0;letter-spacing:0.08em;">POLITE REGISTER</th></tr></thead>'
     +'<tbody>'+rows+teRow+'</tbody></table></div>';
 }
 
