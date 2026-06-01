@@ -451,7 +451,7 @@ body.search-collapsed #search-results{top:0;}
   <div style="text-align:center">
     <div class="home-kanji">刻</div>
     <div class="home-sub">Kanji Drill — Level 24</div>
-    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.08em;">updated 2026-05-30 22:47</div>
+    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.08em;">updated 2026-06-02 00:00</div>
   </div>
   <div class="home-buttons">
     <div class="home-divider">Study</div>
@@ -2652,8 +2652,8 @@ function makeVerbTableHTML(verb) {
   const ROW_ORDER = {present_aff:0, past_aff:1, present_neg:2, past_neg:3};
   const rows = [...verb.rows].sort((a,b)=>(ROW_ORDER[a.tense+'_'+a.pol]??99)-(ROW_ORDER[b.tense+'_'+b.pol]??99)).map(r => {
     const plLabel = r.pol==='aff'
-      ? '<span style="color:#4af080;font-weight:600;">AFFIRMATIVE</span>'
-      : '<span style="color:#f04a4a;font-weight:600;">NEGATIVE</span>';
+      ? '<span style="color:#4af080;font-size:9px;font-weight:500;">AFFIRMATIVE</span>'
+      : '<span style="color:#f04a4a;font-size:9px;font-weight:500;">NEGATIVE</span>';
     return '<tr>'
       +'<td class="vc-rl"><span class="vc-tb" style="background:'+TC[r.tense]+';color:'+TT[r.tense]+';">'+r.tense.toUpperCase()+'</span><br>'+plLabel+'</td>'
       +'<td>'+cellHTML(r.plain, false)+'</td>'
