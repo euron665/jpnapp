@@ -590,7 +590,7 @@ body.search-collapsed #search-results{top:0;}
   </div>
   <div class="review-body">
     <div class="review-card">
-      <div class="conj-step-label" id="conj-step-label" style="display:none;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);font-family:'DM Sans',sans-serif;font-weight:400;margin-bottom:12px;"></div>
+      <div class="conj-step-label" id="conj-step-label" style="display:none;margin-bottom:12px;"></div>
       <div class="review-kanji-display" id="review-display"></div>
       <div class="review-known-meaning" id="known-meaning"></div>
     </div>
@@ -1536,9 +1536,19 @@ function loadItem() {
   const botLabel = document.getElementById('step-label');
   if (currentItem.type === 'conj') {
     reviewStep = 'conj';
-    const FL = {'present-aff':'Present Affirmative','present-neg':'Present Negative','past-aff':'Past Affirmative','past-neg':'Past Negative','te':'て-form'};
-    const fLabel = currentItem.formality==='plain' ? 'Plain Register' : 'Polite Register';
-    conjTopLabel.textContent = fLabel+' — '+FL[currentItem.form];
+    const pill = (bg,col,txt) => `<span class="vc-tb" style="background:${bg};color:${col};margin-right:6px;">${txt}</span>`;
+    let labelHTML = '';
+    if (currentItem.form === 'te') {
+      labelHTML = pill('#12122a','#8080f0','て-FORM');
+    } else {
+      const isTensePres = currentItem.form.startsWith('present');
+      const isAff = currentItem.form.endsWith('aff');
+      const isPlain = currentItem.formality === 'plain';
+      labelHTML += isTensePres ? pill('#0e1535','#4060e0','PRESENT') : pill('#1e0e18','#e09080','PAST');
+      labelHTML += isAff ? pill('#1a3a2a','#4af080','AFFIRMATIVE') : pill('#3a1a1a','#f04a4a','NEGATIVE');
+      labelHTML += isPlain ? pill('#2a1230','#c060c0','PLAIN') : pill('#1e1e1e','#a0a0a0','POLITE');
+    }
+    conjTopLabel.innerHTML = labelHTML;
     conjTopLabel.style.display = 'block';
     botLabel.style.display = 'none';
     document.getElementById('review-display').textContent = currentItem.word;
