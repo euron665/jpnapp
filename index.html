@@ -451,7 +451,7 @@ body.search-collapsed #search-results{top:0;}
   <div style="text-align:center">
     <div class="home-kanji">刻</div>
     <div class="home-sub">Kanji Drill — Level 24</div>
-    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.08em;">updated 2026-06-07 01:59</div>
+    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.08em;">updated 2026-06-07 02:10</div>
   </div>
   <div class="home-buttons">
     <div class="home-divider">Study</div>
@@ -1536,7 +1536,7 @@ function loadItem() {
   const botLabel = document.getElementById('step-label');
   if (currentItem.type === 'conj') {
     reviewStep = 'conj';
-    const pill = (bg,col,txt) => `<span class="vc-tb" style="background:${bg};color:${col};margin-right:6px;">${txt}</span>`;
+    const pill = (bg,col,txt) => `<span style="font-family:var(--font-mono);font-size:13px;font-weight:500;text-transform:uppercase;letter-spacing:0.1em;padding:3px 9px;border-radius:3px;border:1px solid ${col};color:${col};background:transparent;margin-right:6px;display:inline-block;">${txt}</span>`;
     let labelHTML = '';
     if (currentItem.form === 'te') {
       labelHTML = pill('#12122a','#8080f0','て-FORM');
