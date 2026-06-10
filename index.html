@@ -463,7 +463,7 @@ body.search-collapsed #search-results{top:0;}
   <div style="text-align:center">
     <div class="home-kanji">刻</div>
     <div class="home-sub">Kanji Drill — Level 24</div>
-    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.08em;">updated 2026-06-10 23:25</div>
+    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.08em;">updated 2026-06-10 23:33</div>
   </div>
   <div class="home-buttons">
     <div class="home-divider">Study</div>
@@ -2980,6 +2980,7 @@ showScreen('home');
 
 // ── SKG SWIPE NAVIGATION ──────────────────────────────────────────────────
 function navigateSKG(dir) {
+  if (document.getElementById('kv-modal-overlay').classList.contains('open')) return;
   if (!currentSKG || !SKGS) return;
   const idx = SKGS.findIndex(s => s.id === currentSKG.id);
   if (idx === -1) return;
