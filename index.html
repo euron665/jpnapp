@@ -893,7 +893,11 @@ body.grammar-active .screen{top:0 !important;}
 .xscroll-track{display:block;width:100%;height:3px;border-radius:2px;background:var(--surface2);overflow:hidden;}
 .xscroll-thumb{height:100%;border-radius:2px;background:#44445c;}
 #grammar .formula-row + .xscroll-track{margin-top:5px;}
-#grammar .formula-box + .xscroll-track{width:calc(100% - 28px);margin:-19px auto 19px;}
+#grammar .formula-box.xs-wrapped{display:block;overflow-x:visible;}
+#grammar .xscroll-wrap{display:flex;align-items:center;justify-content:flex-start;flex-wrap:nowrap;gap:10px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+#grammar .xscroll-wrap > :first-child{margin-left:auto;}
+#grammar .xscroll-wrap > :last-child{margin-right:auto;}
+#grammar .formula-box .xscroll-track{margin-top:6px;}
 #grammar .recap-table + .xscroll-track{margin-top:-27px;margin-bottom:27px;}
 </style>
 </head>
@@ -19089,23 +19093,46 @@ function toggleExamples(btn) {
   }
 }
 
+function attachTrack(scroller, host) {
+  var track = document.createElement('div');
+  track.className = 'xscroll-track';
+  var thumb = document.createElement('div');
+  thumb.className = 'xscroll-thumb';
+  track.appendChild(thumb);
+  if (host) host.appendChild(track);
+  else scroller.insertAdjacentElement('afterend', track);
+  var upd = function() {
+    thumb.style.width = (scroller.clientWidth / scroller.scrollWidth * 100) + '%';
+    thumb.style.marginLeft = (scroller.scrollLeft / scroller.scrollWidth * 100) + '%';
+  };
+  scroller.addEventListener('scroll', upd, {passive: true});
+  upd();
+}
+
 function addScrollHints(sec) {
-  sec.querySelectorAll('.formula-box, .formula-row, .recap-table').forEach(function(el) {
+  sec.querySelectorAll('.formula-box').forEach(function(box) {
+    if (box.dataset.xhint) return;
+    if (box.scrollWidth <= box.clientWidth + 2) return;
+    box.dataset.xhint = '1';
+    var wrap = document.createElement('div');
+    wrap.className = 'xscroll-wrap';
+    while (box.firstChild) wrap.appendChild(box.firstChild);
+    box.appendChild(wrap);
+    box.classList.add('xs-wrapped');
+    attachTrack(wrap, box);
+  });
+  sec.querySelectorAll('.formula-row').forEach(function(el) {
+    if (el.dataset.xhint) return;
+    if (el.closest('.formula-box')) return;
+    if (el.scrollWidth <= el.clientWidth + 2) return;
+    el.dataset.xhint = '1';
+    attachTrack(el, null);
+  });
+  sec.querySelectorAll('.recap-table').forEach(function(el) {
     if (el.dataset.xhint) return;
     if (el.scrollWidth <= el.clientWidth + 2) return;
     el.dataset.xhint = '1';
-    var track = document.createElement('div');
-    track.className = 'xscroll-track';
-    var thumb = document.createElement('div');
-    thumb.className = 'xscroll-thumb';
-    track.appendChild(thumb);
-    el.insertAdjacentElement('afterend', track);
-    var upd = function() {
-      thumb.style.width = (el.clientWidth / el.scrollWidth * 100) + '%';
-      thumb.style.marginLeft = (el.scrollLeft / el.scrollWidth * 100) + '%';
-    };
-    el.addEventListener('scroll', upd, {passive: true});
-    upd();
+    attachTrack(el, null);
   });
 }
 
