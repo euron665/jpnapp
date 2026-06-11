@@ -898,6 +898,7 @@ body.grammar-active .screen{top:0 !important;}
 #grammar .xscroll-wrap > :first-child{margin-left:auto;}
 #grammar .xscroll-wrap > :last-child{margin-right:auto;}
 #grammar .formula-box .xscroll-track{margin-top:6px;}
+#grammar .xscroll-wrap .formula-row{overflow-x:visible;max-width:none;flex:0 0 auto;}
 #grammar .recap-table + .xscroll-track{margin-top:-27px;margin-bottom:27px;}
 </style>
 </head>
@@ -12251,7 +12252,7 @@ body.grammar-active .screen{top:0 !important;}
 <div class="formula-group-label">Spatial / Temporal</div>
 <div class="formula-box">
 <div class="formula-var-group">
-<span class="formula-var-type">starting point</span>
+<span class="formula-var-type" style="color:#5090d0;">starting point</span>
 <span class="formula-var" style="color:#5090d0;">Noun</span>
 </div>
 <span class="formula-plus">+</span>
@@ -19112,7 +19113,13 @@ function attachTrack(scroller, host) {
 function addScrollHints(sec) {
   sec.querySelectorAll('.formula-box').forEach(function(box) {
     if (box.dataset.xhint) return;
-    if (box.scrollWidth <= box.clientWidth + 2) return;
+    var over = box.scrollWidth > box.clientWidth + 2;
+    if (!over) {
+      box.querySelectorAll('.formula-row').forEach(function(r) {
+        if (r.scrollWidth > r.clientWidth + 2) over = true;
+      });
+    }
+    if (!over) return;
     box.dataset.xhint = '1';
     var wrap = document.createElement('div');
     wrap.className = 'xscroll-wrap';
