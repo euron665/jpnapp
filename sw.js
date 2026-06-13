@@ -1,4 +1,4 @@
-const CACHE = 'koku-v35';
+const CACHE = 'koku-v36';
 const ASSETS = [
   '/jpnapp/',
   '/jpnapp/index.html',
@@ -20,5 +20,21 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
+  const req = e.request;
+  if (req.method !== 'GET') return;
   e.respondWith(
-    caches.match(e.request).then(r => r || fet
+    caches.match(req).then(cached => {
+      if (cached) return cached;
+      return fetch(req).then(res => {
+        if (res && (res.ok || res.type === 'opaque')) {
+          const copy = res.clone();
+          caches.open(CACHE).then(c => c.put(req, copy));
+        }
+        return res;
+      }).catch(() => {
+        if (req.mode === 'navigate') return caches.match('/jpnapp/index.html');
+        return Response.error();
+      });
+    })
+  );
+});
