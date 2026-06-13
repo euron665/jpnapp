@@ -1133,7 +1133,7 @@ body.review-active .screen{top:0 !important;}
         <input type="text" class="review-input" id="review-input"
                placeholder="type meaning…" autocomplete="off"
                autocorrect="off" spellcheck="false" autocapitalize="off">
-        <button class="submit-btn" id="submit-btn" onmousedown="event.preventDefault()" onclick="handleSubmit()">Enter</button>
+        <button class="submit-btn" id="submit-btn" onmousedown="event.preventDefault()" ontouchend="event.preventDefault(); handleSubmit();" onclick="handleSubmit()">Enter</button>
       </div>
       <div class="answer-reveal" id="answer-reveal"></div>
       <div class="feedback-row" id="feedback-row">
@@ -1150,7 +1150,7 @@ body.review-active .screen{top:0 !important;}
       <span class="score-pass" id="score-r-pass" title="Reading correct">R✓ 0</span>
       <span class="score-fail" id="score-r-fail" title="Reading failed">R✗ 0</span>
     </div>
-    <button class="back-btn" onmousedown="event.preventDefault()" onclick="skipItem()">Skip →</button>
+    <button class="back-btn" onmousedown="event.preventDefault()" ontouchend="event.preventDefault(); skipItem();" onclick="skipItem()">Skip →</button>
   </div>
 </div>
 
@@ -17809,8 +17809,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && document.getElementById('review').classList.contains('active'))
+  if (e.key === 'Enter' && document.getElementById('review').classList.contains('active')) {
+    e.preventDefault();
     handleSubmit();
+  }
 });
 
 // ── KANA DATA ────────────────────────────────────────────────────────
