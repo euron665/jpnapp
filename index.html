@@ -1133,7 +1133,7 @@ body.review-active .screen{top:0 !important;}
         <input type="text" class="review-input" id="review-input"
                placeholder="type meaning…" autocomplete="off"
                autocorrect="off" spellcheck="false" autocapitalize="off">
-        <button class="submit-btn" id="submit-btn" onclick="handleSubmit()">Enter</button>
+        <button class="submit-btn" id="submit-btn" onmousedown="event.preventDefault()" onclick="handleSubmit()">Enter</button>
       </div>
       <div class="answer-reveal" id="answer-reveal"></div>
       <div class="feedback-row" id="feedback-row">
@@ -1150,7 +1150,7 @@ body.review-active .screen{top:0 !important;}
       <span class="score-pass" id="score-r-pass" title="Reading correct">R✓ 0</span>
       <span class="score-fail" id="score-r-fail" title="Reading failed">R✗ 0</span>
     </div>
-    <button class="back-btn" onclick="skipItem()">Skip →</button>
+    <button class="back-btn" onmousedown="event.preventDefault()" onclick="skipItem()">Skip →</button>
   </div>
 </div>
 
@@ -17642,7 +17642,6 @@ function checkKana(val) {
   const ok = val.trim().toLowerCase() === correct;
   if (ok) {
     inp.className = 'review-input correct';
-    inp.disabled = true;
     rPass++;
     updateScoreDisplay();
     armNext(nextItem);
@@ -17671,7 +17670,6 @@ function checkMeaning(val) {
 
   if (ok) {
     inp.className = 'review-input correct';
-    inp.disabled  = true;
     mPass++;
     updateScoreDisplay();
     if (currentItem.type === 'kanji' && kanjiReviewSteps === 'meaning') {
@@ -17721,7 +17719,6 @@ function checkReading(val) {
 
   if (ok) {
     inp.className = 'review-input correct';
-    inp.disabled  = true;
     rPass++;
     updateScoreDisplay();
     armNext(nextItem);
@@ -18224,7 +18221,6 @@ function checkKatakana(val) {
   const note = currentItem.note ? kataNoteHTML(currentItem.note, true) : '';
   if (ok) {
     inp.className = 'review-input correct';
-    inp.disabled = true;
     document.getElementById('submit-btn').disabled = true;
     mPass++; updateScoreDisplay();
     document.getElementById('known-meaning').innerHTML = '<span style="font-style:italic;">' + currentItem.romaji + '</span>';
@@ -19145,7 +19141,7 @@ function checkConj(val) {
   const norm   = s => s.trim().replace(/-/g,'ー');
   const ok     = alts.some(a => norm(a)===norm(val));
   if (ok) {
-    inp.className='review-input correct'; inp.disabled=true;
+    inp.className='review-input correct';
     rPass++; updateScoreDisplay();
     armNext(nextItem);
   } else {
