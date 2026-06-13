@@ -944,7 +944,7 @@ body.grammar-active .screen{top:0 !important;}
   <div style="text-align:center">
     <div class="home-kanji">刻</div>
     <div class="home-sub">Kanji Drill — Level 24</div>
-    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.08em;">updated 2026-06-13 21:25</div>
+    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.08em;">updated 2026-06-13 21:40</div>
   </div>
   <div class="home-buttons">
     <div class="home-divider">Study</div>
@@ -17531,6 +17531,8 @@ function loadItem() {
   document.getElementById('answer-reveal').innerHTML = '';
   document.getElementById('feedback-row').className = 'feedback-row';
   document.getElementById('submit-btn').disabled = false;
+  document.getElementById('submit-btn').textContent = 'Enter';
+  awaitingNext = false; pendingNext = null;
 
   const inp = document.getElementById('review-input');
   inp.value = ''; inp.className = 'review-input'; inp.disabled = false;
@@ -17607,6 +17609,7 @@ function loadItem() {
 }
 
 function handleSubmit() {
+  if (awaitingNext) { awaitingNext = false; const a = pendingNext; pendingNext = null; if (a) a(); return; }
   const inp = document.getElementById('review-input');
   let val = inp.value.trim();
   if (!val) return;
@@ -17629,10 +17632,9 @@ function checkKana(val) {
   if (ok) {
     inp.className = 'review-input correct';
     inp.disabled = true;
-    document.getElementById('submit-btn').disabled = true;
     rPass++;
     updateScoreDisplay();
-    setTimeout(() => nextItem(), 400);
+    armNext(nextItem);
   } else {
     inp.className = 'review-input wrong';
     reveal.innerHTML = `Correct: <strong>${correct}</strong>`;
@@ -17659,10 +17661,13 @@ function checkMeaning(val) {
   if (ok) {
     inp.className = 'review-input correct';
     inp.disabled  = true;
-    document.getElementById('submit-btn').disabled = true;
     mPass++;
     updateScoreDisplay();
-    setTimeout(() => (currentItem.type === 'kanji' && kanjiReviewSteps === 'meaning') ? nextItem() : moveToReadingStep(), 450);
+    if (currentItem.type === 'kanji' && kanjiReviewSteps === 'meaning') {
+      armNext(nextItem);
+    } else {
+      setTimeout(moveToReadingStep, 450);
+    }
   } else {
     inp.className = 'review-input wrong';
     reveal.innerHTML = `Correct: <strong>${correct}</strong>`;
@@ -17691,6 +17696,7 @@ function moveToReadingStep() {
   inp.placeholder = 'type reading in romaji…';
   inp.dataset.mode = 'kana';
   document.getElementById('submit-btn').disabled = false;
+  document.getElementById('submit-btn').textContent = 'Enter';
   setTimeout(() => inp.focus(), 50);
 }
 
@@ -17704,10 +17710,9 @@ function checkReading(val) {
   if (ok) {
     inp.className = 'review-input correct';
     inp.disabled  = true;
-    document.getElementById('submit-btn').disabled = true;
     rPass++;
     updateScoreDisplay();
-    setTimeout(() => nextItem(), 400);
+    armNext(nextItem);
   } else {
     inp.className = 'review-input wrong';
     reveal.innerHTML = `Correct: <strong>${correct}</strong>`;
@@ -18072,6 +18077,16 @@ function startKanaReview() {
 }
 
 // ── KATAKANA WORDS ─────────────────────────────────────────────────────
+let awaitingNext = false;
+let pendingNext = null;
+function armNext(action) {
+  pendingNext = action;
+  awaitingNext = true;
+  const b = document.getElementById('submit-btn');
+  b.disabled = false;
+  b.textContent = 'Next →';
+}
+
 function kataNoteHTML(note, block) {
   const colors = {'FALSE FRIEND':'#e8193c','ORIGIN':'#5090d0','CLIPPING':'#5db89a','USAGE':'#c9a84c'};
   let chip = '', body = note;
@@ -18203,10 +18218,8 @@ function checkKatakana(val) {
     if (note) {
       reveal.innerHTML = `<span style="color:var(--text-dim);">${display}</span>${note}`;
       reveal.className = 'answer-reveal show';
-      setTimeout(() => nextItem(), 1700);
-    } else {
-      setTimeout(() => nextItem(), 1000);
     }
+    armNext(nextItem);
   } else {
     inp.className = 'review-input wrong';
     reveal.innerHTML = `Correct: <strong>${display}</strong>${note}`;
@@ -19120,9 +19133,8 @@ function checkConj(val) {
   const ok     = alts.some(a => norm(a)===norm(val));
   if (ok) {
     inp.className='review-input correct'; inp.disabled=true;
-    document.getElementById('submit-btn').disabled=true;
     rPass++; updateScoreDisplay();
-    setTimeout(()=>nextItem(), 450);
+    armNext(nextItem);
   } else {
     inp.className='review-input wrong';
     const extra = alts.length>1 ? ' <span style="color:var(--text-dim);font-size:11px;">or '+alts.slice(1).join(' / ')+'</span>' : '';
