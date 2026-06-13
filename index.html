@@ -154,6 +154,9 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
   max-width:540px;padding-bottom:24px;}
 .svk-card{background:var(--surface);border:1px solid var(--border);
   border-radius:var(--r);padding:14px 16px;}
+.kata-cat-card{transition:border-color 0.15s,background 0.15s;}
+.kata-cat-card:hover{border-color:var(--accent);background:var(--surface2);}
+.kata-cat-card.cat-open:hover{border-color:var(--border);background:var(--surface);}
 .svk-header{display:flex;align-items:center;gap:14px;cursor:pointer;margin-bottom:0;}
 .svk-kanji{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:29px;line-height:1;}
 .svk-info{flex:1;}
@@ -946,12 +949,14 @@ body.grammar-active .screen{top:0 !important;}
   <div class="home-buttons">
     <div class="home-divider">Study</div>
     <button class="btn-secondary" onclick="goTo('study-kana')">Study Kana</button>
+    <button class="btn-secondary" onclick="goTo('study-katakana')">Study Katakana Words</button>
     <button class="btn-secondary" onclick="goTo('skg-picker','study-kanji')">Study Kanji &amp; Vocab</button>
     <button class="btn-secondary" onclick="goTo('pos-picker','study-pos')">Study by Part of Speech</button>
     <button class="btn-secondary" onclick="goTo('study-verbs')">Study Conjugation</button>
     <button class="btn-secondary" onclick="goTo('grammar')">Study Grammar</button>
     <div class="home-divider">Review</div>
     <button class="btn-primary" onclick="goTo('kana-picker','review-kana')">Review Kana</button>
+    <button class="btn-primary" onclick="goTo('katakana-picker')">Review Katakana Words</button>
     <button class="btn-primary" onclick="goTo('skg-picker','review-kanji')">Review Kanji</button>
     <button class="btn-primary" onclick="goTo('skg-picker','review-vocab')">Review Vocab</button>
     <button class="btn-primary" onclick="goTo('pos-picker','review-pos')">Review by Part of Speech</button>
@@ -1068,6 +1073,36 @@ body.grammar-active .screen{top:0 !important;}
     <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-dim);font-family:'DM Mono',monospace;margin-bottom:4px;">Order</div>
     <button class="btn-primary" onclick="startKanjiReview(false)">Sequential</button>
     <button class="btn-secondary" onclick="startKanjiReview(true)">Randomised</button>
+  </div>
+</div>
+
+<!-- STUDY KATAKANA -->
+<div id="study-katakana" class="screen">
+  <div class="screen-header">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="screen-title">Study — Katakana Words</div>
+  </div>
+  <div class="scrollable" style="padding-top:56px;width:100%;">
+    <div class="study-vocab-kanji-list" id="study-katakana-list"></div>
+  </div>
+</div>
+
+<!-- KATAKANA PICKER (review) -->
+<div id="katakana-picker" class="screen">
+  <div class="screen-header">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="screen-title">Review Katakana — Select Categories</div>
+  </div>
+  <div class="scrollable" style="padding-top:56px;width:100%;max-width:460px;">
+    <div style="padding:16px 0 8px;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);font-family:'DM Sans',sans-serif;">Select one or more</div>
+    <label class="pos-check-row" style="margin-bottom:8px;">
+      <input type="checkbox" id="kata-all" onchange="toggleAllKata(this)">
+      <span class="pos-check-label" style="font-weight:600;">All categories</span>
+      <span class="pos-check-count" id="kata-all-count"></span>
+    </label>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:24px;" id="katakana-picker-sets"></div>
+    <div style="font-size:12px;color:var(--text-dim);font-family:'DM Sans',sans-serif;margin-bottom:16px;" id="katakana-total-count"></div>
+    <button class="btn-primary" style="width:100%;" id="katakana-go-btn" onclick="startKatakanaReview()" disabled>Begin Review</button>
   </div>
 </div>
 
@@ -16918,6 +16953,8 @@ function goTo(id, mode) {
   if (id === 'pos-picker')         buildPOSPicker();
   if (id === 'study-pos')          buildStudyPOS();
   if (id === 'study-kana')         buildStudyKana();
+  if (id === 'study-katakana')     buildStudyKatakana();
+  if (id === 'katakana-picker')    buildKatakanaPicker();
   if (id === 'kana-picker')        buildKanaPicker();
   if (id === 'study-verbs')        buildVerbStudy();
   if (id === 'conj-picker')        updateConjGoBtn();
@@ -17463,6 +17500,11 @@ function startVocabSingle(k) {
 
 // ── REVIEW ENGINE ──────────────────────────────────────────────────────
 function startReview() {
+  document.getElementById('score-m-pass').style.display = '';
+  document.getElementById('score-m-fail').style.display = '';
+  document.getElementById('score-r-pass').style.display = '';
+  document.getElementById('score-r-fail').style.display = '';
+  document.querySelector('.score-sep').style.display = '';
   queueIndex = 0;
   mPass=0; mFail=0; rPass=0; rFail=0;
   itemFailed = {};
@@ -17487,6 +17529,7 @@ function loadItem() {
 
   const inp = document.getElementById('review-input');
   inp.value = ''; inp.className = 'review-input'; inp.disabled = false;
+  document.getElementById('review-display').style.fontSize = '';
 
   const conjTopLabel = document.getElementById('conj-step-label');
   const botLabel = document.getElementById('step-label');
@@ -17511,6 +17554,19 @@ function loadItem() {
     document.getElementById('known-meaning').textContent = currentItem.meaning;
     inp.placeholder = 'type in hiragana…';
     inp.dataset.mode = 'kana';
+  } else if (currentItem.type === 'katakana') {
+    conjTopLabel.style.display = 'none';
+    botLabel.style.display = '';
+    reviewStep = 'katakana';
+    const _kd = document.getElementById('review-display');
+    _kd.textContent = currentItem.word;
+    _kd.style.fontSize = currentItem.word.length <= 3 ? 'clamp(60px,16vw,110px)'
+                       : currentItem.word.length <= 5 ? 'clamp(46px,12vw,82px)'
+                       : 'clamp(34px,9vw,60px)';
+    document.getElementById('step-label').textContent = 'Meaning';
+    document.getElementById('known-meaning').textContent = '';
+    inp.placeholder = 'type meaning…';
+    inp.dataset.mode = 'text';
   } else if (currentItem._type === 'kana') {
     conjTopLabel.style.display = 'none';
     botLabel.style.display = '';
@@ -17555,6 +17611,7 @@ function handleSubmit() {
   }
   if (reviewStep === 'conj')    checkConj(val);
   else if (reviewStep === 'kana')    checkKana(val);
+  else if (reviewStep === 'katakana') checkKatakana(val);
   else if (reviewStep === 'meaning') checkMeaning(val);
   else checkReading(val);
 }
@@ -17674,6 +17731,8 @@ function endReview() {
   // restore score display if coming from kana review
   document.getElementById('score-m-pass').style.display = '';
   document.getElementById('score-m-fail').style.display = '';
+  document.getElementById('score-r-pass').style.display = '';
+  document.getElementById('score-r-fail').style.display = '';
   document.querySelector('.score-sep').style.display = '';
   document.getElementById('score-m-pass').textContent = 'M✓ 0';
   document.getElementById('score-m-fail').textContent = 'M✗ 0';
@@ -17684,8 +17743,13 @@ function endReview() {
     document.getElementById('done-mp').textContent = mPass;
     document.getElementById('done-mf').textContent = mFail;
   }
-  document.getElementById('done-rp').textContent = rPass;
-  document.getElementById('done-rf').textContent = rFail;
+  if (currentMode === 'review-katakana') {
+    document.getElementById('done-rp').textContent = '—';
+    document.getElementById('done-rf').textContent = '—';
+  } else {
+    document.getElementById('done-rp').textContent = rPass;
+    document.getElementById('done-rf').textContent = rFail;
+  }
   showScreen('done');
 }
 
@@ -17731,6 +17795,8 @@ document.addEventListener('keydown', e => {
 });
 
 // ── KANA DATA ────────────────────────────────────────────────────────
+const KATAKANA = [{"word":"リンゴ","meaning":"apple","category":"Food & Drink","note":"","romaji":"ringo"},{"word":"コーヒー","meaning":"coffee","category":"Food & Drink","note":"","romaji":"kōhī"},{"word":"メニュー","meaning":"menu","category":"Food & Drink","note":"","romaji":"menyū"},{"word":"スパゲッティ","meaning":"spaghetti","category":"Food & Drink","note":"","romaji":"supagetti"},{"word":"カレー","meaning":"curry","category":"Food & Drink","note":"","romaji":"karē"},{"word":"サンドイッチ","meaning":"sandwich","category":"Food & Drink","note":"","romaji":"sandoicchi"},{"word":"アイスクリーム","meaning":"ice cream","category":"Food & Drink","note":"","romaji":"aisukurīmu"},{"word":"ラーメン","meaning":"ramen","category":"Food & Drink","note":"","romaji":"rāmen"},{"word":"ハンバーガー","meaning":"hamburger","category":"Food & Drink","note":"","romaji":"hanbāgā"},{"word":"コーラ","meaning":"cola","category":"Food & Drink","note":"","romaji":"kōra"},{"word":"サラダ","meaning":"salad","category":"Food & Drink","note":"","romaji":"sarada"},{"word":"ミルク","meaning":"milk","category":"Food & Drink","note":"","romaji":"miruku"},{"word":"フライドポテト","meaning":"French fries","category":"Food & Drink","note":"ORIGIN: wasei-eigo \"fried potato.\"","romaji":"furaidopoteto"},{"word":"ケーキ","meaning":"cake","category":"Food & Drink","note":"","romaji":"kēki"},{"word":"ジュース","meaning":"juice; soft drink","category":"Food & Drink","note":"USAGE: any soft drink, not only fruit juice.","romaji":"jūsu"},{"word":"オレンジジュース","meaning":"orange juice","category":"Food & Drink","note":"","romaji":"orenjijūsu"},{"word":"ステーキ","meaning":"steak","category":"Food & Drink","note":"","romaji":"sutēki"},{"word":"ピザ","meaning":"pizza","category":"Food & Drink","note":"","romaji":"piza"},{"word":"トースト","meaning":"toast","category":"Food & Drink","note":"","romaji":"tōsuto"},{"word":"レモンティー","meaning":"lemon tea","category":"Food & Drink","note":"","romaji":"remontī"},{"word":"パン","meaning":"bread","category":"Food & Drink","note":"ORIGIN: Portuguese \"pão\" = bread, not \"pan.\"","romaji":"pan"},{"word":"トマト","meaning":"tomato","category":"Food & Drink","note":"","romaji":"tomato"},{"word":"カレーライス","meaning":"curry with rice","category":"Food & Drink","note":"","romaji":"karēraisu"},{"word":"スープ","meaning":"soup","category":"Food & Drink","note":"","romaji":"sūpu"},{"word":"ヨーグルト","meaning":"yogurt","category":"Food & Drink","note":"","romaji":"yōguruto"},{"word":"チョコレート","meaning":"chocolate","category":"Food & Drink","note":"","romaji":"chokorēto"},{"word":"スプーン","meaning":"spoon","category":"Food & Drink","note":"","romaji":"supūn"},{"word":"バナナ","meaning":"banana","category":"Food & Drink","note":"","romaji":"banana"},{"word":"ポップコーン","meaning":"popcorn","category":"Food & Drink","note":"","romaji":"poppukōn"},{"word":"ビール","meaning":"beer","category":"Food & Drink","note":"","romaji":"bīru"},{"word":"ワイン","meaning":"wine","category":"Food & Drink","note":"","romaji":"wain"},{"word":"バター","meaning":"butter","category":"Food & Drink","note":"","romaji":"batā"},{"word":"チーズ","meaning":"cheese","category":"Food & Drink","note":"","romaji":"chīzu"},{"word":"ハム","meaning":"ham","category":"Food & Drink","note":"","romaji":"hamu"},{"word":"ソーセージ","meaning":"sausage","category":"Food & Drink","note":"","romaji":"sōsēji"},{"word":"ベーコン","meaning":"bacon","category":"Food & Drink","note":"","romaji":"bēkon"},{"word":"ジャム","meaning":"jam","category":"Food & Drink","note":"","romaji":"jamu"},{"word":"デザート","meaning":"dessert","category":"Food & Drink","note":"","romaji":"dezāto"},{"word":"オレンジ","meaning":"orange","category":"Food & Drink","note":"","romaji":"orenji"},{"word":"レモン","meaning":"lemon","category":"Food & Drink","note":"","romaji":"remon"},{"word":"クッキー","meaning":"cookie","category":"Food & Drink","note":"","romaji":"kukkī"},{"word":"ドーナツ","meaning":"doughnut","category":"Food & Drink","note":"","romaji":"dōnatsu"},{"word":"ガム","meaning":"chewing gum","category":"Food & Drink","note":"CLIPPING: チューインガム → ガム.","romaji":"gamu"},{"word":"キャンディー","meaning":"candy","category":"Food & Drink","note":"","romaji":"kyandī"},{"word":"ナイフ","meaning":"knife","category":"Food & Drink","note":"","romaji":"naifu"},{"word":"フォーク","meaning":"fork","category":"Food & Drink","note":"","romaji":"fōku"},{"word":"グラス","meaning":"drinking glass","category":"Food & Drink","note":"USAGE: a glass for drinking; window/material glass is ガラス.","romaji":"gurasu"},{"word":"コップ","meaning":"cup; tumbler","category":"Food & Drink","note":"ORIGIN: Dutch \"kop\" — a drinking cup.","romaji":"koppu"},{"word":"ナプキン","meaning":"napkin","category":"Food & Drink","note":"","romaji":"napukin"},{"word":"ランチ","meaning":"lunch","category":"Food & Drink","note":"","romaji":"ranchi"},{"word":"バイキング","meaning":"buffet","category":"Food & Drink","note":"FALSE FRIEND: not \"viking\" — all-you-can-eat buffet (from \"Viking smörgåsbord\").","romaji":"baikingu"},{"word":"ペットボトル","meaning":"plastic bottle","category":"Food & Drink","note":"ORIGIN: wasei-eigo \"PET bottle\" — a plastic drink bottle.","romaji":"pettobotoru"},{"word":"ボトル","meaning":"bottle","category":"Food & Drink","note":"","romaji":"botoru"},{"word":"カバン","meaning":"bag","category":"Clothing & Accessories","note":"","romaji":"kaban"},{"word":"ワンピース","meaning":"dress","category":"Clothing & Accessories","note":"ORIGIN: \"one-piece\" = a dress.","romaji":"wanpīsu"},{"word":"ジーンズ","meaning":"jeans","category":"Clothing & Accessories","note":"","romaji":"jīnzu"},{"word":"Ｔシャツ","meaning":"T-shirt","category":"Clothing & Accessories","note":"","romaji":"Ｔshatsu"},{"word":"シャツ","meaning":"shirt","category":"Clothing & Accessories","note":"","romaji":"shatsu"},{"word":"パンツ","meaning":"underwear; trousers","category":"Clothing & Accessories","note":"FALSE FRIEND: usually underwear; can mean trousers — context decides.","romaji":"pantsu"},{"word":"セーター","meaning":"sweater","category":"Clothing & Accessories","note":"","romaji":"sētā"},{"word":"トレーナー","meaning":"sweatshirt","category":"Clothing & Accessories","note":"FALSE FRIEND: \"trainer\" = a sweatshirt, not a coach or shoe.","romaji":"torēnā"},{"word":"ネクタイ","meaning":"necktie","category":"Clothing & Accessories","note":"","romaji":"nekutai"},{"word":"マフラー","meaning":"winter scarf","category":"Clothing & Accessories","note":"FALSE FRIEND: \"muffler\" = a winter scarf.","romaji":"mafurā"},{"word":"ブーツ","meaning":"boots","category":"Clothing & Accessories","note":"","romaji":"būtsu"},{"word":"スカート","meaning":"skirt","category":"Clothing & Accessories","note":"","romaji":"sukāto"},{"word":"ハイヒール","meaning":"high heels","category":"Clothing & Accessories","note":"","romaji":"haihīru"},{"word":"スーツ","meaning":"suit","category":"Clothing & Accessories","note":"","romaji":"sūtsu"},{"word":"コート","meaning":"coat","category":"Clothing & Accessories","note":"","romaji":"kōto"},{"word":"ジャケット","meaning":"jacket","category":"Clothing & Accessories","note":"","romaji":"jaketto"},{"word":"ベルト","meaning":"belt","category":"Clothing & Accessories","note":"","romaji":"beruto"},{"word":"ボタン","meaning":"button","category":"Clothing & Accessories","note":"ORIGIN: Portuguese \"botão.\"","romaji":"botan"},{"word":"ポケット","meaning":"pocket","category":"Clothing & Accessories","note":"","romaji":"poketto"},{"word":"ハンカチ","meaning":"handkerchief","category":"Clothing & Accessories","note":"CLIPPING: ハンカチーフ → ハンカチ.","romaji":"hankachi"},{"word":"サンダル","meaning":"sandals","category":"Clothing & Accessories","note":"","romaji":"sandaru"},{"word":"スニーカー","meaning":"sneakers; trainers","category":"Clothing & Accessories","note":"","romaji":"sunīkā"},{"word":"アクセサリー","meaning":"accessory","category":"Clothing & Accessories","note":"","romaji":"akusesarī"},{"word":"ホテル","meaning":"hotel","category":"Places & Buildings","note":"","romaji":"hoteru"},{"word":"コンビニ","meaning":"convenience store|conbini|konbini","category":"Places & Buildings","note":"CLIPPING: コンビニエンスストア → コンビニ.","romaji":"konbini"},{"word":"デパート","meaning":"department store|depato","category":"Places & Buildings","note":"CLIPPING: デパートメントストア → デパート.","romaji":"depāto"},{"word":"ビル","meaning":"building","category":"Places & Buildings","note":"FALSE FRIEND: clip of ビルディング = a building, not a \"bill.\"","romaji":"biru"},{"word":"マンション","meaning":"apartment; condo","category":"Places & Buildings","note":"FALSE FRIEND: looks like \"mansion\" — actually an ordinary apartment/condo, nothing grand.","romaji":"manshon"},{"word":"トイレ","meaning":"toilet; restroom","category":"Places & Buildings","note":"CLIPPING: トイレット → トイレ.","romaji":"toire"},{"word":"スーパー","meaning":"supermarket","category":"Places & Buildings","note":"CLIPPING: スーパーマーケット → スーパー.","romaji":"sūpā"},{"word":"レストラン","meaning":"restaurant","category":"Places & Buildings","note":"","romaji":"resutoran"},{"word":"ホーム","meaning":"platform","category":"Places & Buildings","note":"CLIPPING: train platform, from プラットホーム; also means \"home.\"","romaji":"hōmu"},{"word":"フロント","meaning":"reception; front desk","category":"Places & Buildings","note":"FALSE FRIEND: \"front\" = a hotel reception desk.","romaji":"furonto"},{"word":"ショッピングモール","meaning":"shopping mall","category":"Places & Buildings","note":"","romaji":"shoppingumōru"},{"word":"アパート","meaning":"apartment (low-rise)","category":"Places & Buildings","note":"USAGE: a cheaper low-rise flat; a pricier concrete block is マンション. CLIPPING of アパートメント.","romaji":"apāto"},{"word":"プール","meaning":"swimming pool","category":"Places & Buildings","note":"","romaji":"pūru"},{"word":"エレベーター","meaning":"elevator; lift","category":"Places & Buildings","note":"","romaji":"erebētā"},{"word":"エスカレーター","meaning":"escalator","category":"Places & Buildings","note":"","romaji":"esukarētā"},{"word":"レジ","meaning":"cash register; checkout","category":"Places & Buildings","note":"CLIPPING: レジスター → レジ.","romaji":"reji"},{"word":"ガソリンスタンド","meaning":"petrol station","category":"Places & Buildings","note":"ORIGIN: wasei-eigo \"gasoline + stand.\"","romaji":"gasorinsutando"},{"word":"オフィス","meaning":"office","category":"Places & Buildings","note":"","romaji":"ofisu"},{"word":"カウンター","meaning":"counter","category":"Places & Buildings","note":"","romaji":"kauntā"},{"word":"テレビ","meaning":"television|tv","category":"Tech & Electronics","note":"CLIPPING: テレビジョン → テレビ.","romaji":"terebi"},{"word":"コンピューター","meaning":"computer","category":"Tech & Electronics","note":"","romaji":"konpyūtā"},{"word":"メール","meaning":"email|e-mail|mail","category":"Tech & Electronics","note":"USAGE: normally means e-mail.","romaji":"mēru"},{"word":"シーディー","meaning":"CD","category":"Tech & Electronics","note":"","romaji":"shīdī"},{"word":"カメラ","meaning":"camera","category":"Tech & Electronics","note":"","romaji":"kamera"},{"word":"ビデオカメラ","meaning":"camcorder","category":"Tech & Electronics","note":"","romaji":"bideokamera"},{"word":"ラジオ","meaning":"radio","category":"Tech & Electronics","note":"","romaji":"rajio"},{"word":"インターネット","meaning":"internet","category":"Tech & Electronics","note":"","romaji":"intānetto"},{"word":"ファイル","meaning":"file","category":"Tech & Electronics","note":"","romaji":"fairu"},{"word":"ソフト","meaning":"software","category":"Tech & Electronics","note":"USAGE: clip of ソフトウェア; also means \"soft.\"","romaji":"sofuto"},{"word":"パソコン","meaning":"pc|computer|personal computer","category":"Tech & Electronics","note":"CLIPPING: パーソナルコンピューター → パソコン.","romaji":"pasokon"},{"word":"スマホ","meaning":"smartphone|smart phone|phone","category":"Tech & Electronics","note":"CLIPPING: スマートフォン → スマホ.","romaji":"sumaho"},{"word":"アプリ","meaning":"app","category":"Tech & Electronics","note":"CLIPPING: アプリケーション → アプリ.","romaji":"apuri"},{"word":"ゲーム","meaning":"game","category":"Tech & Electronics","note":"","romaji":"gēmu"},{"word":"マウス","meaning":"mouse (computer)","category":"Tech & Electronics","note":"","romaji":"mausu"},{"word":"キーボード","meaning":"keyboard","category":"Tech & Electronics","note":"","romaji":"kībōdo"},{"word":"プリンター","meaning":"printer","category":"Tech & Electronics","note":"","romaji":"purintā"},{"word":"コピー","meaning":"copy","category":"Tech & Electronics","note":"","romaji":"kopī"},{"word":"データ","meaning":"data","category":"Tech & Electronics","note":"","romaji":"dēta"},{"word":"サイト","meaning":"website","category":"Tech & Electronics","note":"CLIPPING: ウェブサイト → サイト.","romaji":"saito"},{"word":"カード","meaning":"card","category":"Tech & Electronics","note":"","romaji":"kādo"},{"word":"クレジットカード","meaning":"credit card|card","category":"Tech & Electronics","note":"","romaji":"kurejittokādo"},{"word":"ビデオ","meaning":"video","category":"Tech & Electronics","note":"","romaji":"bideo"},{"word":"メッセージ","meaning":"message","category":"Tech & Electronics","note":"","romaji":"messēji"},{"word":"パスワード","meaning":"password","category":"Tech & Electronics","note":"","romaji":"pasuwādo"},{"word":"ログイン","meaning":"login","category":"Tech & Electronics","note":"","romaji":"roguin"},{"word":"トランプ","meaning":"deck of cards","category":"Sports & Leisure","note":"FALSE FRIEND: English \"trump\" = playing cards.","romaji":"toranpu"},{"word":"スポーツ","meaning":"sport","category":"Sports & Leisure","note":"","romaji":"supōtsu"},{"word":"テニス","meaning":"tennis","category":"Sports & Leisure","note":"","romaji":"tenisu"},{"word":"サーフィン","meaning":"surfing","category":"Sports & Leisure","note":"","romaji":"sāfin"},{"word":"コンサート","meaning":"concert","category":"Sports & Leisure","note":"","romaji":"konsāto"},{"word":"クラシック","meaning":"classical music","category":"Sports & Leisure","note":"USAGE: refers to classical music.","romaji":"kurashikku"},{"word":"カラオケ","meaning":"karaoke","category":"Sports & Leisure","note":"ORIGIN: 空 (kara, empty) + オーケストラ (orchestra).","romaji":"karaoke"},{"word":"パーティー","meaning":"party","category":"Sports & Leisure","note":"","romaji":"pātī"},{"word":"バーベキュー","meaning":"barbecue","category":"Sports & Leisure","note":"","romaji":"bābekyū"},{"word":"ピアノ","meaning":"piano","category":"Sports & Leisure","note":"","romaji":"piano"},{"word":"スキー","meaning":"skiing","category":"Sports & Leisure","note":"","romaji":"sukī"},{"word":"サッカー","meaning":"soccer","category":"Sports & Leisure","note":"","romaji":"sakkā"},{"word":"ゴルフ","meaning":"golf","category":"Sports & Leisure","note":"","romaji":"gorufu"},{"word":"バイオリン","meaning":"violin","category":"Sports & Leisure","note":"","romaji":"baiorin"},{"word":"アニメ","meaning":"animation; anime","category":"Sports & Leisure","note":"CLIPPING: アニメーション → アニメ.","romaji":"anime"},{"word":"ボール","meaning":"ball","category":"Sports & Leisure","note":"","romaji":"bōru"},{"word":"ジョギング","meaning":"jogging","category":"Sports & Leisure","note":"","romaji":"jogingu"},{"word":"マラソン","meaning":"marathon","category":"Sports & Leisure","note":"","romaji":"marason"},{"word":"バスケットボール","meaning":"basketball","category":"Sports & Leisure","note":"","romaji":"basukettobōru"},{"word":"バレーボール","meaning":"volleyball","category":"Sports & Leisure","note":"","romaji":"barēbōru"},{"word":"ジム","meaning":"gym","category":"Sports & Leisure","note":"","romaji":"jimu"},{"word":"ヨガ","meaning":"yoga","category":"Sports & Leisure","note":"","romaji":"yoga"},{"word":"ダンス","meaning":"dance","category":"Sports & Leisure","note":"","romaji":"dansu"},{"word":"ドライブ","meaning":"drive; road trip","category":"Sports & Leisure","note":"USAGE: going for a drive.","romaji":"doraibu"},{"word":"ピクニック","meaning":"picnic","category":"Sports & Leisure","note":"","romaji":"pikunikku"},{"word":"キャンプ","meaning":"camping","category":"Sports & Leisure","note":"","romaji":"kyanpu"},{"word":"ハイキング","meaning":"hiking","category":"Sports & Leisure","note":"","romaji":"haikingu"},{"word":"ギター","meaning":"guitar","category":"Sports & Leisure","note":"","romaji":"gitā"},{"word":"バンド","meaning":"band","category":"Sports & Leisure","note":"","romaji":"bando"},{"word":"ガラス","meaning":"glass (material)","category":"Home & Furniture","note":"ORIGIN: Dutch \"glas\" — window/material glass; a drinking glass is コップ/グラス.","romaji":"garasu"},{"word":"ドア","meaning":"door (western-style)","category":"Home & Furniture","note":"USAGE: a hinged western door; a sliding door is 戸.","romaji":"doa"},{"word":"カーテン","meaning":"curtain","category":"Home & Furniture","note":"","romaji":"kāten"},{"word":"ヒーター","meaning":"heater","category":"Home & Furniture","note":"","romaji":"hītā"},{"word":"エアコン","meaning":"air conditioner|aircon|ac","category":"Home & Furniture","note":"CLIPPING: エアコンディショナー → エアコン.","romaji":"eakon"},{"word":"クッション","meaning":"cushion","category":"Home & Furniture","note":"","romaji":"kusshon"},{"word":"スイッチ","meaning":"switch","category":"Home & Furniture","note":"","romaji":"suicchi"},{"word":"ソファ","meaning":"sofa","category":"Home & Furniture","note":"","romaji":"sofa"},{"word":"タオル","meaning":"towel","category":"Home & Furniture","note":"","romaji":"taoru"},{"word":"テーブル","meaning":"table","category":"Home & Furniture","note":"","romaji":"tēburu"},{"word":"ベッド","meaning":"bed","category":"Home & Furniture","note":"","romaji":"beddo"},{"word":"シャワー","meaning":"shower","category":"Home & Furniture","note":"","romaji":"shawā"},{"word":"ストーブ","meaning":"space heater","category":"Home & Furniture","note":"FALSE FRIEND: \"stove\" = a heater for warmth, not a cooking stove (コンロ).","romaji":"sutōbu"},{"word":"カレンダー","meaning":"calendar","category":"Home & Furniture","note":"","romaji":"karendā"},{"word":"ハンガー","meaning":"clothes hanger","category":"Home & Furniture","note":"","romaji":"hangā"},{"word":"スリッパ","meaning":"slippers","category":"Home & Furniture","note":"","romaji":"surippa"},{"word":"ランプ","meaning":"lamp","category":"Home & Furniture","note":"","romaji":"ranpu"},{"word":"リモコン","meaning":"remote control|remote","category":"Home & Furniture","note":"CLIPPING: リモートコントロール → リモコン.","romaji":"rimokon"},{"word":"レンジ","meaning":"microwave","category":"Home & Furniture","note":"CLIPPING/USAGE: from 電子レンジ — usually means a microwave oven.","romaji":"renji"},{"word":"ドライヤー","meaning":"hair dryer","category":"Home & Furniture","note":"","romaji":"doraiyā"},{"word":"アイロン","meaning":"clothes iron","category":"Home & Furniture","note":"FALSE FRIEND: \"iron\" = the clothes iron, not the metal (鉄).","romaji":"airon"},{"word":"トースター","meaning":"toaster","category":"Home & Furniture","note":"","romaji":"tōsutā"},{"word":"タクシー","meaning":"taxi","category":"Transport","note":"","romaji":"takushī"},{"word":"バス","meaning":"bus","category":"Transport","note":"","romaji":"basu"},{"word":"バイク","meaning":"motorcycle","category":"Transport","note":"FALSE FRIEND: \"bike\" = motorcycle, not bicycle (自転車).","romaji":"baiku"},{"word":"タイヤ","meaning":"tyre","category":"Transport","note":"","romaji":"taiya"},{"word":"ガソリン","meaning":"petrol; gasoline","category":"Transport","note":"","romaji":"gasorin"},{"word":"エンジン","meaning":"engine","category":"Transport","note":"","romaji":"enjin"},{"word":"ハンドル","meaning":"steering wheel","category":"Transport","note":"FALSE FRIEND: \"handle\" = a steering wheel (or handlebars), not a door handle.","romaji":"handoru"},{"word":"ブレーキ","meaning":"brake","category":"Transport","note":"","romaji":"burēki"},{"word":"ヘリコプター","meaning":"helicopter","category":"Transport","note":"","romaji":"herikoputā"},{"word":"アメリカ","meaning":"USA","category":"Countries & Places","note":"","romaji":"amerika"},{"word":"イギリス","meaning":"Britain; UK","category":"Countries & Places","note":"ORIGIN: Portuguese \"Inglês.\"","romaji":"igirisu"},{"word":"オーストラリア","meaning":"Australia","category":"Countries & Places","note":"","romaji":"ōsutoraria"},{"word":"スウェーデン","meaning":"Sweden","category":"Countries & Places","note":"","romaji":"suwēden"},{"word":"ドイツ","meaning":"Germany","category":"Countries & Places","note":"ORIGIN: Dutch \"Duits.\"","romaji":"doitsu"},{"word":"ヨーロッパ","meaning":"Europe","category":"Countries & Places","note":"","romaji":"yōroppa"},{"word":"フランス","meaning":"France","category":"Countries & Places","note":"","romaji":"furansu"},{"word":"イタリア","meaning":"Italy","category":"Countries & Places","note":"","romaji":"itaria"},{"word":"スペイン","meaning":"Spain","category":"Countries & Places","note":"","romaji":"supein"},{"word":"カナダ","meaning":"Canada","category":"Countries & Places","note":"","romaji":"kanada"},{"word":"ロシア","meaning":"Russia","category":"Countries & Places","note":"","romaji":"roshia"},{"word":"インド","meaning":"India","category":"Countries & Places","note":"","romaji":"indo"},{"word":"ブラジル","meaning":"Brazil","category":"Countries & Places","note":"","romaji":"burajiru"},{"word":"アジア","meaning":"Asia","category":"Countries & Places","note":"","romaji":"ajia"},{"word":"ノート","meaning":"notebook","category":"Daily Life & Abstract","note":"USAGE: \"note\" = a notebook, not a memo.","romaji":"nōto"},{"word":"ドル","meaning":"dollar","category":"Daily Life & Abstract","note":"","romaji":"doru"},{"word":"キロ","meaning":"kilo","category":"Daily Life & Abstract","note":"CLIPPING: short for kilogram or kilometre.","romaji":"kiro"},{"word":"タバコ","meaning":"tobacco; cigarettes","category":"Daily Life & Abstract","note":"ORIGIN: Portuguese \"tabaco\".","romaji":"tabako"},{"word":"サービス","meaning":"service","category":"Daily Life & Abstract","note":"USAGE: often means a free extra — \"on the house.\"","romaji":"sābisu"},{"word":"オノマトペ","meaning":"onomatopoeia","category":"Daily Life & Abstract","note":"ORIGIN: French \"onomatopée.\"","romaji":"onomatope"},{"word":"ペラペラ","meaning":"fluent","category":"Daily Life & Abstract","note":"USAGE: onomatopoeia — speaking a language fluently.","romaji":"perapera"},{"word":"ドキドキ","meaning":"racing heart","category":"Daily Life & Abstract","note":"USAGE: onomatopoeia — heart pounding from nerves or excitement.","romaji":"dokidoki"},{"word":"ペン","meaning":"pen","category":"Daily Life & Abstract","note":"","romaji":"pen"},{"word":"デート","meaning":"date (romantic)","category":"Daily Life & Abstract","note":"FALSE FRIEND: a romantic date, not a calendar date (日付).","romaji":"dēto"},{"word":"テスト","meaning":"test","category":"Daily Life & Abstract","note":"","romaji":"tesuto"},{"word":"ホームステイ","meaning":"homestay","category":"Daily Life & Abstract","note":"","romaji":"hōmusutei"},{"word":"ピンク","meaning":"pink","category":"Daily Life & Abstract","note":"","romaji":"pinku"},{"word":"ホストファミリー","meaning":"host family","category":"Daily Life & Abstract","note":"","romaji":"hosutofamirī"},{"word":"ルームメート","meaning":"roommate","category":"Daily Life & Abstract","note":"","romaji":"rūmumēto"},{"word":"プレゼント","meaning":"present; gift","category":"Daily Life & Abstract","note":"","romaji":"purezento"},{"word":"ホームシック","meaning":"homesickness","category":"Daily Life & Abstract","note":"","romaji":"hōmushikku"},{"word":"マイナス","meaning":"minus; negative","category":"Daily Life & Abstract","note":"","romaji":"mainasu"},{"word":"レントゲン","meaning":"X-ray","category":"Daily Life & Abstract","note":"ORIGIN: German, after W. Röntgen.","romaji":"rentogen"},{"word":"ウエイター","meaning":"waiter","category":"Daily Life & Abstract","note":"","romaji":"ueitā"},{"word":"チケット","meaning":"ticket","category":"Daily Life & Abstract","note":"","romaji":"chiketto"},{"word":"バレンタインデー","meaning":"Valentine's Day","category":"Daily Life & Abstract","note":"","romaji":"barentaindē"},{"word":"サラリーマン","meaning":"office worker; salaryman","category":"Daily Life & Abstract","note":"ORIGIN: wasei-eigo \"salary + man.\"","romaji":"sararīman"},{"word":"コンタクト","meaning":"contact lenses","category":"Daily Life & Abstract","note":"CLIPPING: コンタクトレンズ → コンタクト.","romaji":"kontakuto"},{"word":"ニュース","meaning":"news","category":"Daily Life & Abstract","note":"","romaji":"nyūsu"},{"word":"パンダ","meaning":"panda","category":"Daily Life & Abstract","note":"","romaji":"panda"},{"word":"シャンプー","meaning":"shampoo","category":"Daily Life & Abstract","note":"","romaji":"shanpū"},{"word":"パーマ","meaning":"perm","category":"Daily Life & Abstract","note":"CLIPPING: パーマネントウェーブ → パーマ.","romaji":"pāma"},{"word":"セット","meaning":"set","category":"Daily Life & Abstract","note":"","romaji":"setto"},{"word":"ブロー","meaning":"blow-dry","category":"Daily Life & Abstract","note":"USAGE: \"blow\" = blow-drying hair.","romaji":"burō"},{"word":"スピーチ","meaning":"speech","category":"Daily Life & Abstract","note":"","romaji":"supīchi"},{"word":"ポスター","meaning":"poster","category":"Daily Life & Abstract","note":"","romaji":"posutā"},{"word":"プロジェクト","meaning":"project","category":"Daily Life & Abstract","note":"","romaji":"purojekuto"},{"word":"ボーナス","meaning":"bonus","category":"Daily Life & Abstract","note":"","romaji":"bōnasu"},{"word":"アルバイト","meaning":"part-time job","category":"Daily Life & Abstract","note":"ORIGIN: German \"Arbeit\" (work); often clipped to バイト.","romaji":"arubaito"},{"word":"ストレス","meaning":"stress","category":"Daily Life & Abstract","note":"","romaji":"sutoresu"},{"word":"リラックス","meaning":"relax","category":"Daily Life & Abstract","note":"","romaji":"rirakkusu"},{"word":"アイデア","meaning":"idea","category":"Daily Life & Abstract","note":"","romaji":"aidea"},{"word":"チャンス","meaning":"chance; opportunity","category":"Daily Life & Abstract","note":"","romaji":"chansu"},{"word":"スタート","meaning":"start","category":"Daily Life & Abstract","note":"","romaji":"sutāto"},{"word":"ゴール","meaning":"goal","category":"Daily Life & Abstract","note":"","romaji":"gōru"},{"word":"ルール","meaning":"rule","category":"Daily Life & Abstract","note":"","romaji":"rūru"},{"word":"レベル","meaning":"level","category":"Daily Life & Abstract","note":"","romaji":"reberu"},{"word":"グループ","meaning":"group","category":"Daily Life & Abstract","note":"","romaji":"gurūpu"},{"word":"メンバー","meaning":"member","category":"Daily Life & Abstract","note":"","romaji":"menbā"},{"word":"スケジュール","meaning":"schedule","category":"Daily Life & Abstract","note":"","romaji":"sukejūru"},{"word":"アドバイス","meaning":"advice","category":"Daily Life & Abstract","note":"","romaji":"adobaisu"},{"word":"チェック","meaning":"check","category":"Daily Life & Abstract","note":"","romaji":"chekku"},{"word":"サイン","meaning":"signature; autograph","category":"Daily Life & Abstract","note":"FALSE FRIEND: \"sign\" = a signature or autograph.","romaji":"sain"},{"word":"プラン","meaning":"plan","category":"Daily Life & Abstract","note":"","romaji":"puran"},{"word":"パスポート","meaning":"passport","category":"Daily Life & Abstract","note":"","romaji":"pasupōto"},{"word":"スーツケース","meaning":"suitcase","category":"Daily Life & Abstract","note":"","romaji":"sūtsukēsu"},{"word":"カンニング","meaning":"cheating (on a test)","category":"Daily Life & Abstract","note":"FALSE FRIEND: not \"cunning\" — cheating on an exam.","romaji":"kanningu"},{"word":"テンション","meaning":"mood; energy level","category":"Daily Life & Abstract","note":"FALSE FRIEND: \"tension\" = your mood/energy, not stress. テンションが高い = upbeat.","romaji":"tenshon"},{"word":"スマート","meaning":"slim; slender","category":"Daily Life & Abstract","note":"FALSE FRIEND: \"smart\" = slim in build, not clever.","romaji":"sumāto"},{"word":"ハーフ","meaning":"biracial person","category":"Daily Life & Abstract","note":"FALSE FRIEND: \"half\" = a person of mixed heritage.","romaji":"hāfu"},{"word":"クレーム","meaning":"complaint","category":"Daily Life & Abstract","note":"FALSE FRIEND: \"claim\" = a customer complaint, not an insurance claim.","romaji":"kurēmu"},{"word":"キャンセル","meaning":"cancellation","category":"Daily Life & Abstract","note":"","romaji":"kyanseru"},{"word":"トラブル","meaning":"trouble","category":"Daily Life & Abstract","note":"","romaji":"toraburu"},{"word":"マナー","meaning":"manners; etiquette","category":"Daily Life & Abstract","note":"","romaji":"manā"},{"word":"インタビュー","meaning":"interview (media)","category":"Daily Life & Abstract","note":"USAGE: a media/press interview; a job interview is 面接.","romaji":"intabyū"},{"word":"コミュニケーション","meaning":"communication","category":"Daily Life & Abstract","note":"","romaji":"komyunikēshon"},{"word":"マスク","meaning":"face mask","category":"Daily Life & Abstract","note":"","romaji":"masuku"},{"word":"レシート","meaning":"receipt","category":"Daily Life & Abstract","note":"","romaji":"reshīto"},{"word":"ポイント","meaning":"point; loyalty points","category":"Daily Life & Abstract","note":"USAGE: a key point, or store loyalty points.","romaji":"pointo"}];
+const KATA_CAT_ORDER = ["Food & Drink","Clothing & Accessories","Places & Buildings","Tech & Electronics","Sports & Leisure","Home & Furniture","Transport","Countries & Places","Daily Life & Abstract"];
 const KANA_SETS = {
   hiragana_basic: { label:'Hiragana Basic', items:[
     {kana:'あ',romaji:'a'},{kana:'い',romaji:'i'},{kana:'う',romaji:'u'},{kana:'え',romaji:'e'},{kana:'お',romaji:'o'},
@@ -17998,6 +18064,133 @@ function startKanaReview() {
   document.getElementById('score-r-fail').textContent = '✗ 0';
   loadItem();
   showScreen('review');
+}
+
+// ── KATAKANA WORDS ─────────────────────────────────────────────────────
+function kataNoteHTML(note, block) {
+  const colors = {'FALSE FRIEND':'#e8193c','ORIGIN':'#5090d0','CLIPPING':'#5db89a','USAGE':'#c9a84c'};
+  let chip = '', body = note;
+  const idx = note.indexOf(':');
+  if (idx > -1) {
+    const label = note.slice(0, idx).trim().toUpperCase();
+    if (colors[label]) {
+      chip = `<span style="font-family:var(--font-mono);font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;padding:2px 7px;border-radius:3px;border:1px solid ${colors[label]};color:${colors[label]};margin-right:6px;display:inline-block;">${label}</span>`;
+      body = note.slice(idx + 1).trim();
+    }
+  }
+  if (block) return `<div style="margin-top:8px;font-size:13px;color:#7888b8;line-height:1.5;">${chip}${body}</div>`;
+  return `${chip}<span style="color:#7888b8;">${body}</span>`;
+}
+
+function buildStudyKatakana() {
+  const list = document.getElementById('study-katakana-list');
+  list.innerHTML = '';
+  KATA_CAT_ORDER.forEach(cat => {
+    const items = KATAKANA.filter(w => w.category === cat);
+    if (!items.length) return;
+    items.sort((a, b) => (a.note ? 1 : 0) - (b.note ? 1 : 0));
+    const card = document.createElement('div'); card.className = 'svk-card kata-cat-card';
+    const header = document.createElement('div'); header.className = 'svk-header';
+    header.innerHTML = `<div class="svk-info"><div class="svk-meaning" style="font-size:15px;color:var(--text);">${cat}</div></div><div class="vki-count">${items.length} words</div>`;
+    const body = document.createElement('div'); body.className = 'svk-body';
+    const grid = document.createElement('div'); grid.className = 'rg-vocab-grid';
+    items.forEach(w => {
+      const pill = document.createElement('div'); pill.className = 'vocab-pill';
+      let h = `<span class="vp-word">${w.word}</span><span class="vp-reading" style="font-style:italic;font-size:11px;">${w.romaji}</span><span class="vp-meaning">${w.meaning.replace(/\|/g, ' / ')}</span>`;
+      if (w.note) h += `<span style="display:block;font-size:11px;margin-top:12px;line-height:1.4;">${kataNoteHTML(w.note, false)}</span>`;
+      pill.innerHTML = h;
+      grid.appendChild(pill);
+    });
+    body.appendChild(grid);
+    header.onclick = () => { body.classList.toggle('open'); card.classList.toggle('cat-open'); };
+    card.appendChild(header); card.appendChild(body);
+    list.appendChild(card);
+  });
+}
+
+function buildKatakanaPicker() {
+  const wrap = document.getElementById('katakana-picker-sets');
+  wrap.innerHTML = '';
+  KATA_CAT_ORDER.forEach(cat => {
+    const count = KATAKANA.filter(w => w.category === cat).length;
+    if (!count) return;
+    const label = document.createElement('label'); label.className = 'pos-check-row';
+    const cbx = document.createElement('input');
+    cbx.type = 'checkbox'; cbx.className = 'kata-checkbox'; cbx.value = cat;
+    cbx.onchange = updateKatakanaCount;
+    const nm = document.createElement('span'); nm.className = 'pos-check-label'; nm.textContent = cat;
+    const ct = document.createElement('span'); ct.className = 'pos-check-count'; ct.textContent = count + ' words';
+    label.appendChild(cbx); label.appendChild(nm); label.appendChild(ct);
+    wrap.appendChild(label);
+  });
+  document.getElementById('kata-all').checked = false;
+  document.getElementById('kata-all-count').textContent = KATAKANA.length + ' words';
+  updateKatakanaCount();
+}
+
+function toggleAllKata(cb) {
+  document.querySelectorAll('.kata-checkbox').forEach(c => c.checked = cb.checked);
+  updateKatakanaCount();
+}
+
+function updateKatakanaCount() {
+  const checked = [...document.querySelectorAll('.kata-checkbox:checked')].map(c => c.value);
+  const total = KATAKANA.filter(w => checked.includes(w.category)).length;
+  document.getElementById('katakana-total-count').textContent = checked.length ? total + ' words' : '';
+  document.getElementById('katakana-go-btn').disabled = checked.length === 0;
+  const allCats = document.querySelectorAll('.kata-checkbox').length;
+  document.getElementById('kata-all').checked = allCats > 0 && checked.length === allCats;
+}
+
+function startKatakanaReview() {
+  const checked = [...document.querySelectorAll('.kata-checkbox:checked')].map(c => c.value);
+  if (!checked.length) return;
+  queue = KATAKANA.filter(w => checked.includes(w.category))
+                  .map(w => ({ type: 'katakana', word: w.word, meaning: w.meaning, note: w.note, romaji: w.romaji }));
+  shuffle(queue);
+  queueIndex = 0;
+  mPass = 0; mFail = 0; rPass = 0; rFail = 0;
+  itemFailed = {};
+  currentMode = 'review-katakana';
+  document.getElementById('score-r-pass').style.display = 'none';
+  document.getElementById('score-r-fail').style.display = 'none';
+  document.querySelector('.score-sep').style.display = 'none';
+  document.getElementById('score-m-pass').style.display = '';
+  document.getElementById('score-m-fail').style.display = '';
+  document.getElementById('score-m-pass').textContent = 'M✓ 0';
+  document.getElementById('score-m-fail').textContent = 'M✗ 0';
+  showScreen('review');
+  loadItem();
+}
+
+function checkKatakana(val) {
+  const inp = document.getElementById('review-input');
+  const reveal = document.getElementById('answer-reveal');
+  const correct = currentItem.meaning;
+  const display = correct.replace(/\|/g, ' / ');
+  const ok = meaningMatches(val, correct);
+  const note = currentItem.note ? kataNoteHTML(currentItem.note, true) : '';
+  if (ok) {
+    inp.className = 'review-input correct';
+    inp.disabled = true;
+    document.getElementById('submit-btn').disabled = true;
+    mPass++; updateScoreDisplay();
+    document.getElementById('known-meaning').innerHTML = '<span style="font-style:italic;">' + currentItem.romaji + '</span>';
+    if (note) {
+      reveal.innerHTML = `<span style="color:var(--text-dim);">${display}</span>${note}`;
+      reveal.className = 'answer-reveal show';
+      setTimeout(() => nextItem(), 1700);
+    } else {
+      setTimeout(() => nextItem(), 1000);
+    }
+  } else {
+    inp.className = 'review-input wrong';
+    reveal.innerHTML = `Correct: <strong>${display}</strong>${note}`;
+    reveal.className = 'answer-reveal show';
+    if (!itemFailed[itemKey]) itemFailed[itemKey] = {};
+    if (!itemFailed[itemKey].meaning) { mFail++; itemFailed[itemKey].meaning = true; updateScoreDisplay(); }
+    setTimeout(() => { inp.value = ''; inp.className = 'review-input'; inp.placeholder = 'retype the correct meaning…'; }, 400);
+  }
 }
 
 // ── GLOBAL SEARCH ────────────────────────────────────────────────────
@@ -19153,7 +19346,7 @@ function openChapter(n) {
     sec.style.display = 'block';
     requestAnimationFrame(function() { addScrollHints(sec); });
   }
-  document.getElementById('grammar').scrollTo({top: 0, behavior: 'instant'});
+  window.scrollTo({top: 0, behavior: 'instant'});
 }
 
 function closeChapter() {
@@ -19161,7 +19354,7 @@ function closeChapter() {
   var sections = document.querySelectorAll('.chapter-section');
   sections.forEach(function(s) { s.style.display = 'none'; });
   document.getElementById('chapter-menu').style.display = '';
-  document.getElementById('grammar').scrollTo({top: 0, behavior: 'instant'});
+  window.scrollTo({top: 0, behavior: 'instant'});
 }
 
 function scrollToCard(id) {
