@@ -944,7 +944,7 @@ body.grammar-active .screen{top:0 !important;}
   <div style="text-align:center">
     <div class="home-kanji">刻</div>
     <div class="home-sub">Kanji Drill — Level 24</div>
-    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.08em;">updated 2026-06-13 18:37</div>
+    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.08em;">updated 2026-06-13 21:25</div>
   </div>
   <div class="home-buttons">
     <div class="home-divider">Study</div>
@@ -1099,6 +1099,11 @@ body.grammar-active .screen{top:0 !important;}
       <input type="checkbox" id="kata-all" onchange="toggleAllKata(this)">
       <span class="pos-check-label" style="font-weight:600;">All categories</span>
       <span class="pos-check-count" id="kata-all-count"></span>
+    </label>
+    <label class="pos-check-row" style="margin-bottom:8px;">
+      <input type="checkbox" id="kata-ff" onchange="updateKatakanaCount()">
+      <span class="pos-check-label" style="font-weight:600;color:var(--accent);">⚠ False Friends only</span>
+      <span class="pos-check-count" id="kata-ff-count"></span>
     </label>
     <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:24px;" id="katakana-picker-sets"></div>
     <div style="font-size:12px;color:var(--text-dim);font-family:'DM Sans',sans-serif;margin-bottom:16px;" id="katakana-total-count"></div>
@@ -18088,7 +18093,14 @@ function buildStudyKatakana() {
   KATA_CAT_ORDER.forEach(cat => {
     const items = KATAKANA.filter(w => w.category === cat);
     if (!items.length) return;
-    items.sort((a, b) => (a.note ? 1 : 0) - (b.note ? 1 : 0));
+    const _NORD = { 'FALSE FRIEND': 1, 'ORIGIN': 2, 'CLIPPING': 3, 'USAGE': 4 };
+    const _krank = w => {
+      if (!w.note) return 0;
+      const i = w.note.indexOf(':');
+      const lab = i > -1 ? w.note.slice(0, i).trim().toUpperCase() : '';
+      return _NORD[lab] || 99;
+    };
+    items.sort((a, b) => _krank(a) - _krank(b));
     const card = document.createElement('div'); card.className = 'svk-card kata-cat-card';
     const header = document.createElement('div'); header.className = 'svk-header';
     header.innerHTML = `<div class="svk-info"><div class="svk-meaning" style="font-size:15px;color:var(--text);">${cat}</div></div><div class="vki-count">${items.length} words</div>`;
@@ -18108,6 +18120,12 @@ function buildStudyKatakana() {
   });
 }
 
+function kataIsFF(w) {
+  if (!w.note) return false;
+  const i = w.note.indexOf(':');
+  return (i > -1 ? w.note.slice(0, i).trim().toUpperCase() : '') === 'FALSE FRIEND';
+}
+
 function buildKatakanaPicker() {
   const wrap = document.getElementById('katakana-picker-sets');
   wrap.innerHTML = '';
@@ -18125,6 +18143,8 @@ function buildKatakanaPicker() {
   });
   document.getElementById('kata-all').checked = false;
   document.getElementById('kata-all-count').textContent = KATAKANA.length + ' words';
+  document.getElementById('kata-ff').checked = false;
+  document.getElementById('kata-ff-count').textContent = KATAKANA.filter(kataIsFF).length + ' words';
   updateKatakanaCount();
 }
 
@@ -18135,17 +18155,21 @@ function toggleAllKata(cb) {
 
 function updateKatakanaCount() {
   const checked = [...document.querySelectorAll('.kata-checkbox:checked')].map(c => c.value);
-  const total = KATAKANA.filter(w => checked.includes(w.category)).length;
-  document.getElementById('katakana-total-count').textContent = checked.length ? total + ' words' : '';
-  document.getElementById('katakana-go-btn').disabled = checked.length === 0;
+  const ff = document.getElementById('kata-ff').checked;
+  const set = new Set();
+  KATAKANA.forEach(w => { if (checked.includes(w.category) || (ff && kataIsFF(w))) set.add(w.word); });
+  const any = checked.length > 0 || ff;
+  document.getElementById('katakana-total-count').textContent = any ? set.size + ' words' : '';
+  document.getElementById('katakana-go-btn').disabled = !any;
   const allCats = document.querySelectorAll('.kata-checkbox').length;
   document.getElementById('kata-all').checked = allCats > 0 && checked.length === allCats;
 }
 
 function startKatakanaReview() {
   const checked = [...document.querySelectorAll('.kata-checkbox:checked')].map(c => c.value);
-  if (!checked.length) return;
-  queue = KATAKANA.filter(w => checked.includes(w.category))
+  const ff = document.getElementById('kata-ff').checked;
+  if (!checked.length && !ff) return;
+  queue = KATAKANA.filter(w => checked.includes(w.category) || (ff && kataIsFF(w)))
                   .map(w => ({ type: 'katakana', word: w.word, meaning: w.meaning, note: w.note, romaji: w.romaji }));
   shuffle(queue);
   queueIndex = 0;
