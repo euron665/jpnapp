@@ -1,4 +1,4 @@
-const CACHE = 'koku-v46';
+const CACHE = 'koku-v47';
 const ASSETS = [
   '/jpnapp/',
   '/jpnapp/index.html',
@@ -19,22 +19,20 @@ self.addEventListener('activate', e => {
   self.clients.claim();
 });
 
+// NETWORK-FIRST: always fetch the latest when online, fall back to cache offline.
+// This guarantees the app updates the moment you're online — no stale cache.
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
   e.respondWith(
-    caches.match(req).then(cached => {
-      if (cached) return cached;
-      return fetch(req).then(res => {
-        if (res && (res.ok || res.type === 'opaque')) {
-          const copy = res.clone();
-          caches.open(CACHE).then(c => c.put(req, copy));
-        }
-        return res;
-      }).catch(() => {
-        if (req.mode === 'navigate') return caches.match('/jpnapp/index.html');
-        return Response.error();
-      });
-    })
+    fetch(req).then(res => {
+      if (res && (res.ok || res.type === 'opaque')) {
+        const copy = res.clone();
+        caches.open(CACHE).then(c => c.put(req, copy));
+      }
+      return res;
+    }).catch(() =>
+      caches.match(req).then(c => c || (req.mode === 'navigate' ? caches.match('/jpnapp/index.html') : Response.error()))
+    )
   );
 });
