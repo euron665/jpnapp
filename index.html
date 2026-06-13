@@ -166,15 +166,15 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
 .svk-body.open{display:block;}
 
 /* REVIEW */
-#review{gap:0;justify-content:space-between;padding:0;overflow-x:hidden;}
+#review{gap:0;justify-content:flex-start;padding:0;overflow-x:hidden;}
 .review-header{width:100%;padding:14px 20px;border-bottom:1px solid var(--border);
   display:flex;align-items:center;gap:12px;flex-shrink:0;}
 .review-progress{flex:1;height:2px;background:var(--border);border-radius:1px;overflow:hidden;}
 .review-progress-fill{height:100%;background:var(--accent);border-radius:1px;transition:width 0.3s ease;}
 .review-counter{font-size:11px;letter-spacing:0.1em;color:var(--text-dim);font-family:var(--font-mono);white-space:nowrap;}
 
-.review-body{flex:1;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;padding:20px 16px;gap:18px;width:100%;max-width:100%;}
+.review-body{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;
+  justify-content:flex-start;padding:22px 16px 14px;gap:14px;width:100%;max-width:100%;}
 .review-card{text-align:center;width:100%;max-width:480px;}
 .review-kanji-display{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:clamp(75px,19vw,140px);
   line-height:1;color:var(--text);margin-bottom:10px;
@@ -199,6 +199,7 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
   text-transform:uppercase;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
 .submit-btn:hover{opacity:0.9;} .submit-btn:active{transform:scale(0.97);}
 .submit-btn:disabled{opacity:0.4;cursor:default;}
+.submit-btn.next-ready{background:var(--pass-text);color:#0c0c0e;font-weight:600;}
 @media(max-width:520px){
   .input-row{flex-direction:column;}
   .submit-btn{width:100%;padding:14px;}
@@ -944,7 +945,7 @@ body.grammar-active .screen{top:0 !important;}
   <div style="text-align:center">
     <div class="home-kanji">刻</div>
     <div class="home-sub">Kanji Drill — Level 24</div>
-    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.08em;">updated 2026-06-13 21:46</div>
+    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.08em;">updated 2026-06-14 00:42</div>
   </div>
   <div class="home-buttons">
     <div class="home-divider">Study</div>
@@ -1066,9 +1067,9 @@ body.grammar-active .screen{top:0 !important;}
   <div class="order-buttons">
     <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-dim);font-family:'DM Mono',monospace;margin-bottom:4px;">Test</div>
     <div style="display:flex;gap:8px;margin-bottom:16px;">
+      <button class="sort-btn" id="os-steps-both"    onclick="setKanjiSteps('both')"   style="flex:1;padding:10px 8px;">Meaning + Reading</button>
       <button class="sort-btn" id="os-steps-meaning" onclick="setKanjiSteps('meaning')" style="flex:1;padding:10px 8px;">Meaning only</button>
       <button class="sort-btn" id="os-steps-reading" onclick="setKanjiSteps('reading')" style="flex:1;padding:10px 8px;">Reading only</button>
-      <button class="sort-btn" id="os-steps-both"    onclick="setKanjiSteps('both')"   style="flex:1;padding:10px 8px;">Meaning + Reading</button>
     </div>
     <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-dim);font-family:'DM Mono',monospace;margin-bottom:4px;">Order</div>
     <button class="btn-primary" onclick="startKanjiReview(false)">Sequential</button>
@@ -1114,7 +1115,7 @@ body.grammar-active .screen{top:0 !important;}
 <!-- REVIEW -->
 <div id="review" class="screen">
   <div class="review-header">
-    <button class="back-btn" onclick="goHome()">✕</button>
+    <button class="back-btn" onclick="exitReview()">✕</button>
     <div class="review-progress"><div class="review-progress-fill" id="progress-fill"></div></div>
     <div class="review-counter" id="review-counter">0 / 0</div>
   </div>
@@ -16966,7 +16967,13 @@ function goTo(id, mode) {
   showScreen(id);
 }
 
+let reviewReturn = 'home';
+function exitReview() { showScreen(reviewReturn || 'home'); }
 function showScreen(id) {
+  if (id === 'review') {
+    const cur = document.querySelector('.screen.active');
+    if (cur && cur.id !== 'review') reviewReturn = cur.id;
+  }
   // Reset search bar visibility on screen change
   _srCollapsed = false;
   document.body.classList.remove('search-collapsed');
@@ -17532,6 +17539,7 @@ function loadItem() {
   document.getElementById('feedback-row').className = 'feedback-row';
   document.getElementById('submit-btn').disabled = false;
   document.getElementById('submit-btn').textContent = 'Enter';
+  document.getElementById('submit-btn').classList.remove('next-ready');
   awaitingNext = false; pendingNext = null;
 
   const inp = document.getElementById('review-input');
@@ -17697,6 +17705,7 @@ function moveToReadingStep() {
   inp.dataset.mode = 'kana';
   document.getElementById('submit-btn').disabled = false;
   document.getElementById('submit-btn').textContent = 'Enter';
+  document.getElementById('submit-btn').classList.remove('next-ready');
   setTimeout(() => inp.focus(), 50);
 }
 
@@ -18085,6 +18094,7 @@ function armNext(action) {
   const b = document.getElementById('submit-btn');
   b.disabled = false;
   b.textContent = 'Next →';
+  b.classList.add('next-ready');
 }
 
 function kataNoteHTML(note, block) {
