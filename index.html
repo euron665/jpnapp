@@ -17518,6 +17518,13 @@ function startVocabAll() {
   startReview();
 }
 
+function highlightRare(word, rare) {
+  if (!rare) return word;
+  const i = word.indexOf(rare);
+  if (i < 0) return word;
+  return word.slice(0, i) + '<span style="color:var(--gold);">' + rare + '</span>' + word.slice(i + rare.length);
+}
+
 function getSingleVocabItems() {
   // Live: every kanji whose total vocab (across all reading groups) is exactly 1.
   const items = [];
@@ -17527,7 +17534,7 @@ function getSingleVocabItems() {
     v.rgs.forEach(rg => rg.vocab.forEach(e => all.push(e)));
     if (all.length === 1) {
       const e = all[0];
-      items.push({ type:'vocab', kanji:e.word, reading:e.reading, meaning:e.meaning });
+      items.push({ type:'vocab', kanji:e.word, reading:e.reading, meaning:e.meaning, rare:k });
     }
   });
   return items;
@@ -17646,7 +17653,8 @@ function loadItem() {
     conjTopLabel.style.display = 'none';
     botLabel.style.display = '';
     reviewStep = 'meaning';
-    document.getElementById('review-display').textContent = currentItem.kanji;
+    if (currentItem.rare) document.getElementById('review-display').innerHTML = highlightRare(currentItem.kanji, currentItem.rare);
+    else document.getElementById('review-display').textContent = currentItem.kanji;
     document.getElementById('step-label').textContent = (currentItem.type === 'kanji' && kanjiReviewSteps === 'meaning') ? 'Meaning' : 'Step 1 — Meaning';
     document.getElementById('known-meaning').textContent = '';
     inp.placeholder = 'type meaning…';
