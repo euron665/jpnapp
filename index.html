@@ -998,6 +998,7 @@ body.review-active .screen{top:0 !important;}
     <div class="screen-title" id="skg-picker-title">Select SKG</div>
   </div>
   <div class="scrollable" style="padding-top:56px;width:100%;">
+    <button id="single-vocab-btn" class="btn-primary" style="width:100%;max-width:600px;margin-bottom:14px;display:none;" onclick="startSingleVocabReview()">1 Kanji &#8211; 1 Vocab&#9;·&#9;<span id="single-vocab-count">0</span> items</button>
     <div class="sort-bar" id="sort-bar">
       <button class="sort-btn active" onclick="setSKGSort('num')"    id="sort-num">SKG #</button>
       <button class="sort-btn"        onclick="setSKGSort('kanji-asc')"  id="sort-ka">Kanji Count ↑</button>
@@ -17012,6 +17013,12 @@ function buildSKGGrid() {
     'review-vocab':'Review Vocab — Select SKG'
   };
   document.getElementById('skg-picker-title').textContent = labels[currentMode] || 'Select SKG';
+  const _svb = document.getElementById('single-vocab-btn');
+  if (_svb) {
+    const _isRev = (currentMode === 'review-kanji' || currentMode === 'review-vocab');
+    _svb.style.display = _isRev ? '' : 'none';
+    if (_isRev) document.getElementById('single-vocab-count').textContent = getSingleVocabItems().length;
+  }
   renderSKGGrid();
 }
 
@@ -17507,6 +17514,29 @@ function startVocabAll() {
       type:'vocab', kanji:e.word, reading:e.reading, meaning:e.meaning
     })));
   });
+  queue = items;
+  startReview();
+}
+
+function getSingleVocabItems() {
+  // Live: every kanji whose total vocab (across all reading groups) is exactly 1.
+  const items = [];
+  Object.keys(VOCAB).forEach(k => {
+    const v = VOCAB[k]; if (!v) return;
+    const all = [];
+    v.rgs.forEach(rg => rg.vocab.forEach(e => all.push(e)));
+    if (all.length === 1) {
+      const e = all[0];
+      items.push({ type:'vocab', kanji:e.word, reading:e.reading, meaning:e.meaning });
+    }
+  });
+  return items;
+}
+
+function startSingleVocabReview() {
+  const items = getSingleVocabItems();
+  if (!items.length) return;
+  shuffle(items);
   queue = items;
   startReview();
 }
