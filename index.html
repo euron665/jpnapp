@@ -1022,7 +1022,7 @@ body.review-active .screen{top:0 !important;}
     <div id="quick-drills" style="display:none;width:100%;max-width:600px;">
       <div class="picker-label">Quick Drills</div>
       <button id="single-vocab-btn" class="btn-primary" style="width:100%;margin-bottom:10px;display:none;" onclick="startSingleVocabReview()">1 Kanji &#8211; 1 Vocab&#9;·&#9;<span id="single-vocab-count">0</span> items</button>
-      <button id="same-meaning-btn" class="btn-primary" style="width:100%;margin-bottom:10px;display:none;" onclick="startSameMeaningReview()">Same-Meaning Words&#9;·&#9;<span id="same-meaning-count">0</span> items</button>
+      <button id="same-meaning-btn" class="btn-primary" style="width:100%;margin-bottom:10px;display:none;" onclick="openSameMeaningLimit()">Same-Meaning Words&#9;·&#9;<span id="same-meaning-count">0</span> items</button>
       <div class="picker-divider"></div>
     </div>
     <div class="picker-head" style="width:100%;max-width:600px;">
@@ -1145,6 +1145,17 @@ body.review-active .screen{top:0 !important;}
   <div class="sm-modal" onclick="event.stopPropagation()">
     <span class="sm-modal-close" onclick="closeSameMeaning()">✕</span>
     <div id="sm-modal-body"></div>
+  </div>
+</div>
+
+<!-- SAME-MEANING LIMIT PROMPT -->
+<div id="sm-limit-overlay" class="sm-modal-overlay" onclick="closeSameMeaningLimit()">
+  <div class="sm-modal" onclick="event.stopPropagation()" style="text-align:center;max-width:320px;">
+    <span class="sm-modal-close" onclick="closeSameMeaningLimit()">✕</span>
+    <div class="sm-meaning" style="margin-bottom:4px;">Same-Meaning Review</div>
+    <div style="font-size:13px;color:var(--text-dim);margin:8px 0 16px;font-family:'DM Sans',sans-serif;">How many words?<br><span style="font-size:11px;">(blank = all <span id="sm-limit-total">0</span>)</span></div>
+    <input type="number" id="sm-limit" min="1" placeholder="all" onkeydown="if(event.key==='Enter')beginSameMeaningReview()" style="width:96px;padding:9px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-family:var(--font-mono);font-size:16px;text-align:center;margin-bottom:18px;">
+    <button class="btn-primary" style="width:100%;" onclick="beginSameMeaningReview()">Begin Review</button>
   </div>
 </div>
 
@@ -18387,11 +18398,24 @@ function getSameMeaningItems() {
   }));
   return items;
 }
-function startSameMeaningReview() {
+function openSameMeaningLimit() {
+  const n = getSameMeaningItems().length;
+  if (!n) return;
+  document.getElementById('sm-limit-total').textContent = n;
+  document.getElementById('sm-limit').value = '';
+  document.getElementById('sm-limit-overlay').classList.add('open');
+}
+function closeSameMeaningLimit() { document.getElementById('sm-limit-overlay').classList.remove('open'); }
+function beginSameMeaningReview() {
+  const lim = parseInt(document.getElementById('sm-limit').value);
+  closeSameMeaningLimit();
+  startSameMeaningReview(lim > 0 ? lim : 0);
+}
+function startSameMeaningReview(limit) {
   const items = getSameMeaningItems();
   if (!items.length) return;
   shuffle(items);
-  queue = items;
+  queue = (limit > 0) ? items.slice(0, limit) : items;
   startReview();
 }
 
