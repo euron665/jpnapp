@@ -65,12 +65,18 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
 .skg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
   gap:8px;width:100%;max-width:600px;padding-bottom:24px;}
 .skg-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
-  padding:14px 12px;cursor:pointer;transition:all 0.15s;text-align:center;}
+  padding:18px 12px 12px;cursor:pointer;transition:all 0.15s;text-align:center;position:relative;}
 .skg-card:hover{border-color:var(--accent);background:var(--surface2);}
 .skg-card:active{transform:scale(0.97);}
-.skg-card-id{font-size:10px;letter-spacing:0.2em;color:var(--text-dim);margin-bottom:6px;}
-.skg-card-kanji{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:27px;line-height:1;}
-.skg-card-count{font-size:10px;color:var(--text);margin-top:5px;}
+.skg-card-id{position:absolute;top:4px;right:7px;font-size:9px;letter-spacing:0.05em;color:var(--text-muted);}
+.skg-card-kanji{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:25px;line-height:1.1;}
+.skg-card-count{font-size:10px;color:var(--text);margin-top:7px;}
+.picker-label{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);font-family:'DM Sans',sans-serif;padding:4px 0 10px;}
+.picker-divider{height:1px;background:var(--border);margin:6px 0 20px;}
+.picker-head{display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;}
+.picker-head .picker-label{padding:0;}
+.sort-cycle{background:transparent;border:1px solid var(--border);border-radius:var(--r);color:var(--text-dim);font-family:var(--font-mono);font-size:11px;letter-spacing:0.05em;padding:5px 11px;cursor:pointer;white-space:nowrap;}
+.sort-cycle:hover{border-color:var(--text-dim);} .sort-cycle:active{transform:scale(0.96);}
 
 /* MODE / ORDER SELECT */
 #mode-select,#order-select{gap:28px;}
@@ -1010,17 +1016,18 @@ body.review-active .screen{top:0 !important;}
 <div id="skg-picker" class="screen">
   <div class="screen-header">
     <button class="back-btn" onclick="goHome()">← Back</button>
-    <div class="screen-title" id="skg-picker-title">Select SKG</div>
+    <div class="screen-title" id="skg-picker-title">Choose a Set</div>
   </div>
   <div class="scrollable" style="padding-top:56px;width:100%;">
-    <button id="single-vocab-btn" class="btn-primary" style="width:100%;max-width:600px;margin-bottom:14px;display:none;" onclick="startSingleVocabReview()">1 Kanji &#8211; 1 Vocab&#9;·&#9;<span id="single-vocab-count">0</span> items</button>
-    <button id="same-meaning-btn" class="btn-primary" style="width:100%;max-width:600px;margin-bottom:14px;display:none;" onclick="startSameMeaningReview()">Same-Meaning Words&#9;·&#9;<span id="same-meaning-count">0</span> items</button>
-    <div class="sort-bar" id="sort-bar">
-      <button class="sort-btn active" onclick="setSKGSort('num')"    id="sort-num">SKG #</button>
-      <button class="sort-btn"        onclick="setSKGSort('kanji-asc')"  id="sort-ka">Kanji Count ↑</button>
-      <button class="sort-btn"        onclick="setSKGSort('kanji-desc')" id="sort-kd">Kanji Count ↓</button>
-      <button class="sort-btn"        onclick="setSKGSort('vocab-desc')" id="sort-vd">Vocab Count ↓</button>
-      <button class="sort-btn"        onclick="setSKGSort('vocab-asc')"  id="sort-va">Vocab Count ↑</button>
+    <div id="quick-drills" style="display:none;width:100%;max-width:600px;">
+      <div class="picker-label">Quick Drills</div>
+      <button id="single-vocab-btn" class="btn-primary" style="width:100%;margin-bottom:10px;display:none;" onclick="startSingleVocabReview()">1 Kanji &#8211; 1 Vocab&#9;·&#9;<span id="single-vocab-count">0</span> items</button>
+      <button id="same-meaning-btn" class="btn-primary" style="width:100%;margin-bottom:10px;display:none;" onclick="startSameMeaningReview()">Same-Meaning Words&#9;·&#9;<span id="same-meaning-count">0</span> items</button>
+      <div class="picker-divider"></div>
+    </div>
+    <div class="picker-head" style="width:100%;max-width:600px;">
+      <span class="picker-label">Choose a Set</span>
+      <button class="sort-cycle" id="sort-cycle" onclick="cycleSKGSort()">⇅ Set #</button>
     </div>
     <div class="skg-grid" id="skg-grid"></div>
   </div>
@@ -17015,40 +17022,41 @@ function showScreen(id) {
   if (sc) sc.scrollTop = 0;
 }
 
-// ── SKG GRID ───────────────────────────────────────────────────────────
+// ── SET (SKG) PICKER ───────────────────────────────────────────────────
+const SORT_LABELS = {'num':'Set #','kanji-asc':'Kanji ↑','kanji-desc':'Kanji ↓','vocab-desc':'Vocab ↓','vocab-asc':'Vocab ↑'};
+function sortOrderForMode() {
+  const kanjiOnly = currentMode === 'study-kanji' || currentMode === 'review-kanji';
+  return kanjiOnly ? ['num','kanji-asc','kanji-desc'] : ['num','kanji-asc','kanji-desc','vocab-desc','vocab-asc'];
+}
+function updateSortLabel() {
+  const b = document.getElementById('sort-cycle');
+  if (b) b.textContent = '⇅ ' + (SORT_LABELS[skgSortMode] || 'Set #');
+}
+function cycleSKGSort() {
+  const order = sortOrderForMode();
+  skgSortMode = order[(order.indexOf(skgSortMode) + 1) % order.length];
+  updateSortLabel();
+  renderSKGGrid();
+}
 function buildSKGGrid() {
-  // hide vocab sort buttons when in study-kanji mode
-  const vocabOnly = currentMode === 'study-kanji';
-  document.getElementById('sort-vd').style.display = vocabOnly ? 'none' : '';
-  document.getElementById('sort-va').style.display = vocabOnly ? 'none' : '';
-  // if currently sorted by vocab, reset to num
-  if (vocabOnly && (skgSortMode === 'vocab-desc' || skgSortMode === 'vocab-asc')) {
-    skgSortMode = 'num';
-  }
-  // sync sort button highlight
-  document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
-  const _map = {'num':'sort-num','kanji-asc':'sort-ka','kanji-desc':'sort-kd','vocab-desc':'sort-vd','vocab-asc':'sort-va'};
-  const _el = document.getElementById(_map[skgSortMode]);
-  if (_el) _el.classList.add('active');
+  // reset to a valid sort if the current one doesn't apply to this mode
+  if (sortOrderForMode().indexOf(skgSortMode) === -1) skgSortMode = 'num';
+  updateSortLabel();
   const labels = {
-    'study-kanji':'Study Kanji — Select SKG',
-    'study-vocab':'Study Vocab — Select SKG',
-    'review-kanji':'Review Kanji — Select SKG',
-    'review-vocab':'Review Vocab — Select SKG'
+    'study-kanji':'Study Kanji — Choose a Set',
+    'study-vocab':'Study Vocab — Choose a Set',
+    'review-kanji':'Review Kanji — Choose a Set',
+    'review-vocab':'Review Vocab — Choose a Set'
   };
-  document.getElementById('skg-picker-title').textContent = labels[currentMode] || 'Select SKG';
+  document.getElementById('skg-picker-title').textContent = labels[currentMode] || 'Choose a Set';
+  const isRev = (currentMode === 'review-kanji' || currentMode === 'review-vocab');
   const _svb = document.getElementById('single-vocab-btn');
-  if (_svb) {
-    const _isRev = (currentMode === 'review-kanji' || currentMode === 'review-vocab');
-    _svb.style.display = _isRev ? '' : 'none';
-    if (_isRev) document.getElementById('single-vocab-count').textContent = getSingleVocabItems().length;
-  }
+  if (_svb) { _svb.style.display = isRev ? '' : 'none'; if (isRev) document.getElementById('single-vocab-count').textContent = getSingleVocabItems().length; }
+  const _smN = (currentMode === 'review-vocab') ? getSameMeaningItems().length : 0;
   const _smb = document.getElementById('same-meaning-btn');
-  if (_smb) {
-    const _smN = (currentMode === 'review-vocab') ? getSameMeaningItems().length : 0;
-    _smb.style.display = _smN ? '' : 'none';
-    if (_smN) document.getElementById('same-meaning-count').textContent = _smN;
-  }
+  if (_smb) { _smb.style.display = _smN ? '' : 'none'; if (_smN) document.getElementById('same-meaning-count').textContent = _smN; }
+  const qd = document.getElementById('quick-drills');
+  if (qd) qd.style.display = isRev ? '' : 'none';
   renderSKGGrid();
 }
 
@@ -17061,13 +17069,13 @@ function selectSKG(skg) {
     buildStudyVocab();
     showScreen('study-vocab');
   } else if (currentMode === 'review-kanji') {
-    document.getElementById('os-id').textContent = skg.id;
+    document.getElementById('os-id').textContent = String(skg.id).replace(/SKG\s*/i,'');
     document.getElementById('os-kanji').textContent = skg.kanji.slice(0,8).join(' ');
     setKanjiSteps('both');
     showScreen('order-select');
   } else {
-    document.getElementById('ms-title').textContent = skg.id;
-    document.getElementById('ms-id').textContent = skg.id;
+    document.getElementById('ms-title').textContent = String(skg.id).replace(/SKG\s*/i,'');
+    document.getElementById('ms-id').textContent = String(skg.id).replace(/SKG\s*/i,'');
     document.getElementById('ms-kanji').textContent = skg.kanji.slice(0,6).join(' ');
     showScreen('mode-select');
   }
@@ -19060,24 +19068,18 @@ function renderVerbTables() {
 }
 
 function renderSKGGrid() {
-  // Show/hide vocab sort buttons based on mode
   const isKanjiMode = currentMode === 'study-kanji' || currentMode === 'review-kanji';
-  ['sort-vd','sort-va'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.style.display = isKanjiMode ? 'none' : '';
-  });
   const grid = document.getElementById('skg-grid');
   grid.innerHTML = '';
   getSortedSKGs().forEach(skg => {
     const totalVocab = skg.kanji.reduce((s,k) => s + (VOCAB[k] ? VOCAB[k].rgs.reduce((x,rg)=>x+rg.vocab.length,0) : 0), 0);
-    const isKanjiMode = currentMode === 'study-kanji' || currentMode === 'review-kanji';
     const countText = isKanjiMode
       ? skg.kanji.length + ' kanji'
       : skg.kanji.length + ' kanji · ' + totalVocab + ' vocab';
     const card = document.createElement('div');
     card.className = 'skg-card';
-    card.innerHTML = '<div class="skg-card-id">'+skg.id+'</div>'
-      +'<div class="skg-card-kanji">'+skg.kanji[0]+'</div>'
+    card.innerHTML = '<div class="skg-card-id">'+String(skg.id).replace(/SKG\s*/i,'')+'</div>'
+      +'<div class="skg-card-kanji">'+skg.kanji.slice(0,3).join('')+'</div>'
       +'<div class="skg-card-count">'+countText+'</div>';
     card.addEventListener('click', () => selectSKG(skg));
     grid.appendChild(card);
