@@ -1021,7 +1021,7 @@ body.review-active .screen{top:0 !important;}
   <div class="scrollable" style="padding-top:56px;width:100%;">
     <div id="quick-drills" style="display:none;width:100%;max-width:600px;">
       <div class="picker-label">Quick Drills</div>
-      <button id="single-vocab-btn" class="btn-primary" style="width:100%;margin-bottom:10px;display:none;" onclick="startSingleVocabReview()">1 Kanji &#8211; 1 Vocab&#9;·&#9;<span id="single-vocab-count">0</span> items</button>
+      <button id="single-vocab-btn" class="btn-primary" style="width:100%;margin-bottom:10px;display:none;" onclick="openSingleVocabLimit()">1 Kanji &#8211; 1 Vocab&#9;·&#9;<span id="single-vocab-count">0</span> items</button>
       <button id="same-meaning-btn" class="btn-primary" style="width:100%;margin-bottom:10px;display:none;" onclick="openSameMeaningLimit()">Same-Meaning Words&#9;·&#9;<span id="same-meaning-count">0</span> items</button>
       <div class="picker-divider"></div>
     </div>
@@ -1145,6 +1145,17 @@ body.review-active .screen{top:0 !important;}
   <div class="sm-modal" onclick="event.stopPropagation()">
     <span class="sm-modal-close" onclick="closeSameMeaning()">✕</span>
     <div id="sm-modal-body"></div>
+  </div>
+</div>
+
+<!-- 1 KANJI 1 VOCAB LIMIT PROMPT -->
+<div id="sv-limit-overlay" class="sm-modal-overlay" onclick="closeSingleVocabLimit()">
+  <div class="sm-modal" onclick="event.stopPropagation()" style="text-align:center;max-width:320px;">
+    <span class="sm-modal-close" onclick="closeSingleVocabLimit()">✕</span>
+    <div class="sm-meaning" style="margin-bottom:4px;">1 Kanji &#8211; 1 Vocab</div>
+    <div style="font-size:13px;color:var(--text-dim);margin:8px 0 16px;font-family:'DM Sans',sans-serif;">How many words?<br><span style="font-size:11px;">(blank = all <span id="sv-limit-total">0</span>)</span></div>
+    <input type="number" id="sv-limit" min="1" placeholder="all" onkeydown="if(event.key==='Enter')beginSingleVocabReview()" style="width:96px;padding:9px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-family:var(--font-mono);font-size:16px;text-align:center;margin-bottom:18px;">
+    <button class="btn-primary" style="width:100%;" onclick="beginSingleVocabReview()">Begin Review</button>
   </div>
 </div>
 
@@ -17595,11 +17606,24 @@ function getSingleVocabItems() {
   return items;
 }
 
-function startSingleVocabReview() {
+function openSingleVocabLimit() {
+  const n = getSingleVocabItems().length;
+  if (!n) return;
+  document.getElementById('sv-limit-total').textContent = n;
+  document.getElementById('sv-limit').value = '';
+  document.getElementById('sv-limit-overlay').classList.add('open');
+}
+function closeSingleVocabLimit() { document.getElementById('sv-limit-overlay').classList.remove('open'); }
+function beginSingleVocabReview() {
+  const lim = parseInt(document.getElementById('sv-limit').value);
+  closeSingleVocabLimit();
+  startSingleVocabReview(lim > 0 ? lim : 0);
+}
+function startSingleVocabReview(limit) {
   const items = getSingleVocabItems();
   if (!items.length) return;
   shuffle(items);
-  queue = items;
+  queue = (limit > 0) ? items.slice(0, limit) : items;
   startReview();
 }
 
