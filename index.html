@@ -937,7 +937,7 @@ body.review-active .screen{top:0 !important;}
 <!-- GLOBAL SEARCH BAR -->
 <div id="global-search-bar">
   <div id="search-row">
-    <input type="text" id="search-input" placeholder="Search kanji, vocab, SKG…"
+    <input type="text" id="search-input" placeholder="Search kanji, vocab…"
            autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"
            oninput="onSearchInput(this.value)">
     <button id="search-clear" onclick="clearSearch()">✕</button>
@@ -952,7 +952,7 @@ body.review-active .screen{top:0 !important;}
 <div id="kv-modal-overlay" class="kv-modal-overlay" onclick="if(event.target===this)closeKanjiVocabModal()"></div>
 <div id="search-results">
   <div id="sr-skg" class="search-section" style="display:none">
-    <div class="search-section-label">Similar Kanji Group</div>
+    <div class="search-section-label">Set</div>
     <div id="sr-skg-list"></div>
   </div>
   <div id="sr-kanji" class="search-section" style="display:none">
@@ -1020,7 +1020,7 @@ body.review-active .screen{top:0 !important;}
   </div>
   <div class="scrollable" style="padding-top:56px;width:100%;">
     <div id="quick-drills" style="display:none;width:100%;max-width:600px;">
-      <div class="picker-label">Quick Drills</div>
+      <div class="picker-label">Special Drills</div>
       <button id="single-vocab-btn" class="btn-primary" style="width:100%;margin-bottom:10px;display:none;" onclick="openSingleVocabLimit()">1 Kanji &#8211; 1 Vocab&#9;·&#9;<span id="single-vocab-count">0</span> items</button>
       <button id="same-meaning-btn" class="btn-primary" style="width:100%;margin-bottom:10px;display:none;" onclick="openSameMeaningLimit()">Same-Meaning Words&#9;·&#9;<span id="same-meaning-count">0</span> items</button>
       <div class="picker-divider"></div>
@@ -1066,7 +1066,7 @@ body.review-active .screen{top:0 !important;}
     <div class="mode-skg-kanji" id="ms-kanji"></div>
   </div>
   <div class="mode-buttons">
-    <button class="btn-primary" onclick="startVocabAll()">All vocab in SKG</button>
+    <button class="btn-primary" onclick="startVocabAll()">All vocab in set</button>
     <button class="btn-secondary" onclick="goTo('vocab-kanji-picker')">Pick specific kanji</button>
   </div>
 </div>
@@ -17451,7 +17451,7 @@ function buildStudyPOS() {
 
 function buildStudyKanji() {
   if (!currentSKG) return;
-  document.getElementById('study-kanji-title').textContent = currentSKG.id + ' — Kanji';
+  document.getElementById('study-kanji-title').textContent = String(currentSKG.id).replace(/SKG\s*/i,'') + ' — Kanji';
   const list = document.getElementById('study-kanji-list');
   list.innerHTML = '';
   currentSKG.kanji.forEach(k => {
@@ -17472,7 +17472,7 @@ function buildStudyKanji() {
 // ── STUDY: VOCAB ───────────────────────────────────────────────────────
 function buildStudyVocab() {
   if (!currentSKG) return;
-  document.getElementById('study-vocab-title').textContent = currentSKG.id + ' — Vocab';
+  document.getElementById('study-vocab-title').textContent = String(currentSKG.id).replace(/SKG\s*/i,'') + ' — Vocab';
   const list = document.getElementById('study-vocab-list');
   list.innerHTML = '';
   currentSKG.kanji.forEach(k => {
@@ -17530,7 +17530,7 @@ function buildStudyVocab() {
 
 // ── VOCAB KANJI PICKER ─────────────────────────────────────────────────
 function buildVocabKanjiList() {
-  document.getElementById('vkp-title').textContent = currentSKG?.id || '';
+  document.getElementById('vkp-title').textContent = String(currentSKG?.id || '').replace(/SKG\s*/i,'');
   const list = document.getElementById('vocab-kanji-list');
   list.innerHTML = '';
   if (!currentSKG) return;
@@ -18468,7 +18468,7 @@ function setSearchKB(mode) {
   document.getElementById('kb-en').classList.toggle('active', mode === 'en');
   document.getElementById('kb-kana').classList.toggle('active', mode === 'kana');
   const inp = document.getElementById('search-input');
-  inp.placeholder = mode === 'kana' ? 'ローマ字で入力…' : 'Search kanji, vocab, SKG…';
+  inp.placeholder = mode === 'kana' ? 'ローマ字で入力…' : 'Search kanji, vocab…';
 }
 
 function onSearchInput(val) {
@@ -18554,7 +18554,7 @@ function renderSearchResults(skgs, kanjis, vocabs) {
       +'<div class="sr-sub">'+km.reading+'</div>'
       +'<div class="sr-main">'+km.meaning+'</div>'
       +'</div>'
-      +'<div class="sr-meta">'+km.skg+'<br>'+vc+' vocab</div>';
+      +'<div class="sr-meta">'+String(km.skg).replace(/SKG\s*/i,'')+'<br>'+vc+' vocab</div>';
     el.onclick = () => {
       clearSearch();
       if (skg) {
