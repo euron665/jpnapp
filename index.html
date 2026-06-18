@@ -163,6 +163,7 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
 .sm-w{font-family:'Noto Sans JP',sans-serif;font-size:22px;font-weight:300;line-height:1;}
 .sm-r{font-size:11px;color:var(--text-dim);font-family:var(--font-mono);margin-top:4px;}
 .sm-note{font-size:13px;color:#7888b8;line-height:1.6;}
+.vocab-pill.sr-flash{border-color:#3dd6c8;box-shadow:0 0 0 1px #3dd6c8;}
 .pos-check-row{display:flex;align-items:center;gap:12px;padding:12px 14px;
   background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
   cursor:pointer;transition:border-color 0.15s;}
@@ -945,6 +946,7 @@ body.review-active .screen{top:0 !important;}
   <div id="search-kb-row">
     <button id="kb-en" class="kb-btn active" onclick="setSearchKB('en')">EN</button>
     <button id="kb-kana" class="kb-btn kb-btn-kana" onclick="setSearchKB('kana')">かな</button>
+    <button id="kb-kata" class="kb-btn kb-btn-kana" onclick="setSearchKB('kata')">カナ</button>
   </div>
 </div>
 
@@ -962,6 +964,10 @@ body.review-active .screen{top:0 !important;}
   <div id="sr-vocab" class="search-section" style="display:none">
     <div class="search-section-label">Vocab</div>
     <div id="sr-vocab-list"></div>
+  </div>
+  <div id="sr-kata" class="search-section" style="display:none">
+    <div class="search-section-label">Katakana</div>
+    <div id="sr-kata-list"></div>
   </div>
   <div id="sr-empty" class="search-empty" style="display:none">No results</div>
 </div>
@@ -18261,10 +18267,10 @@ function buildStudyKatakana() {
     const card = document.createElement('div'); card.className = 'svk-card kata-cat-card';
     const header = document.createElement('div'); header.className = 'svk-header';
     header.innerHTML = `<div class="svk-info"><div class="svk-meaning" style="font-size:15px;color:var(--text);">${cat}</div></div><div class="vki-count">${items.length} words</div>`;
-    const body = document.createElement('div'); body.className = 'svk-body';
+    const body = document.createElement('div'); body.className = 'svk-body'; body.dataset.cat = cat;
     const grid = document.createElement('div'); grid.className = 'rg-vocab-grid';
     items.forEach(w => {
-      const pill = document.createElement('div'); pill.className = 'vocab-pill';
+      const pill = document.createElement('div'); pill.className = 'vocab-pill'; pill.dataset.word = w.word;
       let h = `<span class="vp-word">${w.word}</span><span class="vp-reading" style="font-style:italic;font-size:11px;">${w.romaji}</span><span class="vp-meaning">${w.meaning.replace(/\|/g, ' / ')}</span>`;
       if (w.note) h += `<span style="display:block;font-size:11px;margin-top:12px;line-height:1.4;">${kataNoteHTML(w.note, false)}</span>`;
       pill.innerHTML = h;
@@ -18463,21 +18469,36 @@ document.addEventListener('scroll', function(e) {
   }
 }, true);
 
+function normRomaji(s) {
+  return String(s || '').toLowerCase().replace(/ā/g,'a').replace(/ī/g,'i').replace(/ū/g,'u').replace(/ē/g,'e').replace(/ō/g,'o');
+}
+function toKatakana(str, live) {
+  let out = '';
+  for (const ch of toHiragana(str, live)) {
+    const c = ch.charCodeAt(0);
+    out += (c >= 0x3041 && c <= 0x3096) ? String.fromCharCode(c + 0x60) : ch;
+  }
+  return out;
+}
 function setSearchKB(mode) {
   searchKBMode = mode;
   document.getElementById('kb-en').classList.toggle('active', mode === 'en');
   document.getElementById('kb-kana').classList.toggle('active', mode === 'kana');
+  document.getElementById('kb-kata').classList.toggle('active', mode === 'kata');
   const inp = document.getElementById('search-input');
-  inp.placeholder = mode === 'kana' ? 'ローマ字で入力…' : 'Search kanji, vocab…';
+  inp.placeholder = (mode === 'kana' || mode === 'kata') ? 'ローマ字で入力…' : 'Search kanji, vocab…';
 }
 
 function onSearchInput(val) {
   const inp      = document.getElementById('search-input');
   const clearBtn = document.getElementById('search-clear');
   const overlay  = document.getElementById('search-results');
-  // live romaji→kana conversion when in kana mode
+  // live romaji→kana conversion when in kana / katakana mode
   if (searchKBMode === 'kana') {
     const converted = toHiragana(val, true);
+    if (converted !== val) { inp.value = converted; val = converted; }
+  } else if (searchKBMode === 'kata') {
+    const converted = toKatakana(val, true);
     if (converted !== val) { inp.value = converted; val = converted; }
   }
   val = val.trim();
@@ -18525,16 +18546,27 @@ function runSearch(q) {
     });
   });
 
-  renderSearchResults(skgResults, kanjiResults, vocabResults);
+  // Katakana match (word, romaji, or meaning)
+  const kataResults = [];
+  KATAKANA.forEach(w => {
+    if (w.word.includes(q)
+      || w.meaning.toLowerCase().includes(ql)
+      || normRomaji(w.romaji).includes(ql)) {
+      kataResults.push(w);
+    }
+  });
+
+  renderSearchResults(skgResults, kanjiResults, vocabResults, kataResults);
 }
 
-function renderSearchResults(skgs, kanjis, vocabs) {
+function renderSearchResults(skgs, kanjis, vocabs, katas) {
+  katas = katas || [];
   const skgSec   = document.getElementById('sr-skg');
   const kanjiSec = document.getElementById('sr-kanji');
   const vocabSec = document.getElementById('sr-vocab');
   const empty    = document.getElementById('sr-empty');
 
-  const total = kanjis.length + vocabs.length;
+  const total = kanjis.length + vocabs.length + katas.length;
   empty.style.display = total === 0 ? 'block' : 'none';
 
   skgSec.style.display = 'none';
@@ -18602,6 +18634,46 @@ function renderSearchResults(skgs, kanjis, vocabs) {
     };
     vocabList.appendChild(el);
   });
+
+  // Katakana
+  const kataSec = document.getElementById('sr-kata');
+  kataSec.style.display = katas.length ? 'block' : 'none';
+  const kataList = document.getElementById('sr-kata-list');
+  kataList.innerHTML = '';
+  katas.slice(0,10).forEach(w => {
+    const el = document.createElement('div');
+    el.className = 'search-result-item';
+    el.innerHTML = '<div class="sr-kanji">'+w.word+'</div>'
+      +'<div class="sr-info">'
+      +'<div class="sr-sub" style="font-style:italic;">'+w.romaji+'</div>'
+      +'<div class="sr-main">'+w.meaning.replace(/\|/g,' / ')+'</div>'
+      +'</div>'
+      +'<div class="sr-meta">'+w.category+'</div>';
+    el.onclick = () => goToKatakanaWord(w.word);
+    kataList.appendChild(el);
+  });
+}
+
+function goToKatakanaWord(word) {
+  clearSearch();
+  const item = KATAKANA.find(w => w.word === word);
+  if (!item) return;
+  buildStudyKatakana();
+  showScreen('study-katakana');
+  setTimeout(() => {
+    const body = document.querySelector('#study-katakana-list .svk-body[data-cat="'+item.category+'"]');
+    if (body) {
+      body.classList.add('open');
+      const card = body.closest('.kata-cat-card');
+      if (card) card.classList.add('cat-open');
+    }
+    const pill = document.querySelector('#study-katakana-list .vocab-pill[data-word="'+word+'"]');
+    if (pill) {
+      pill.scrollIntoView({behavior:'instant', block:'center'});
+      pill.classList.add('sr-flash');
+      setTimeout(() => pill.classList.remove('sr-flash'), 1600);
+    }
+  }, 100);
 }
 
 // ── SKG SORT ─────────────────────────────────────────────────────────
