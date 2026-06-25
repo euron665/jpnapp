@@ -1029,6 +1029,8 @@ body.review-active .screen{top:0 !important;}
       <div class="picker-label">Special Drills</div>
       <button id="single-vocab-btn" class="btn-primary" style="width:100%;margin-bottom:10px;display:none;" onclick="openSingleVocabLimit()">1 Kanji &#8211; 1 Vocab&#9;·&#9;<span id="single-vocab-count">0</span> items</button>
       <button id="same-meaning-btn" class="btn-primary" style="width:100%;margin-bottom:10px;display:none;" onclick="openSameMeaningLimit()">Same-Meaning Words&#9;·&#9;<span id="same-meaning-count">0</span> items</button>
+      <button id="study-single-btn" class="btn-primary" style="width:100%;margin-bottom:10px;display:none;" onclick="openStudySingleVocab()">1 Kanji &#8211; 1 Vocab&#9;·&#9;<span id="study-single-count">0</span> cards</button>
+      <button id="study-sm-btn" class="btn-primary" style="width:100%;margin-bottom:10px;display:none;" onclick="openStudySameMeaning()">Same-Meaning Words&#9;·&#9;<span id="study-sm-count">0</span> groups</button>
       <div class="picker-divider"></div>
     </div>
     <div class="picker-head" style="width:100%;max-width:600px;">
@@ -1058,6 +1060,28 @@ body.review-active .screen{top:0 !important;}
   </div>
   <div class="scrollable" style="padding-top:56px;width:100%;">
     <div class="study-vocab-kanji-list" id="study-vocab-list"></div>
+  </div>
+</div>
+
+<!-- STUDY: 1 KANJI – 1 VOCAB -->
+<div id="study-single" class="screen">
+  <div class="screen-header">
+    <button class="back-btn" onclick="goTo('skg-picker')">← Back</button>
+    <div class="screen-title">1 Kanji – 1 Vocab</div>
+  </div>
+  <div class="scrollable" style="padding-top:56px;width:100%;">
+    <div class="study-vocab-kanji-list" id="study-single-list"></div>
+  </div>
+</div>
+
+<!-- STUDY: SAME-MEANING -->
+<div id="study-sm" class="screen">
+  <div class="screen-header">
+    <button class="back-btn" onclick="goTo('skg-picker')">← Back</button>
+    <div class="screen-title">Same-Meaning Words</div>
+  </div>
+  <div class="scrollable" style="padding-top:56px;width:100%;">
+    <div id="study-sm-list" style="width:100%;max-width:600px;margin:0 auto;"></div>
   </div>
 </div>
 
@@ -17102,13 +17126,20 @@ function buildSKGGrid() {
   };
   document.getElementById('skg-picker-title').textContent = labels[currentMode] || 'Choose a Set';
   const isRev = (currentMode === 'review-kanji' || currentMode === 'review-vocab');
+  const isStudy = (currentMode === 'study-kanji' || currentMode === 'study-vocab');
   const _svb = document.getElementById('single-vocab-btn');
   if (_svb) { _svb.style.display = isRev ? '' : 'none'; if (isRev) document.getElementById('single-vocab-count').textContent = getSingleVocabItems().length; }
   const _smN = (currentMode === 'review-vocab') ? getSameMeaningItems().length : 0;
   const _smb = document.getElementById('same-meaning-btn');
   if (_smb) { _smb.style.display = _smN ? '' : 'none'; if (_smN) document.getElementById('same-meaning-count').textContent = _smN; }
+  // Study drills (browse the same two subsets)
+  const _ssb = document.getElementById('study-single-btn');
+  if (_ssb) { _ssb.style.display = isStudy ? '' : 'none'; if (isStudy) document.getElementById('study-single-count').textContent = getSingleVocabItems().length; }
+  const _ssmN = isStudy ? getStudySameMeaningGroups().length : 0;
+  const _ssmb = document.getElementById('study-sm-btn');
+  if (_ssmb) { _ssmb.style.display = _ssmN ? '' : 'none'; if (_ssmN) document.getElementById('study-sm-count').textContent = _ssmN; }
   const qd = document.getElementById('quick-drills');
-  if (qd) qd.style.display = isRev ? '' : 'none';
+  if (qd) qd.style.display = (isRev || isStudy) ? '' : 'none';
   renderSKGGrid();
 }
 
@@ -18471,6 +18502,86 @@ function startSameMeaningReview(limit) {
   shuffle(items);
   queue = (limit > 0) ? items.slice(0, limit) : items;
   startReview();
+}
+
+// ── STUDY DRILLS (browse, not test) ────────────────────────────────────
+function getStudySameMeaningGroups() {
+  // Only groups with at least one word present in your current vocab.
+  ensureVocabWordIndex();
+  return SAME_MEANING.filter(g => g.words.some(wd => VOCAB_WORD_INDEX[wd.w]));
+}
+
+function openStudySingleVocab() {
+  const list = document.getElementById('study-single-list');
+  list.innerHTML = '';
+  let n = 0;
+  Object.keys(VOCAB).forEach(k => {
+    const v = VOCAB[k]; if (!v) return;
+    const all = [];
+    v.rgs.forEach(rg => rg.vocab.forEach(e => all.push(e)));
+    if (all.length !== 1) return;
+    n++;
+    const e = all[0];
+    const km = KANJI_MAP[k] || { reading:'', meaning:'' };
+    const card = document.createElement('div');
+    card.className = 'svk-card';
+    const header = document.createElement('div');
+    header.className = 'svk-header';
+    header.innerHTML = `<div class="svk-kanji">${k}</div>
+      <div class="svk-info">
+        <div class="svk-reading">${km.reading}</div>
+        <div class="svk-meaning">${km.meaning}</div>
+      </div>`;
+    const body = document.createElement('div');
+    body.className = 'svk-body open';
+    const block = document.createElement('div');
+    block.className = 'rg-block';
+    const grid = document.createElement('div');
+    grid.className = 'rg-vocab-grid';
+    const pill = document.createElement('div');
+    pill.className = 'vocab-pill';
+    pill.innerHTML = `<span class="vp-word">${highlightRare(e.word, k)}</span>
+      <span class="vp-reading">${e.reading}</span>
+      <span class="vp-meaning">${e.meaning}</span>${buildPOSTags(e.word)}`;
+    if (smGroups(e.word).length) {
+      const mk = document.createElement('span');
+      mk.className = 'sm-mark'; mk.textContent = '⇄';
+      mk.onclick = (ev) => { ev.stopPropagation(); openSameMeaning(e.word); };
+      pill.appendChild(mk);
+    }
+    grid.appendChild(pill);
+    block.appendChild(grid);
+    body.appendChild(block);
+    header.onclick = () => body.classList.toggle('open');
+    card.appendChild(header);
+    card.appendChild(body);
+    list.appendChild(card);
+  });
+  if (!n) return;
+  document.querySelector('#study-single .screen-title').textContent = '1 Kanji – 1 Vocab · ' + n + ' cards';
+  showScreen('study-single');
+}
+
+function openStudySameMeaning() {
+  const groups = getStudySameMeaningGroups();
+  if (!groups.length) return;
+  const list = document.getElementById('study-sm-list');
+  list.innerHTML = '';
+  groups.forEach(g => {
+    const card = document.createElement('div');
+    card.className = 'svk-card';
+    card.style.cssText = 'padding:16px 18px;margin-bottom:12px;';
+    let html = `<div class="sm-meaning" style="margin-top:0;">${g.m}</div><div class="sm-words">`;
+    g.words.forEach(wd => {
+      html += `<div class="sm-word"><span class="sm-w">${wd.w}</span><span class="sm-r">${wd.r}</span></div>`;
+    });
+    html += '</div>';
+    if (g.note) html += `<div class="sm-note">${g.note.replace(/\n/g, '<br>')}</div>`;
+    card.innerHTML = html;
+    list.appendChild(card);
+  });
+  document.querySelector('#study-sm .screen-title').textContent = 'Same-Meaning · ' + groups.length + ' groups';
+  showScreen('study-sm');
 }
 
 // ── GLOBAL SEARCH ────────────────────────────────────────────────────
