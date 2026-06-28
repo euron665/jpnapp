@@ -978,7 +978,7 @@ body.review-active .screen{top:0 !important;}
   <div style="text-align:center">
     <div class="home-kanji">刻</div>
     <div class="home-sub">Kanji Drill — Level 24</div>
-    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.08em;">updated 2026-06-28 02:09</div>
+    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.08em;">updated 2026-06-28 02:16</div>
   </div>
   <div class="home-buttons">
     <div class="home-divider">Study</div>
@@ -17576,11 +17576,7 @@ function buildStudyVocab() {
             pill.appendChild(mk);
           }
           // Two-step tap: 1st selects (border), 2nd opens the kanji breakdown.
-          pill.onclick = () => {
-            if (pill.classList.contains('vp-selected')) { openVocabKanjiBreakdown(e.word); return; }
-            document.querySelectorAll('#study-vocab-list .vocab-pill.vp-selected').forEach(p => p.classList.remove('vp-selected'));
-            pill.classList.add('vp-selected');
-          };
+          pill.onclick = () => pillTap(pill, e.word);
           grid.appendChild(pill);
         });
         block.appendChild(grid);
@@ -19582,6 +19578,13 @@ function navigateSKG(dir) {
 }
 
 // ── KANJI VOCAB MODAL ──────────────────────────────────────────────────
+function pillTap(el, word) {
+  if (el.classList.contains('vp-selected')) { openVocabKanjiBreakdown(word); return; }
+  const root = el.closest('.kv-modal') || el.closest('#study-vocab-list') || document;
+  root.querySelectorAll('.vocab-pill.vp-selected').forEach(p => p.classList.remove('vp-selected'));
+  el.classList.add('vp-selected');
+}
+
 function openVocabKanjiBreakdown(word) {
   const kanji = []; const seen = new Set();
   for (const ch of word) {
@@ -19638,10 +19641,10 @@ function openKanjiVocabModal(k) {
       html += `<div class="rg-block">${buildRGLabel(ri+1, rg.rg_reading || rg.vocab[0]?.reading || '')}`;
       html += `<div class="rg-vocab-grid">`;
       rg.vocab.forEach(e => {
-        html += `<div class="vocab-pill">
+        html += `<div class="vocab-pill" onclick="pillTap(this,'${e.word}')">
           <span class="vp-word">${e.word}</span>
           <span class="vp-reading">${e.reading}</span>
-          <span class="vp-meaning">${e.meaning}</span>${buildPOSTags(e.word)}
+          <span class="vp-meaning">${e.meaning}</span>${buildPOSTags(e.word)}${smGroups(e.word).length ? `<span class="sm-mark" onclick="event.stopPropagation();openSameMeaning('${e.word}')">⇄</span>` : ''}
         </div>`;
       });
       html += `</div></div>`;
