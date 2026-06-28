@@ -166,6 +166,7 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
 .sm-r{font-size:11px;color:var(--text-dim);font-family:var(--font-mono);margin-top:4px;}
 .sm-note{font-size:13px;color:#7888b8;line-height:1.6;}
 .vocab-pill.sr-flash{border-color:#3dd6c8;box-shadow:0 0 0 1px #3dd6c8;}
+.study-kanji-card.sr-flash,.svk-card.sr-flash{border-color:#3dd6c8;box-shadow:0 0 0 1px #3dd6c8;}
 .pos-check-row{display:flex;align-items:center;gap:12px;padding:12px 14px;
   background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
   cursor:pointer;transition:border-color 0.15s;}
@@ -978,7 +979,7 @@ body.review-active .screen{top:0 !important;}
   <div style="text-align:center">
     <div class="home-kanji">刻</div>
     <div class="home-sub">Kanji Drill — Level 24</div>
-    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.08em;">updated 2026-06-28 02:16</div>
+    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.08em;">updated 2026-06-28 02:30</div>
   </div>
   <div class="home-buttons">
     <div class="home-divider">Study</div>
@@ -17522,6 +17523,7 @@ function buildStudyKanji() {
     if (!km) return;
     const card = document.createElement('div');
     card.className = 'study-kanji-card';
+    card.dataset.kanji = k;
     const vocabCount = VOCAB[k] ? VOCAB[k].rgs.reduce((a,rg)=>a+rg.vocab.length,0) : 0;
     card.innerHTML = '<div class="skh-kanji">'+k+'</div>'
       +'<div class="skh-reading">'+km.reading+'</div>'
@@ -18733,12 +18735,14 @@ function renderSearchResults(skgs, kanjis, vocabs, katas) {
         currentMode = 'study-kanji';
         buildStudyKanji();
         showScreen('study-kanji');
-        // open the card after render
+        // jump to the kanji card after render
         setTimeout(() => {
-          const body = document.getElementById('svs-'+km.kanji);
-          const toggle = document.getElementById('toggle-'+km.kanji);
-          if (body) { body.classList.add('open'); }
-          if (toggle) { toggle.classList.add('open'); }
+          const card = document.querySelector('#study-kanji-list .study-kanji-card[data-kanji="'+km.kanji+'"]');
+          if (card) {
+            card.scrollIntoView({behavior:'instant', block:'center'});
+            card.classList.add('sr-flash');
+            setTimeout(() => card.classList.remove('sr-flash'), 1600);
+          }
         }, 100);
       }
     };
@@ -18767,7 +18771,15 @@ function renderSearchResults(skgs, kanjis, vocabs, katas) {
         showScreen('study-vocab');
         setTimeout(() => {
           const body = document.querySelector('#study-vocab-list .svk-body[data-kanji="'+v.kanji+'"]');
-          if (body) body.classList.add('open');
+          if (body) {
+            body.classList.add('open');
+            const card = body.closest('.svk-card') || body;
+            card.scrollIntoView({behavior:'instant', block:'center'});
+            if (card.classList.contains('svk-card')) {
+              card.classList.add('sr-flash');
+              setTimeout(() => card.classList.remove('sr-flash'), 1600);
+            }
+          }
         }, 100);
       }
     };
@@ -19578,6 +19590,28 @@ function navigateSKG(dir) {
 }
 
 // ── KANJI VOCAB MODAL ──────────────────────────────────────────────────
+function goToKanjiVocab(k) {
+  const skg = SKGS.find(s => s.kanji.includes(k));
+  if (!skg) { openKanjiVocabModal(k); return; }   // fallback if not in a set
+  closeKanjiVocabModal();
+  currentSKG = skg;
+  currentMode = 'study-vocab';
+  buildStudyVocab();
+  showScreen('study-vocab');
+  setTimeout(() => {
+    const body = document.querySelector('#study-vocab-list .svk-body[data-kanji="'+k+'"]');
+    if (body) {
+      body.classList.add('open');
+      const card = body.closest('.svk-card') || body;
+      card.scrollIntoView({behavior:'instant', block:'center'});
+      if (card.classList.contains('svk-card')) {
+        card.classList.add('sr-flash');
+        setTimeout(() => card.classList.remove('sr-flash'), 1600);
+      }
+    }
+  }, 100);
+}
+
 function pillTap(el, word) {
   if (el.classList.contains('vp-selected')) { openVocabKanjiBreakdown(word); return; }
   const root = el.closest('.kv-modal') || el.closest('#study-vocab-list') || document;
@@ -19607,7 +19641,7 @@ function openVocabKanjiBreakdown(word) {
   if (kanji.length) {
     kanji.forEach(k => {
       const km = KANJI_MAP[k];
-      html += `<div class="study-kanji-card" style="cursor:pointer;" onclick="openKanjiVocabModal('${k}')">
+      html += `<div class="study-kanji-card" style="cursor:pointer;" onclick="goToKanjiVocab('${k}')">
         <div class="skh-kanji">${k}</div>
         <div class="skh-reading">${km.reading}</div>
         <div class="skh-meaning">${km.meaning}</div>
