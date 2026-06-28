@@ -180,7 +180,7 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
 .study-vocab-kanji-list{display:flex;flex-direction:column;gap:8px;width:100%;
   max-width:540px;padding-bottom:24px;}
 .svk-card{background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--r);padding:14px 16px;}
+  border-radius:var(--r);padding:14px 16px;scroll-margin-top:68px;}
 .kata-cat-card{transition:border-color 0.15s,background 0.15s;}
 .kata-cat-card:hover{border-color:var(--accent);background:var(--surface2);}
 .kata-cat-card.cat-open:hover{border-color:var(--border);background:var(--surface);}
@@ -979,7 +979,7 @@ body.review-active .screen{top:0 !important;}
   <div style="text-align:center">
     <div class="home-kanji">刻</div>
     <div class="home-sub">Kanji Drill — Level 24</div>
-    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.08em;">updated 2026-06-28 02:30</div>
+    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.08em;">updated 2026-06-28 02:40</div>
   </div>
   <div class="home-buttons">
     <div class="home-divider">Study</div>
@@ -18774,7 +18774,7 @@ function renderSearchResults(skgs, kanjis, vocabs, katas) {
           if (body) {
             body.classList.add('open');
             const card = body.closest('.svk-card') || body;
-            card.scrollIntoView({behavior:'instant', block:'center'});
+            card.scrollIntoView({behavior:'instant', block:'start'});
             if (card.classList.contains('svk-card')) {
               card.classList.add('sr-flash');
               setTimeout(() => card.classList.remove('sr-flash'), 1600);
@@ -19603,7 +19603,7 @@ function goToKanjiVocab(k) {
     if (body) {
       body.classList.add('open');
       const card = body.closest('.svk-card') || body;
-      card.scrollIntoView({behavior:'instant', block:'center'});
+      card.scrollIntoView({behavior:'instant', block:'start'});
       if (card.classList.contains('svk-card')) {
         card.classList.add('sr-flash');
         setTimeout(() => card.classList.remove('sr-flash'), 1600);
