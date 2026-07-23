@@ -207,6 +207,11 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
   line-height:1;color:var(--text);margin-bottom:10px;
   text-shadow:0 0 60px rgba(232,25,60,0.15);}
 .review-known-meaning{font-size:14px;color:var(--gold);min-height:20px;font-weight:400;font-family:'DM Sans',sans-serif;}
+.conj-stem-hint{display:none;justify-content:center;align-items:center;gap:9px;margin:10px 0 2px;cursor:pointer;user-select:none;}
+.conj-stem-hint.on{display:flex;}
+.conj-stem-hint .csh-label{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-dim);font-family:var(--font-mono);}
+.conj-stem-hint .csh-value{font-size:20px;font-family:var(--font-jp);color:var(--text);letter-spacing:0.06em;filter:blur(6px);transition:filter .18s;}
+.conj-stem-hint.revealed .csh-value{filter:none;}
 
 .review-input-area{width:100%;max-width:480px;display:flex;flex-direction:column;gap:8px;}
 .step-label{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);font-family:'DM Sans',sans-serif;font-weight:300;}
@@ -235,6 +240,7 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
 .answer-reveal{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
   padding:11px 15px;font-size:13px;color:var(--fail-text);text-align:center;font-family:var(--font-ui);display:none;}
 .answer-reveal.show{display:block;}
+.answer-reveal.hint{display:block;color:var(--gold);border-color:rgba(201,168,76,0.35);}
 .answer-reveal strong{color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:17px;font-weight:300;}
 
 .feedback-row{display:none;gap:8px;}
@@ -413,7 +419,7 @@ body.search-collapsed #search-results{top:0;}
 .vc-table.vc-adj col:nth-child(2){width:34%;}
 .vc-table.vc-na-adj col:nth-child(2){width:38%;}
 .vc-rl{font-size:11px;font-weight:500;color:var(--text-dim);}
-.vc-tb{display:inline-block;font-size:9px;font-weight:500;padding:2px 5px;border-radius:3px;margin-bottom:3px;}
+.vc-tb{display:inline-block;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:3px;}
 .vc-ci{display:flex;align-items:center;gap:7px;}
 .vc-et{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;font-weight:500;
   padding:5px 5px;border-radius:4px;font-family:var(--font-jp);flex-shrink:0;}
@@ -580,6 +586,7 @@ body.search-collapsed #search-results{top:0;}
 #grammar .recap-form{color: var(--accent);
   font-weight: 400;
   white-space: nowrap;}
+#grammar .recap-rom{font-style: italic;font-size: 11px;color: var(--text-dim);font-family: var(--font-mono);white-space: nowrap;}
 #grammar .recap-reg-polite{font-size: 10px;
   font-family: var(--font-mono);
   letter-spacing: 0.1em;
@@ -979,7 +986,7 @@ body.review-active .screen{top:0 !important;}
   <div style="text-align:center">
     <div class="home-kanji">刻</div>
     <div class="home-sub">Kanji Drill — Level 24</div>
-    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.08em;">updated 2026-07-23 21:22</div>
+    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.08em;">updated 2026-07-23 22:34</div>
   </div>
   <div class="home-buttons">
     <div class="home-divider">Study</div>
@@ -1214,6 +1221,7 @@ body.review-active .screen{top:0 !important;}
     <div class="review-card">
       <div class="conj-step-label" id="conj-step-label" style="display:none;margin-bottom:12px;"></div>
       <div class="review-kanji-display" id="review-display"></div>
+      <div class="conj-stem-hint" id="conj-stem-hint" onclick="revealStemHint()"><span class="csh-label">stem</span><span class="csh-value" id="conj-stem-value"></span></div>
       <div class="review-known-meaning" id="known-meaning"></div>
     </div>
     <div class="review-input-area">
@@ -1765,25 +1773,25 @@ body.review-active .screen{top:0 !important;}
 <tbody>
 <tr>
 <td><span class="recap-form">ましょう</span></td>
-<td><span class="recap-reg-polite">Polite</span></td>
+<td><span class="etag" style="color:#a0a0a0; border-color:#a0a0a0;">POLITE</span></td>
 <td>Assert a shared action or personal resolve</td>
 <td>"Let's!" / "I shall!"</td>
 </tr>
 <tr>
 <td><span class="recap-form">ましょうか</span></td>
-<td><span class="recap-reg-polite">Polite</span></td>
+<td><span class="etag" style="color:#a0a0a0; border-color:#a0a0a0;">POLITE</span></td>
 <td>Suggest as an open question; offer to do something for someone</td>
 <td>"Shall we?" / "Shall I?"</td>
 </tr>
 <tr>
 <td><span class="recap-form">ませんか</span></td>
-<td><span class="recap-reg-polite">Polite</span></td>
+<td><span class="etag" style="color:#a0a0a0; border-color:#a0a0a0;">POLITE</span></td>
 <td>Invite the other person to do something</td>
 <td>"Would you like to?"</td>
 </tr>
 <tr>
 <td><span class="recap-form">ないか</span></td>
-<td><span class="recap-reg-casual">Casual</span></td>
+<td><span class="etag" style="color:#c060c0; border-color:#c060c0;">CASUAL</span></td>
 <td>Same as ませんか, but informal</td>
 <td>"Wanna?"</td>
 </tr>
@@ -2733,37 +2741,37 @@ body.review-active .screen{top:0 !important;}
 <tbody>
 <tr>
 <td><span class="recap-form">〜てもいい</span></td>
-<td><span class="recap-reg-polite">Polite</span></td>
+<td><span class="etag" style="color:#a0a0a0; border-color:#a0a0a0;">POLITE</span></td>
 <td>Seek or grant permission</td>
 <td>"May I?" / "You can"</td>
 </tr>
 <tr>
 <td><span class="recap-form">〜てください</span></td>
-<td><span class="recap-reg-polite">Polite</span></td>
+<td><span class="etag" style="color:#a0a0a0; border-color:#a0a0a0;">POLITE</span></td>
 <td>Politely request someone to do something</td>
 <td>"Please do"</td>
 </tr>
 <tr>
 <td><span class="recap-form">〜ないでください</span></td>
-<td><span class="recap-reg-polite">Polite</span></td>
+<td><span class="etag" style="color:#a0a0a0; border-color:#a0a0a0;">POLITE</span></td>
 <td>Politely ask someone not to do something</td>
 <td>"Please don't"</td>
 </tr>
 <tr>
 <td><span class="recap-form">〜なければいけない</span></td>
-<td><span class="recap-reg-polite">Polite</span></td>
+<td><span class="etag" style="color:#a0a0a0; border-color:#a0a0a0;">POLITE</span></td>
 <td>Express obligation — no real choice</td>
 <td>"Have to / Must"</td>
 </tr>
 <tr>
 <td><span class="recap-form">〜てはいけない</span></td>
-<td><span class="recap-reg-polite">Polite</span></td>
+<td><span class="etag" style="color:#a0a0a0; border-color:#a0a0a0;">POLITE</span></td>
 <td>Express prohibition — not allowed</td>
 <td>"Must not / Can't"</td>
 </tr>
 <tr>
 <td><span class="recap-form">〜たほうがいい</span></td>
-<td><span class="recap-reg-polite">Polite</span></td>
+<td><span class="etag" style="color:#a0a0a0; border-color:#a0a0a0;">POLITE</span></td>
 <td>Give soft advice or recommendation</td>
 <td>"You should / You'd better"</td>
 </tr>
@@ -2823,7 +2831,6 @@ body.review-active .screen{top:0 !important;}
 <p>This grammar structure is used to identify or describe something in plain speech — the casual equivalent of <span class="jp">です</span>, translating as "am," "is," or "are" in English.</p>
 <p><span class="jp">だ</span> follows nouns and <span class="note" style="color:#a07ed4;">な-adjectives</span> directly. It cannot be used with <span class="note" style="color:#5db89a;">い-adjectives</span> — this is one of the most important rules about <span class="jp">だ</span>. The plain form of an い-adjective already carries the meaning of "is" on its own: <span class="jp">大きい</span> means "it is big" without any copula attached. Never add <span class="jp">だ</span> after an い-adjective.</p>
 <p><span class="jp">だ</span> is used exclusively in casual speech. In polite speech, <span class="jp">です</span> takes its place. While the two are often treated as direct equivalents, they are not interchangeable — <span class="jp">だ</span> will never appear in formal or polite sentences.</p>
-<p><strong style="color:var(--text);">Conjugation:</strong> <span class="jp">だ</span> changes form for tense and polarity. Past affirmative becomes <span class="jp">だった</span>. Present negative becomes <span class="jp">じゃない</span> (contracted from <span class="jp">ではない</span> — the latter is more formal). Past negative combines both: <span class="jp">じゃなかった</span> (drop <span class="jp">い</span> from <span class="jp">じゃない</span>, add <span class="jp">かった</span>). These four forms — <span class="jp">だ · じゃない · だった · じゃなかった</span> — cover every tense and polarity combination.</p>
 <p><strong style="color:var(--text);">Questions:</strong> <span class="jp">だ</span> does not have a dedicated question form — to ask a question in casual speech, either add <span class="jp">か</span> directly after it or drop it and use rising intonation instead. Adding <span class="jp">か</span> sounds blunt and is typically associated with masculine speech; rising intonation is softer and more common in everyday conversation. In polite speech, <span class="jp">ですか</span> takes over this role entirely and is the standard way to ask questions.</p></div>
 <div class="section-label">Conjugation — all forms</div>
 <table class="recap-table">
@@ -2831,10 +2838,10 @@ body.review-active .screen{top:0 !important;}
 <tr><th>Register</th><th>Tense</th><th>Affirmative</th><th>Negative</th></tr>
 </thead>
 <tbody>
-<tr><td><span class="recap-reg-polite">Plain</span></td><td><span class="recap-reg-polite">Present</span></td><td><span class="recap-form">だ</span></td><td><span class="recap-form">じゃない・ではない</span></td></tr>
-<tr><td><span class="recap-reg-polite">Plain</span></td><td><span class="recap-reg-polite">Past</span></td><td><span class="recap-form">だった</span></td><td><span class="recap-form">じゃなかった・ではなかった</span></td></tr>
-<tr><td><span class="recap-reg-polite">Polite</span></td><td><span class="recap-reg-polite">Present</span></td><td><span class="recap-form">です</span></td><td><span class="recap-form">じゃないです・ではないです・ではありません</span></td></tr>
-<tr><td><span class="recap-reg-polite">Polite</span></td><td><span class="recap-reg-polite">Past</span></td><td><span class="recap-form">でした</span></td><td><span class="recap-form">じゃなかったです・ではなかったです・ではありませんでした</span></td></tr>
+<tr><td><span class="etag" style="color:#c060c0; border-color:#c060c0;">PLAIN</span></td><td><span class="etag" style="color:#4060e0; border-color:#4060e0;">PRESENT</span></td><td><span class="recap-form">だ</span> <em class="recap-rom">(da)</em></td><td><span class="recap-form">じゃない・ではない</span> <em class="recap-rom">(ja nai · de wa nai)</em></td></tr>
+<tr><td><span class="etag" style="color:#c060c0; border-color:#c060c0;">PLAIN</span></td><td><span class="etag" style="color:#e09080; border-color:#e09080;">PAST</span></td><td><span class="recap-form">だった</span> <em class="recap-rom">(datta)</em></td><td><span class="recap-form">じゃなかった・ではなかった</span> <em class="recap-rom">(ja nakatta · de wa nakatta)</em></td></tr>
+<tr><td><span class="etag" style="color:#a0a0a0; border-color:#a0a0a0;">POLITE</span></td><td><span class="etag" style="color:#4060e0; border-color:#4060e0;">PRESENT</span></td><td><span class="recap-form">です</span> <em class="recap-rom">(desu)</em></td><td><span class="recap-form">じゃないです・ではないです・ではありません</span> <em class="recap-rom">(ja nai desu · de wa nai desu · de wa arimasen)</em></td></tr>
+<tr><td><span class="etag" style="color:#a0a0a0; border-color:#a0a0a0;">POLITE</span></td><td><span class="etag" style="color:#e09080; border-color:#e09080;">PAST</span></td><td><span class="recap-form">でした</span> <em class="recap-rom">(deshita)</em></td><td><span class="recap-form">じゃなかったです・ではなかったです・ではありませんでした</span> <em class="recap-rom">(ja nakatta desu · de wa nakatta desu · de wa arimasen deshita)</em></td></tr>
 </tbody>
 </table>
 <div class="section-label examples-toggle" style="margin-top:24px;" onclick="toggleExamples(this)">Examples<span class="toggle-hint"><span class="toggle-action">show</span> <span class="toggle-icon">▶</span></span></div>
@@ -2958,7 +2965,6 @@ body.review-active .screen{top:0 !important;}
 <p>This grammar structure is used to identify or describe something in polite speech — the polite equivalent of <span class="jp">だ</span>, translating as "am," "is," or "are" in English.</p>
 <p><span class="jp">です</span> attaches to nouns and <span class="note" style="color:#a07ed4;">な-adjectives</span> in the same way as <span class="jp">だ</span>. Unlike <span class="jp">だ</span>, it also attaches to <span class="note" style="color:#5db89a;">い-adjectives</span> to form polite predicates — this is the standard way to make an い-adjective polite in everyday speech. In strictly formal writing, い-adjective + <span class="jp">です</span> is sometimes considered incorrect, but in daily spoken Japanese and texting it is completely normal and you will use it constantly.</p>
 <p><span class="jp">です</span> and <span class="jp">だ</span> are often described as polite and casual versions of each other, but they are standalone structures — not simply interchangeable forms of the same word.</p>
-<p><strong style="color:var(--text);">Conjugation:</strong> <span class="jp">です</span> changes form for tense and polarity. Past affirmative becomes <span class="jp">でした</span>. Present negative becomes <span class="jp">じゃないです</span> (contracted from <span class="jp">ではないです</span> — <span class="jp">ではありません</span> is the more formal variant). Past negative combines both: <span class="jp">じゃなかったです</span> (drop <span class="jp">い</span> from <span class="jp">じゃないです</span>, add <span class="jp">かったです</span>). These four forms — <span class="jp">です · じゃないです · でした · じゃなかったです</span> — cover every tense and polarity combination.</p>
 <p><strong style="color:var(--text);">Questions:</strong> Append <span class="jp">か</span> to any of the four forms to turn a statement into a question: <span class="jp">ですか</span> · <span class="jp">じゃないですか</span> · <span class="jp">でしたか</span> · <span class="jp">じゃなかったですか</span>. Intonation rises naturally on the final <span class="jp">か</span>.</p></div>
 <div class="section-label">Conjugation — all forms</div>
 <table class="recap-table">
@@ -2966,10 +2972,10 @@ body.review-active .screen{top:0 !important;}
 <tr><th>Register</th><th>Tense</th><th>Affirmative</th><th>Negative</th></tr>
 </thead>
 <tbody>
-<tr><td><span class="recap-reg-polite">Plain</span></td><td><span class="recap-reg-polite">Present</span></td><td><span class="recap-form">だ</span></td><td><span class="recap-form">じゃない・ではない</span></td></tr>
-<tr><td><span class="recap-reg-polite">Plain</span></td><td><span class="recap-reg-polite">Past</span></td><td><span class="recap-form">だった</span></td><td><span class="recap-form">じゃなかった・ではなかった</span></td></tr>
-<tr><td><span class="recap-reg-polite">Polite</span></td><td><span class="recap-reg-polite">Present</span></td><td><span class="recap-form">です</span></td><td><span class="recap-form">じゃないです・ではないです・ではありません</span></td></tr>
-<tr><td><span class="recap-reg-polite">Polite</span></td><td><span class="recap-reg-polite">Past</span></td><td><span class="recap-form">でした</span></td><td><span class="recap-form">じゃなかったです・ではなかったです・ではありませんでした</span></td></tr>
+<tr><td><span class="etag" style="color:#c060c0; border-color:#c060c0;">PLAIN</span></td><td><span class="etag" style="color:#4060e0; border-color:#4060e0;">PRESENT</span></td><td><span class="recap-form">だ</span> <em class="recap-rom">(da)</em></td><td><span class="recap-form">じゃない・ではない</span> <em class="recap-rom">(ja nai · de wa nai)</em></td></tr>
+<tr><td><span class="etag" style="color:#c060c0; border-color:#c060c0;">PLAIN</span></td><td><span class="etag" style="color:#e09080; border-color:#e09080;">PAST</span></td><td><span class="recap-form">だった</span> <em class="recap-rom">(datta)</em></td><td><span class="recap-form">じゃなかった・ではなかった</span> <em class="recap-rom">(ja nakatta · de wa nakatta)</em></td></tr>
+<tr><td><span class="etag" style="color:#a0a0a0; border-color:#a0a0a0;">POLITE</span></td><td><span class="etag" style="color:#4060e0; border-color:#4060e0;">PRESENT</span></td><td><span class="recap-form">です</span> <em class="recap-rom">(desu)</em></td><td><span class="recap-form">じゃないです・ではないです・ではありません</span> <em class="recap-rom">(ja nai desu · de wa nai desu · de wa arimasen)</em></td></tr>
+<tr><td><span class="etag" style="color:#a0a0a0; border-color:#a0a0a0;">POLITE</span></td><td><span class="etag" style="color:#e09080; border-color:#e09080;">PAST</span></td><td><span class="recap-form">でした</span> <em class="recap-rom">(deshita)</em></td><td><span class="recap-form">じゃなかったです・ではなかったです・ではありませんでした</span> <em class="recap-rom">(ja nakatta desu · de wa nakatta desu · de wa arimasen deshita)</em></td></tr>
 </tbody>
 </table>
 <div class="section-label examples-toggle" style="margin-top:24px;" onclick="toggleExamples(this)">Examples<span class="toggle-hint"><span class="toggle-action">show</span> <span class="toggle-icon">▶</span></span></div>
@@ -4879,31 +4885,31 @@ body.review-active .screen{top:0 !important;}
 <tbody>
 <tr>
 <td><span class="recap-form">だ</span></td>
-<td><span class="recap-reg-casual">Plain</span></td>
+<td><span class="etag" style="color:#c060c0; border-color:#c060c0;">PLAIN</span></td>
 <td>State a fact — plain copula</td>
 <td>"Is / Am / Are"</td>
 </tr>
 <tr>
 <td><span class="recap-form">です</span></td>
-<td><span class="recap-reg-polite">Polite</span></td>
+<td><span class="etag" style="color:#a0a0a0; border-color:#a0a0a0;">POLITE</span></td>
 <td>State a fact — polite copula</td>
 <td>"Is / Am / Are"</td>
 </tr>
 <tr>
 <td><span class="recap-form">だろう</span></td>
-<td><span class="recap-reg-casual">Casual</span></td>
+<td><span class="etag" style="color:#c060c0; border-color:#c060c0;">CASUAL</span></td>
 <td>Suppose or guess — no firm evidence</td>
 <td>"Probably / I bet"</td>
 </tr>
 <tr>
 <td><span class="recap-form">でしょう</span></td>
-<td><span class="recap-reg-polite">Polite</span></td>
+<td><span class="etag" style="color:#a0a0a0; border-color:#a0a0a0;">POLITE</span></td>
 <td>Suppose politely; soften a claim</td>
 <td>"Probably / I suppose"</td>
 </tr>
 <tr>
 <td><span class="recap-form">んです / のです</span></td>
-<td><span class="recap-reg-polite">Polite</span></td>
+<td><span class="etag" style="color:#a0a0a0; border-color:#a0a0a0;">POLITE</span></td>
 <td>Explain, give background, invite explanation</td>
 <td>"The fact is / You see / It's because"</td>
 </tr>
@@ -17740,6 +17746,10 @@ function loadItem() {
   inp.value = ''; inp.className = 'review-input'; inp.disabled = false;
   document.getElementById('review-display').style.fontSize = '';
 
+  // Reset the conjugation stem hint (hidden + re-blurred for every item)
+  const _sh = document.getElementById('conj-stem-hint');
+  _sh.classList.remove('on','revealed');
+
   const conjTopLabel = document.getElementById('conj-step-label');
   const botLabel = document.getElementById('step-label');
   if (currentItem.type === 'conj') {
@@ -17761,6 +17771,8 @@ function loadItem() {
     botLabel.style.display = 'none';
     document.getElementById('review-display').textContent = currentItem.word;
     document.getElementById('known-meaning').textContent = currentItem.meaning;
+    const _stem = conjStem(currentItem);
+    if (_stem) { document.getElementById('conj-stem-value').textContent = _stem; _sh.classList.add('on'); }
     inp.placeholder = 'type in hiragana…';
     inp.dataset.mode = 'kana';
   } else if (currentItem.type === 'katakana') {
@@ -17820,11 +17832,31 @@ function handleSubmit() {
     val = toHiragana(val, false);
     inp.value = val;
   }
+  // Guard: mis-typed / wrong-script input nudges "try again" instead of failing + advancing.
+  if (inp.dataset.mode === 'kana') {
+    if (/[a-z]/i.test(val)) { showTryAgain('Type your answer in Japanese'); return; }
+  } else if (/[぀-ヿ々㐀-鿿]/.test(val)) {
+    showTryAgain('Type your answer'); return;
+  }
   if (reviewStep === 'conj')    checkConj(val);
   else if (reviewStep === 'kana')    checkKana(val);
   else if (reviewStep === 'katakana') checkKatakana(val);
   else if (reviewStep === 'meaning') checkMeaning(val);
   else checkReading(val);
+}
+
+// Non-penalising nudge: shows a hint, keeps the input, does NOT count a fail or advance.
+function showTryAgain(msg) {
+  const reveal = document.getElementById('answer-reveal');
+  const inp = document.getElementById('review-input');
+  reveal.textContent = msg;
+  reveal.className = 'answer-reveal hint';
+  inp.className = 'review-input';
+  clearTimeout(window._taTimer);
+  window._taTimer = setTimeout(() => {
+    if (reveal.classList.contains('hint')) { reveal.className = 'answer-reveal'; reveal.textContent = ''; }
+  }, 1800);
+  inp.focus();
 }
 
 function checkKana(val) {
@@ -19284,10 +19316,10 @@ function makeVerbTableHTML(verb) {
   const ROW_ORDER = {present_aff:0, past_aff:1, present_neg:2, past_neg:3};
   const rows = [...verb.rows].sort((a,b)=>(ROW_ORDER[a.tense+'_'+a.pol]??99)-(ROW_ORDER[b.tense+'_'+b.pol]??99)).map(r => {
     const plLabel = r.pol==='aff'
-      ? '<span class="vc-tb" style="background:#1a3a2a;color:#4af080;">AFFIRMATIVE</span>'
-      : '<span class="vc-tb" style="background:#3a1a1a;color:#f04a4a;">NEGATIVE</span>';
+      ? '<span class="vc-tb" style="color:#4af080;">AFFIRMATIVE</span>'
+      : '<span class="vc-tb" style="color:#f04a4a;">NEGATIVE</span>';
     return '<tr>'
-      +'<td class="vc-rl"><span class="vc-tb" style="background:'+TC[r.tense]+';color:'+TT[r.tense]+';">'+r.tense.toUpperCase()+'</span><br>'+plLabel+'</td>'
+      +'<td class="vc-rl"><span class="vc-tb" style="color:'+TT[r.tense]+';">'+r.tense.toUpperCase()+'</span><br>'+plLabel+'</td>'
       +'<td>'+cellHTML(r.plain, false)+'</td>'
       +'<td>'+cellHTML(r.polite, true)+'</td>'
       +'</tr>';
@@ -19298,7 +19330,7 @@ function makeVerbTableHTML(verb) {
     const ec = verb.te.exc ? ' exc-mark' : '';
     const tc = 'te';
     teRow = '<tr>'
-      +'<td class="vc-rl"><span class="vc-tb" style="background:#12122a;color:#8080f0;">て-FORM</span></td>'
+      +'<td class="vc-rl"><span class="vc-tb" style="color:#8080f0;">て-FORM</span></td>'
       +'<td colspan="2"><div class="vc-tec">'
       +tagSpan(verb.te.tag, 'vc-et-p', tc)
       +'<div class="vc-vb">'
@@ -19420,7 +19452,7 @@ function buildConjWordList(selectedTypes) {
         }
         if (!usedPos) return;
         seen.add(v.word);
-        words.push({word:v.word, reading:v.reading, meaning:v.meaning, pos:usedPos});
+        words.push({word:v.word, reading:v.reading, meaning:v.meaning, pos:usedPos, rgReading:rg.rg_reading});
       });
     });
   });
@@ -19506,6 +19538,23 @@ function conjugate(reading, pos, form, formality) {
     }
   }
   return null;
+}
+
+function revealStemHint() { document.getElementById('conj-stem-hint').classList.add('revealed'); }
+
+// Stem hint for conjugation review: the reading of the word's KANJI portion — the invariant
+// part before the okurigana/conjugating suffix. Computed by stripping the word's trailing kana
+// (しむ, する, じる, む…) off the reading: 楽しむ→たの, 心配する→しんぱい, 飲む→の, 話す→はな.
+// Works for multi-kanji verbs (心配する) where a single reading group would only cover one kanji.
+// Kana-only verbs (する/くる/ある…) strip to nothing, so the hint stays hidden.
+function conjStem(item) {
+  const word = item.word || '', reading = item.reading || '';
+  const m = word.match(/[ぁ-ゟァ-ヿー]+$/);      // trailing okurigana of the written word
+  const okuri = m ? m[0] : '';
+  if (okuri && reading.length > okuri.length && reading.endsWith(okuri)) {
+    return reading.slice(0, reading.length - okuri.length);
+  }
+  return item.rgReading || '';
 }
 
 function conjugateAlts(reading, pos, form, formality) {
