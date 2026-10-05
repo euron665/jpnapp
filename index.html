@@ -315,7 +315,14 @@ body.search-open #global-search-bar{transform:translateY(0);}
   color:var(--text-dim);font-size:0;letter-spacing:0;
   transition:color .15s,border-color .15s,top .22s ease;
 }
-.screen-header .back-btn::before{content:'←';font-size:16px;line-height:1;}
+/* shared SVG left-arrow (same stroke style as the grammar ↑ button) */
+.screen-header .back-btn::before,
+#grammar .chapter-header .back-btn::before,
+#grammar .grammar-home-btn::before{
+  content:'';display:block;width:17px;height:17px;background-color:currentColor;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cline%20x1='19'%20y1='12'%20x2='6'%20y2='12'/%3E%3Cpolyline%20points='13,5%206,12%2013,19'/%3E%3C/svg%3E") no-repeat center/contain;
+  mask:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cline%20x1='19'%20y1='12'%20x2='6'%20y2='12'/%3E%3Cpolyline%20points='13,5%206,12%2013,19'/%3E%3C/svg%3E") no-repeat center/contain;
+}
 .screen-header .back-btn:hover{color:var(--accent);border-color:var(--accent);}
 /* content no longer has to clear a 56px bar */
 .screen:not(#grammar) .scrollable{padding-top:16px !important;}
@@ -1491,7 +1498,30 @@ html.furi-click #grammar .formula-gram, html.furi-on #grammar .formula-gram{ lin
   font-size:0;letter-spacing:0;
   background:var(--bg);border:1px solid var(--border);border-radius:var(--r);
 }
-#grammar .chapter-header .back-btn::before{content:'←';font-size:16px;line-height:1;}
+/* grammar HOME button: same compact arrow icon as every other screen */
+#grammar .grammar-home-btn{
+  position:fixed;top:9px;left:12px;z-index:102;
+  width:34px;height:34px;padding:0;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg);border:1px solid var(--border);border-radius:var(--r);
+  color:var(--text-dim);font-size:0;letter-spacing:0;
+  transition:color .15s,border-color .15s;
+}
+#grammar .grammar-home-btn:hover{color:var(--accent);border-color:var(--accent);}
+@media (max-width:480px){#grammar .grammar-home-btn{top:14px;left:16px;}}
+/* scroll-to-top, grammar only, sits under the back icon while reading */
+#gr-top-btn{
+  display:none;
+  position:fixed;top:50px;left:12px;z-index:102;
+  width:34px;height:34px;align-items:center;justify-content:center;padding:0;
+  background:var(--bg);border:1px solid var(--border);border-radius:var(--r);
+  color:var(--text-dim);cursor:pointer;
+  transition:color .15s,border-color .15s;
+}
+body.gr-reading #gr-top-btn{display:flex;}
+#gr-top-btn:hover{color:var(--accent);border-color:var(--accent);}
+#gr-top-btn svg{width:17px;height:17px;display:block;}
+@media (max-width:480px){#gr-top-btn{top:56px;left:16px;}}
 #grammar .chapter-header .back-btn:hover{border-color:var(--accent);color:var(--accent);}
 </style>
 </head>
@@ -1499,6 +1529,11 @@ html.furi-click #grammar .formula-gram, html.furi-on #grammar .formula-gram{ lin
 
 <!-- HOME -->
 <!-- GLOBAL SEARCH BAR -->
+<button id="gr-top-btn" onclick="grammarToTop()" title="Back to top of chapter" aria-label="Back to top of chapter">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="12" y1="19" x2="12" y2="6"></line><polyline points="5,13 12,6 19,13"></polyline>
+  </svg>
+</button>
 <button id="search-fab" onclick="toggleSearch(event)" title="Search" aria-label="Search">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
     <circle cx="11" cy="11" r="7"></circle><line x1="16.5" y1="16.5" x2="21" y2="21"></line>
@@ -1544,7 +1579,7 @@ html.furi-click #grammar .formula-gram, html.furi-on #grammar .formula-gram{ lin
   <div style="text-align:center">
     <div class="home-kanji">刻</div>
     <div class="home-sub">Kanji Drill — Level 24</div>
-    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.08em;">updated 2026-10-05 11:18</div>
+    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.08em;">updated 2026-10-05 11:30</div>
   </div>
   <div class="home-buttons">
     <div class="home-divider">Study</div>
@@ -38199,6 +38234,7 @@ function showScreen(id) {
   document.body.classList.remove('search-open');
   document.body.classList.toggle('grammar-active', id === 'grammar');
   document.body.classList.toggle('home-active', id === 'home');
+  document.body.classList.remove('gr-reading');   // grammar opens on its chapter menu
   document.body.classList.toggle('review-active', id === 'review');
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -39967,7 +40003,8 @@ function clearSearch() {
   document.getElementById('search-input').value = '';
   document.getElementById('search-clear').classList.remove('show');
   document.getElementById('search-results').classList.remove('show');
-  document.body.classList.remove('search-open');
+  // NOTE: do not close the bar here — emptying the field must leave it open.
+  // It closes only via the icon, an outside tap, Escape, or a screen change.
 }
 
 function runSearch(q) {
@@ -41207,7 +41244,13 @@ function addScrollHints(sec) {
   });
 }
 
+function grammarToTop() {
+  document.getElementById('grammar').scrollTo({top:0, behavior:'smooth'});
+}
+function grReading(on) { document.body.classList.toggle('gr-reading', !!on); }
+
 function openChapter(n) {
+  grReading(true);
   collapseAllExamples();
   guideOrigin = null;
   document.querySelectorAll('.guide-section').forEach(function(s) { s.style.display = 'none'; });
@@ -41227,6 +41270,7 @@ function closeChapter() {
   var sections = document.querySelectorAll('.chapter-section');
   sections.forEach(function(s) { s.style.display = 'none'; });
   if (guideOrigin) { var g = guideOrigin; guideOrigin = null; openGuide(g); return; }
+  grReading(false);
   document.getElementById('chapter-menu').style.display = '';
   document.getElementById('grammar').scrollTo({top:0,behavior:'instant'});
 }
@@ -41298,6 +41342,7 @@ document.addEventListener('keydown', function(e) {
 var guideOrigin = null;
 
 function openGuide(which) {
+  grReading(true);
   collapseAllExamples();
   guideOrigin = null;
   document.getElementById('chapter-menu').style.display = 'none';
@@ -41309,6 +41354,7 @@ function openGuide(which) {
 }
 
 function closeGuide() {
+  grReading(false);
   document.querySelectorAll('.guide-section').forEach(function(s) { s.style.display = 'none'; });
   document.getElementById('chapter-menu').style.display = '';
   document.getElementById('grammar').scrollTo({top:0,behavior:'instant'});
