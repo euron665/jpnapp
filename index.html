@@ -37,17 +37,46 @@ button,input,select,textarea{font-family:inherit;line-height:inherit;}
 /* Centred when it fits, scrollable from the top when it doesn't: plain justify-content:center
    pushed the top out of reach on 390x844 phones. Auto margins centre without that overflow. */
 #home{gap:32px;justify-content:flex-start;}
-#home > :first-child{margin-top:auto;}
-#home > :last-child{margin-bottom:auto;}
+#home .home-title{margin-top:auto;}
+#home .home-stamp{margin-bottom:auto;}
+/* settings cog, top-right of home (same 34px icon style as ← and 🔍) */
+.home-cog{position:absolute;top:9px;right:12px;width:34px;height:34px;padding:0;display:flex;
+  align-items:center;justify-content:center;background:var(--bg);border:1px solid var(--border);
+  border-radius:var(--r);color:var(--text-dim);cursor:pointer;transition:color .15s,border-color .15s;}
+.home-cog:hover{color:var(--accent);border-color:var(--accent);}
+.home-cog svg{width:17px;height:17px;display:block;}
+/* app settings sheet (opened from the home cog) */
+#app-settings{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:450;
+  padding:24px;overflow-y:auto;}
+#app-settings.open{display:flex;align-items:flex-start;justify-content:center;}
+#app-settings .as-panel{width:100%;max-width:380px;margin-top:12vh;background:var(--surface);
+  border:1px solid var(--border);border-radius:var(--r);padding:24px;}
+.as-title{font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--text);
+  font-weight:500;margin-bottom:4px;}
+.as-note{font-size:11px;color:var(--text-dim);line-height:1.6;margin-bottom:14px;}
+.as-done{margin-top:20px;width:100%;padding:10px;background:none;border:1px solid var(--border);
+  border-radius:var(--r);color:var(--text-dim);font-size:11px;letter-spacing:0.18em;
+  text-transform:uppercase;cursor:pointer;}
+.as-done:hover{color:var(--accent);border-color:var(--accent);}
+/* text size stepper row — shared by the app settings sheet and the grammar settings panel */
+.ts-row{display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--border);}
+.ts-label{flex:1;font-size:13px;color:var(--text);font-weight:300;}
+.ts-btn{width:34px;height:34px;padding:0;display:flex;align-items:center;justify-content:center;
+  background:var(--bg);border:1px solid var(--border);border-radius:var(--r);color:var(--text-dim);
+  font-size:13px;font-weight:500;cursor:pointer;transition:color .15s,border-color .15s;}
+.ts-btn:hover:not(:disabled){color:var(--accent);border-color:var(--accent);}
+.ts-btn:disabled{opacity:.35;cursor:default;}
+.ts-btn .zl,#zoom-ctl .zl{font-size:10px;margin-left:1px;}
+.ts-val{min-width:46px;text-align:center;font-family:var(--font-num);font-size:12px;color:var(--text);}
 .home-title{font-family:var(--font-ui);font-size:30px;font-weight:600;letter-spacing:0.02em;
   color:var(--text);text-align:center;padding-top:20px;}
 .home-stamp{font-size:11px;color:var(--text-dim);text-align:center;letter-spacing:0.04em;
   font-weight:400;padding-bottom:8px;}
 .home-stamp .n{font-family:var(--font-num);font-variant-numeric:tabular-nums;}
 
-/* ── desktop text size (A− / A+), fixed bottom-right on every screen ──
+/* ── floating text size (A− / A+), fixed bottom-right on every screen — desktop only ──
    Scales the whole app with CSS zoom on <body>; the control counter-zooms itself so it never
-   moves or grows. Mouse + wide screens only — phones never see it and are never zoomed. */
+   moves or grows. Phones change text size from the ⚙ settings instead (see applyZoom). */
 #zoom-ctl{display:none;position:fixed;right:16px;bottom:16px;z-index:400;gap:6px;user-select:none;}
 @media (hover:hover) and (pointer:fine) and (min-width:700px){ #zoom-ctl{display:flex;} }
 #zoom-ctl button{width:34px;height:34px;padding:0;display:flex;align-items:center;justify-content:center;
@@ -55,7 +84,6 @@ button,input,select,textarea{font-family:inherit;line-height:inherit;}
   font-size:13px;font-weight:500;cursor:pointer;transition:color .15s,border-color .15s;}
 #zoom-ctl button:hover:not(:disabled){color:var(--accent);border-color:var(--accent);}
 #zoom-ctl button:disabled{opacity:.35;cursor:default;}
-#zoom-ctl .zl{font-size:10px;margin-left:1px;}
 .home-buttons{display:flex;flex-direction:column;gap:10px;width:100%;max-width:360px;}
 .home-divider{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--text-dim);
   text-align:center;padding:4px 0;font-family:var(--font-ui);}
@@ -1600,11 +1628,26 @@ body.gr-reading #gr-top-btn{display:flex;}
 </div>
 
 <div id="zoom-ctl" role="group" aria-label="Text size">
-  <button type="button" id="zoom-out" onmousedown="event.preventDefault()" onclick="stepZoom(-1)" aria-label="Smaller text" title="Smaller text">A<span class="zl">−</span></button>
-  <button type="button" id="zoom-in" onmousedown="event.preventDefault()" onclick="stepZoom(1)" aria-label="Larger text" title="Larger text">A<span class="zl">+</span></button>
+  <button type="button" id="zoom-out" class="zoom-minus" onmousedown="event.preventDefault()" onclick="stepZoom(-1)" aria-label="Smaller text" title="Smaller text">A<span class="zl">−</span></button>
+  <button type="button" id="zoom-in" class="zoom-plus" onmousedown="event.preventDefault()" onclick="stepZoom(1)" aria-label="Larger text" title="Larger text">A<span class="zl">+</span></button>
+</div>
+
+<div id="app-settings" onclick="appSettingsBackdrop(event)">
+  <div class="as-panel" role="dialog" aria-label="Settings">
+    <div class="as-title">Text size</div>
+    <div class="as-note">Makes everything in the app bigger or smaller. Saved on this device.</div>
+    <div class="ts-row">
+      <span class="ts-label">Text size</span>
+      <button type="button" class="ts-btn zoom-minus" onclick="stepZoom(-1)" aria-label="Smaller text">A<span class="zl">−</span></button>
+      <span class="ts-val zoom-val">100%</span>
+      <button type="button" class="ts-btn zoom-plus" onclick="stepZoom(1)" aria-label="Larger text">A<span class="zl">+</span></button>
+    </div>
+    <button type="button" class="as-done" onclick="closeAppSettings()">Done</button>
+  </div>
 </div>
 
 <div id="home" class="screen active">
+  <button type="button" class="home-cog" onclick="openAppSettings()" title="Settings" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
   <h1 class="home-title">JpnApp</h1>
   <div class="home-buttons">
     <div class="home-divider">Study</div>
@@ -1622,9 +1665,10 @@ body.gr-reading #gr-top-btn{display:flex;}
     <button class="btn-primary" onclick="goTo('pos-picker','review-pos')">Review by Part of Speech</button>
     <button class="btn-primary" onclick="goTo('conj-picker')">Review Conjugation</button>
   </div>
-  <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM" text below by regex — keep that
-       exact format in the markup; formatHomeStamp() turns it into "Updated 5 Oct 2026 · 11:30". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-10-05 11:30</div>
+  <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
+       the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
+       it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
+  <div class="home-stamp" id="home-stamp">updated 2026-10-05 19:57 · v117</div>
 </div>
 
 <!-- POS PICKER -->
@@ -38079,6 +38123,14 @@ body.gr-reading #gr-top-btn{display:flex;}
 <span class="settings-name">Hidden</span>
 <span class="settings-box" id="furi-box-off"></span>
 </div>
+<div class="settings-title" style="margin-top:30px;">Text size</div>
+<div class="settings-note">Makes everything in the app bigger or smaller. Saved on this device.</div>
+<div class="ts-row">
+<span class="ts-label">Text size</span>
+<button type="button" class="ts-btn zoom-minus" onclick="stepZoom(-1)" aria-label="Smaller text">A<span class="zl">−</span></button>
+<span class="ts-val zoom-val">100%</span>
+<button type="button" class="ts-btn zoom-plus" onclick="stepZoom(1)" aria-label="Larger text">A<span class="zl">+</span></button>
+</div>
 <button class="settings-close" onclick="closeSettings()">Done</button>
 </div>
 </div>
@@ -41442,21 +41494,26 @@ document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close
   setFuri(m);
 })();
 
-/* ---- home build stamp: raw "updated YYYY-MM-DD HH:MM" → "Updated 5 Oct 2026 · 11:30" ---- */
+/* ---- home build stamp: raw "updated YYYY-MM-DD HH:MM · vNNN" → "Updated 5 Oct 2026 · 11:30 · v117" ---- */
 (function formatHomeStamp() {
   var el = document.getElementById('home-stamp');
   if (!el) return;
-  var m = el.textContent.match(/(\d{4})-(\d{2})-(\d{2}) (\d{2}:\d{2})/);
+  var m = el.textContent.match(/(\d{4})-(\d{2})-(\d{2}) (\d{2}:\d{2})(?: · v(\d+))?/);
   if (!m) return;
   var MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   el.innerHTML = 'Updated <span class="n">' + (+m[3]) + ' ' + MON[+m[2] - 1] + ' ' + m[1] +
-                 ' · ' + m[4] + '</span>';
+                 ' · ' + m[4] + (m[5] ? ' · v' + m[5] : '') + '</span>';
 })();
 
-/* ---- desktop text size: A− / A+ (bottom-right). Saved per device in localStorage. ---- */
+/* ---- text size: whole-app CSS zoom on <body>, saved per device (localStorage 'jpnapp-zoom').
+   Controls: floating A−/A+ bottom-right (desktop only, via CSS) and the Text size rows in the
+   home ⚙ sheet and the grammar settings panel (every device). Every control carries
+   .zoom-minus / .zoom-plus / .zoom-val, so applyZoom() keeps them all in sync.
+   Narrow screens (<700px) stop at 125% — beyond that phone layouts get too cramped. ---- */
 var ZOOM_KEY = 'jpnapp-zoom';
 var ZOOM_STEPS = [0.9, 1, 1.1, 1.25, 1.4, 1.6];
-var zoomMQ = window.matchMedia('(hover:hover) and (pointer:fine) and (min-width:700px)');
+var ZOOM_MAX_NARROW = 1.25;
+var wideMQ = window.matchMedia('(min-width:700px)');
 
 var zoomNow = (function() {           // in memory too, so A−/A+ work even if storage is blocked
   var z = 1;
@@ -41464,29 +41521,54 @@ var zoomNow = (function() {           // in memory too, so A−/A+ work even if 
   return ZOOM_STEPS.indexOf(z) < 0 ? 1 : z;
 })();
 
+function zoomSteps() {
+  return wideMQ.matches ? ZOOM_STEPS
+                        : ZOOM_STEPS.filter(function(s) { return s <= ZOOM_MAX_NARROW; });
+}
+
+function effectiveZoom() {
+  var st = zoomSteps();
+  return Math.min(zoomNow, st[st.length - 1]);
+}
+
 function applyZoom() {
-  var z = zoomMQ.matches ? zoomNow : 1;   // phones / touch: never zoomed
+  var z = effectiveZoom(), st = zoomSteps();
   document.body.style.zoom = z === 1 ? '' : String(z);
   var ctl = document.getElementById('zoom-ctl');
-  if (!ctl) return;
-  ctl.style.zoom = z === 1 ? '' : String(1 / z); // keep the control itself at 100%
+  if (ctl) ctl.style.zoom = z === 1 ? '' : String(1 / z); // floating control stays at 100%
   var pct = Math.round(z * 100) + '%';
-  document.getElementById('zoom-out').disabled = z <= ZOOM_STEPS[0];
-  document.getElementById('zoom-in').disabled = z >= ZOOM_STEPS[ZOOM_STEPS.length - 1];
-  document.getElementById('zoom-out').title = 'Smaller text (now ' + pct + ')';
-  document.getElementById('zoom-in').title = 'Larger text (now ' + pct + ')';
+  var atMin = z <= st[0], atMax = z >= st[st.length - 1];
+  document.querySelectorAll('.zoom-minus').forEach(function(b) { b.disabled = atMin; });
+  document.querySelectorAll('.zoom-plus').forEach(function(b) { b.disabled = atMax; });
+  document.querySelectorAll('.zoom-val').forEach(function(v) { v.textContent = pct; });
+  var zo = document.getElementById('zoom-out'), zi = document.getElementById('zoom-in');
+  if (zo) zo.title = 'Smaller text (now ' + pct + ')';
+  if (zi) zi.title = 'Larger text (now ' + pct + ')';
 }
 
 function stepZoom(dir) {
-  var i = ZOOM_STEPS.indexOf(zoomNow) + dir;
-  if (i < 0 || i >= ZOOM_STEPS.length) return;
-  zoomNow = ZOOM_STEPS[i];
+  var st = zoomSteps(), i = st.indexOf(effectiveZoom()) + dir;
+  if (i < 0 || i >= st.length) return;
+  zoomNow = st[i];
   try { localStorage.setItem(ZOOM_KEY, String(zoomNow)); } catch (e) {}
   applyZoom();
 }
 
-if (zoomMQ.addEventListener) zoomMQ.addEventListener('change', applyZoom);
+if (wideMQ.addEventListener) wideMQ.addEventListener('change', applyZoom);
 applyZoom();
+
+/* ---- app settings sheet (home ⚙) ---- */
+function openAppSettings() {
+  applyZoom();
+  document.getElementById('app-settings').classList.add('open');
+}
+function closeAppSettings() {
+  document.getElementById('app-settings').classList.remove('open');
+}
+function appSettingsBackdrop(e) {
+  if (e.target && e.target.id === 'app-settings') closeAppSettings();
+}
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeAppSettings(); });
 
 applyLevels();
 </script>

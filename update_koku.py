@@ -370,11 +370,17 @@ html = replace_const(html, 'SAME_MEANING', same_meaning_js)
 
 tz      = ZoneInfo('Europe/Warsaw')
 now_str = datetime.now(tz).strftime('%Y-%m-%d %H:%M')
-html    = re.sub(r'updated \d{4}-\d{2}-\d{2} \d{2}:\d{2}', f'updated {now_str}', html)
+
+# Home build stamp = time + the version step 6 is about to write into sw.js, so the phone's
+# start page shows "Updated … · vNNN" and the user can see at a glance which build it runs.
+with open(SW_JS, 'r', encoding='utf-8') as f:
+    _swm = re.search(r"const CACHE = 'koku-v(\d+)'", f.read())
+stamp = f'updated {now_str}' + (f' · v{int(_swm.group(1)) + 1}' if _swm else '')
+html  = re.sub(r'updated \d{4}-\d{2}-\d{2} \d{2}:\d{2}(?: · v\d+)?', stamp, html)
 
 with open(INDEX_HTML, 'w', encoding='utf-8') as f:
     f.write(html)
-print(f"  Timestamp → {now_str}")
+print(f"  Stamp → {stamp}")
 
 # ── 6. Bump SW cache version ──────────────────────────────────────────────────
 print("Bumping SW cache version...")
