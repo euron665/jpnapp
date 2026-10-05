@@ -1,0 +1,5336 @@
+[
+  {
+    "kanji": "木",
+    "reading": "もく",
+    "meaning": "Tree",
+    "skg": "SKG 001"
+  },
+  {
+    "kanji": "困",
+    "reading": "こん",
+    "meaning": "Distressed",
+    "skg": "SKG 001"
+  },
+  {
+    "kanji": "栄",
+    "reading": "えい",
+    "meaning": "Prosper",
+    "skg": "SKG 001"
+  },
+  {
+    "kanji": "床",
+    "reading": "ゆか",
+    "meaning": "Floor",
+    "skg": "SKG 001"
+  },
+  {
+    "kanji": "条",
+    "reading": "じょう",
+    "meaning": "Clause",
+    "skg": "SKG 001"
+  },
+  {
+    "kanji": "深",
+    "reading": "しん",
+    "meaning": "Deep",
+    "skg": "SKG 001"
+  },
+  {
+    "kanji": "休",
+    "reading": "きゅう",
+    "meaning": "Rest",
+    "skg": "SKG 001"
+  },
+  {
+    "kanji": "保",
+    "reading": "ほ",
+    "meaning": "Preserve",
+    "skg": "SKG 001"
+  },
+  {
+    "kanji": "松",
+    "reading": "まつ",
+    "meaning": "Pine",
+    "skg": "SKG 001"
+  },
+  {
+    "kanji": "材",
+    "reading": "ざい",
+    "meaning": "Lumber",
+    "skg": "SKG 001"
+  },
+  {
+    "kanji": "林",
+    "reading": "はやし",
+    "meaning": "Forest",
+    "skg": "SKG 001"
+  },
+  {
+    "kanji": "森",
+    "reading": "もり",
+    "meaning": "Forest",
+    "skg": "SKG 001"
+  },
+  {
+    "kanji": "本",
+    "reading": "ほん",
+    "meaning": "Book",
+    "skg": "SKG 002"
+  },
+  {
+    "kanji": "体",
+    "reading": "たい",
+    "meaning": "Body",
+    "skg": "SKG 002"
+  },
+  {
+    "kanji": "未",
+    "reading": "み",
+    "meaning": "Not Yet",
+    "skg": "SKG 002"
+  },
+  {
+    "kanji": "味",
+    "reading": "み",
+    "meaning": "Flavor",
+    "skg": "SKG 002"
+  },
+  {
+    "kanji": "妹",
+    "reading": "まい",
+    "meaning": "Younger Sister",
+    "skg": "SKG 002"
+  },
+  {
+    "kanji": "株",
+    "reading": "かぶ",
+    "meaning": "Stock",
+    "skg": "SKG 002"
+  },
+  {
+    "kanji": "末",
+    "reading": "まつ",
+    "meaning": "End",
+    "skg": "SKG 002"
+  },
+  {
+    "kanji": "米",
+    "reading": "べい",
+    "meaning": "Rice",
+    "skg": "SKG 002"
+  },
+  {
+    "kanji": "歯",
+    "reading": "は",
+    "meaning": "Tooth",
+    "skg": "SKG 002"
+  },
+  {
+    "kanji": "来",
+    "reading": "らい",
+    "meaning": "Come",
+    "skg": "SKG 002"
+  },
+  {
+    "kanji": "楽",
+    "reading": "らく",
+    "meaning": "Comfort",
+    "skg": "SKG 003"
+  },
+  {
+    "kanji": "薬",
+    "reading": "やく",
+    "meaning": "Medicine",
+    "skg": "SKG 003"
+  },
+  {
+    "kanji": "案",
+    "reading": "あん",
+    "meaning": "Plan",
+    "skg": "SKG 003"
+  },
+  {
+    "kanji": "策",
+    "reading": "さく",
+    "meaning": "Plan",
+    "skg": "SKG 003"
+  },
+  {
+    "kanji": "築",
+    "reading": "ちく",
+    "meaning": "Construct",
+    "skg": "SKG 003"
+  },
+  {
+    "kanji": "茶",
+    "reading": "ちゃ",
+    "meaning": "Tea",
+    "skg": "SKG 003"
+  },
+  {
+    "kanji": "八",
+    "reading": "はち",
+    "meaning": "Eight",
+    "skg": "SKG 004"
+  },
+  {
+    "kanji": "入",
+    "reading": "にゅう",
+    "meaning": "Enter",
+    "skg": "SKG 004"
+  },
+  {
+    "kanji": "人",
+    "reading": "にん",
+    "meaning": "Person",
+    "skg": "SKG 004"
+  },
+  {
+    "kanji": "火",
+    "reading": "か",
+    "meaning": "Fire",
+    "skg": "SKG 004"
+  },
+  {
+    "kanji": "秋",
+    "reading": "あき",
+    "meaning": "Autumn",
+    "skg": "SKG 004"
+  },
+  {
+    "kanji": "談",
+    "reading": "だん",
+    "meaning": "Talk",
+    "skg": "SKG 004"
+  },
+  {
+    "kanji": "災",
+    "reading": "さい",
+    "meaning": "Disaster",
+    "skg": "SKG 004"
+  },
+  {
+    "kanji": "内",
+    "reading": "ない",
+    "meaning": "Inside",
+    "skg": "SKG 004"
+  },
+  {
+    "kanji": "肉",
+    "reading": "にく",
+    "meaning": "Meat",
+    "skg": "SKG 004"
+  },
+  {
+    "kanji": "病",
+    "reading": "びょう",
+    "meaning": "Sick",
+    "skg": "SKG 004"
+  },
+  {
+    "kanji": "大",
+    "reading": "たい",
+    "meaning": "Big",
+    "skg": "SKG 005"
+  },
+  {
+    "kanji": "因",
+    "reading": "いん",
+    "meaning": "Cause",
+    "skg": "SKG 005"
+  },
+  {
+    "kanji": "突",
+    "reading": "とつ",
+    "meaning": "Stab",
+    "skg": "SKG 005"
+  },
+  {
+    "kanji": "喫",
+    "reading": "きつ",
+    "meaning": "Consume",
+    "skg": "SKG 005"
+  },
+  {
+    "kanji": "太",
+    "reading": "たい",
+    "meaning": "Fat",
+    "skg": "SKG 005"
+  },
+  {
+    "kanji": "犬",
+    "reading": "いぬ",
+    "meaning": "Dog",
+    "skg": "SKG 005"
+  },
+  {
+    "kanji": "状",
+    "reading": "じょう",
+    "meaning": "Condition",
+    "skg": "SKG 005"
+  },
+  {
+    "kanji": "然",
+    "reading": "ぜん",
+    "meaning": "Nature",
+    "skg": "SKG 005"
+  },
+  {
+    "kanji": "燃",
+    "reading": "ねん",
+    "meaning": "Burn",
+    "skg": "SKG 005"
+  },
+  {
+    "kanji": "夫",
+    "reading": "ふう",
+    "meaning": "Husband",
+    "skg": "SKG 006"
+  },
+  {
+    "kanji": "狭",
+    "reading": "せま",
+    "meaning": "Narrow",
+    "skg": "SKG 006"
+  },
+  {
+    "kanji": "失",
+    "reading": "しつ",
+    "meaning": "Fault",
+    "skg": "SKG 006"
+  },
+  {
+    "kanji": "鉄",
+    "reading": "てつ",
+    "meaning": "Iron",
+    "skg": "SKG 006"
+  },
+  {
+    "kanji": "矢",
+    "reading": "や",
+    "meaning": "Arrow",
+    "skg": "SKG 006"
+  },
+  {
+    "kanji": "医",
+    "reading": "い",
+    "meaning": "Medicine",
+    "skg": "SKG 006"
+  },
+  {
+    "kanji": "族",
+    "reading": "ぞく",
+    "meaning": "Tribe",
+    "skg": "SKG 006"
+  },
+  {
+    "kanji": "候",
+    "reading": "こう",
+    "meaning": "Climate",
+    "skg": "SKG 006"
+  },
+  {
+    "kanji": "喉",
+    "reading": "こう",
+    "meaning": "Throat",
+    "skg": "SKG 006"
+  },
+  {
+    "kanji": "短",
+    "reading": "たん",
+    "meaning": "Short",
+    "skg": "SKG 006"
+  },
+  {
+    "kanji": "知",
+    "reading": "し",
+    "meaning": "Know",
+    "skg": "SKG 006"
+  },
+  {
+    "kanji": "天",
+    "reading": "てん",
+    "meaning": "Heaven",
+    "skg": "SKG 007"
+  },
+  {
+    "kanji": "送",
+    "reading": "そう",
+    "meaning": "Send",
+    "skg": "SKG 007"
+  },
+  {
+    "kanji": "欠",
+    "reading": "けつ",
+    "meaning": "Lack",
+    "skg": "SKG 007"
+  },
+  {
+    "kanji": "飲",
+    "reading": "の",
+    "meaning": "Drink",
+    "skg": "SKG 007"
+  },
+  {
+    "kanji": "歌",
+    "reading": "か",
+    "meaning": "Song",
+    "skg": "SKG 007"
+  },
+  {
+    "kanji": "次",
+    "reading": "じ",
+    "meaning": "Next",
+    "skg": "SKG 007"
+  },
+  {
+    "kanji": "羨",
+    "reading": "せん",
+    "meaning": "Envy",
+    "skg": "SKG 007"
+  },
+  {
+    "kanji": "決",
+    "reading": "けつ",
+    "meaning": "Decide",
+    "skg": "SKG 007"
+  },
+  {
+    "kanji": "十",
+    "reading": "じゅう",
+    "meaning": "Ten",
+    "skg": "SKG 008"
+  },
+  {
+    "kanji": "叶",
+    "reading": "かな",
+    "meaning": "Come True",
+    "skg": "SKG 008"
+  },
+  {
+    "kanji": "計",
+    "reading": "けい",
+    "meaning": "Measure",
+    "skg": "SKG 008"
+  },
+  {
+    "kanji": "干",
+    "reading": "かん",
+    "meaning": "Dry",
+    "skg": "SKG 008"
+  },
+  {
+    "kanji": "千",
+    "reading": "せん",
+    "meaning": "1000",
+    "skg": "SKG 008"
+  },
+  {
+    "kanji": "午",
+    "reading": "ご",
+    "meaning": "Noon",
+    "skg": "SKG 008"
+  },
+  {
+    "kanji": "許",
+    "reading": "きょ",
+    "meaning": "Permit",
+    "skg": "SKG 008"
+  },
+  {
+    "kanji": "缶",
+    "reading": "かん",
+    "meaning": "Can",
+    "skg": "SKG 008"
+  },
+  {
+    "kanji": "年",
+    "reading": "ねん",
+    "meaning": "Year",
+    "skg": "SKG 008"
+  },
+  {
+    "kanji": "牛",
+    "reading": "ぎゅう",
+    "meaning": "Cow",
+    "skg": "SKG 008"
+  },
+  {
+    "kanji": "件",
+    "reading": "けん",
+    "meaning": "Matter",
+    "skg": "SKG 008"
+  },
+  {
+    "kanji": "解",
+    "reading": "かい",
+    "meaning": "Solve",
+    "skg": "SKG 008"
+  },
+  {
+    "kanji": "平",
+    "reading": "へい",
+    "meaning": "Flat",
+    "skg": "SKG 009"
+  },
+  {
+    "kanji": "呼",
+    "reading": "よ",
+    "meaning": "Call",
+    "skg": "SKG 009"
+  },
+  {
+    "kanji": "評",
+    "reading": "ひょう",
+    "meaning": "Evaluate",
+    "skg": "SKG 009"
+  },
+  {
+    "kanji": "半",
+    "reading": "はん",
+    "meaning": "Half",
+    "skg": "SKG 009"
+  },
+  {
+    "kanji": "羊",
+    "reading": "よう",
+    "meaning": "Sheep",
+    "skg": "SKG 009"
+  },
+  {
+    "kanji": "痒",
+    "reading": "かゆ",
+    "meaning": "Itchy",
+    "skg": "SKG 009"
+  },
+  {
+    "kanji": "鮮",
+    "reading": "せん",
+    "meaning": "Fresh",
+    "skg": "SKG 009"
+  },
+  {
+    "kanji": "善",
+    "reading": "ぜん",
+    "meaning": "Morally Good",
+    "skg": "SKG 009"
+  },
+  {
+    "kanji": "洋",
+    "reading": "よう",
+    "meaning": "Western Style",
+    "skg": "SKG 009"
+  },
+  {
+    "kanji": "詳",
+    "reading": "しょう",
+    "meaning": "Detailed",
+    "skg": "SKG 009"
+  },
+  {
+    "kanji": "卒",
+    "reading": "そつ",
+    "meaning": "Graduate",
+    "skg": "SKG 010"
+  },
+  {
+    "kanji": "座",
+    "reading": "ざ",
+    "meaning": "Sit",
+    "skg": "SKG 010"
+  },
+  {
+    "kanji": "率",
+    "reading": "りつ",
+    "meaning": "Percent",
+    "skg": "SKG 010"
+  },
+  {
+    "kanji": "辛",
+    "reading": "から",
+    "meaning": "Spicy",
+    "skg": "SKG 010"
+  },
+  {
+    "kanji": "辞",
+    "reading": "じ",
+    "meaning": "Quit",
+    "skg": "SKG 010"
+  },
+  {
+    "kanji": "幸",
+    "reading": "こう",
+    "meaning": "Happiness",
+    "skg": "SKG 010"
+  },
+  {
+    "kanji": "達",
+    "reading": "たつ",
+    "meaning": "Attain",
+    "skg": "SKG 010"
+  },
+  {
+    "kanji": "一",
+    "reading": "いち",
+    "meaning": "One",
+    "skg": "SKG 011"
+  },
+  {
+    "kanji": "二",
+    "reading": "に",
+    "meaning": "Two",
+    "skg": "SKG 011"
+  },
+  {
+    "kanji": "三",
+    "reading": "さん",
+    "meaning": "Three",
+    "skg": "SKG 011"
+  },
+  {
+    "kanji": "上",
+    "reading": "じょう",
+    "meaning": "Above",
+    "skg": "SKG 012"
+  },
+  {
+    "kanji": "止",
+    "reading": "し",
+    "meaning": "Stop",
+    "skg": "SKG 012"
+  },
+  {
+    "kanji": "企",
+    "reading": "き",
+    "meaning": "Plan",
+    "skg": "SKG 012"
+  },
+  {
+    "kanji": "歴",
+    "reading": "れき",
+    "meaning": "Continuation",
+    "skg": "SKG 012"
+  },
+  {
+    "kanji": "下",
+    "reading": "か",
+    "meaning": "Below",
+    "skg": "SKG 012"
+  },
+  {
+    "kanji": "不",
+    "reading": "ふ",
+    "meaning": "Not",
+    "skg": "SKG 012"
+  },
+  {
+    "kanji": "正",
+    "reading": "せい",
+    "meaning": "Correct",
+    "skg": "SKG 012"
+  },
+  {
+    "kanji": "証",
+    "reading": "しょう",
+    "meaning": "Evidence",
+    "skg": "SKG 012"
+  },
+  {
+    "kanji": "整",
+    "reading": "せい",
+    "meaning": "Arrange",
+    "skg": "SKG 012"
+  },
+  {
+    "kanji": "誕",
+    "reading": "たん",
+    "meaning": "Birth",
+    "skg": "SKG 012"
+  },
+  {
+    "kanji": "士",
+    "reading": "し",
+    "meaning": "Samurai",
+    "skg": "SKG 013"
+  },
+  {
+    "kanji": "結",
+    "reading": "けつ",
+    "meaning": "Bind",
+    "skg": "SKG 013"
+  },
+  {
+    "kanji": "土",
+    "reading": "ど",
+    "meaning": "Dirt",
+    "skg": "SKG 013"
+  },
+  {
+    "kanji": "仕",
+    "reading": "し",
+    "meaning": "Doing",
+    "skg": "SKG 013"
+  },
+  {
+    "kanji": "圧",
+    "reading": "あつ",
+    "meaning": "Pressure",
+    "skg": "SKG 013"
+  },
+  {
+    "kanji": "在",
+    "reading": "ざい",
+    "meaning": "Exist",
+    "skg": "SKG 013"
+  },
+  {
+    "kanji": "社",
+    "reading": "しゃ",
+    "meaning": "Company",
+    "skg": "SKG 013"
+  },
+  {
+    "kanji": "工",
+    "reading": "こう",
+    "meaning": "Construction",
+    "skg": "SKG 014"
+  },
+  {
+    "kanji": "王",
+    "reading": "おう",
+    "meaning": "King",
+    "skg": "SKG 014"
+  },
+  {
+    "kanji": "任",
+    "reading": "にん",
+    "meaning": "Duty",
+    "skg": "SKG 014"
+  },
+  {
+    "kanji": "望",
+    "reading": "ぼう",
+    "meaning": "Hope",
+    "skg": "SKG 014"
+  },
+  {
+    "kanji": "主",
+    "reading": "しゅ",
+    "meaning": "Master",
+    "skg": "SKG 014"
+  },
+  {
+    "kanji": "注",
+    "reading": "ちゅう",
+    "meaning": "Pour",
+    "skg": "SKG 014"
+  },
+  {
+    "kanji": "住",
+    "reading": "じゅう",
+    "meaning": "Dwell",
+    "skg": "SKG 014"
+  },
+  {
+    "kanji": "玉",
+    "reading": "たま",
+    "meaning": "Ball",
+    "skg": "SKG 014"
+  },
+  {
+    "kanji": "国",
+    "reading": "こく",
+    "meaning": "Country",
+    "skg": "SKG 014"
+  },
+  {
+    "kanji": "宝",
+    "reading": "ほう",
+    "meaning": "Treasure",
+    "skg": "SKG 014"
+  },
+  {
+    "kanji": "室",
+    "reading": "しつ",
+    "meaning": "Room",
+    "skg": "SKG 014"
+  },
+  {
+    "kanji": "屋",
+    "reading": "や",
+    "meaning": "Roof",
+    "skg": "SKG 014"
+  },
+  {
+    "kanji": "生",
+    "reading": "せい",
+    "meaning": "Life",
+    "skg": "SKG 014"
+  },
+  {
+    "kanji": "産",
+    "reading": "さん",
+    "meaning": "Give Birth",
+    "skg": "SKG 014"
+  },
+  {
+    "kanji": "性",
+    "reading": "せい",
+    "meaning": "Gender",
+    "skg": "SKG 014"
+  },
+  {
+    "kanji": "星",
+    "reading": "せい",
+    "meaning": "Star",
+    "skg": "SKG 014"
+  },
+  {
+    "kanji": "市",
+    "reading": "し",
+    "meaning": "City",
+    "skg": "SKG 015"
+  },
+  {
+    "kanji": "姉",
+    "reading": "し",
+    "meaning": "Older Sister",
+    "skg": "SKG 015"
+  },
+  {
+    "kanji": "布",
+    "reading": "ふ",
+    "meaning": "Cloth",
+    "skg": "SKG 015"
+  },
+  {
+    "kanji": "希",
+    "reading": "き",
+    "meaning": "Wish",
+    "skg": "SKG 015"
+  },
+  {
+    "kanji": "師",
+    "reading": "し",
+    "meaning": "Teacher",
+    "skg": "SKG 015"
+  },
+  {
+    "kanji": "諦",
+    "reading": "あきら",
+    "meaning": "Give Up",
+    "skg": "SKG 015"
+  },
+  {
+    "kanji": "常",
+    "reading": "じょう",
+    "meaning": "Normal",
+    "skg": "SKG 015"
+  },
+  {
+    "kanji": "席",
+    "reading": "せき",
+    "meaning": "Seat",
+    "skg": "SKG 015"
+  },
+  {
+    "kanji": "南",
+    "reading": "なん",
+    "meaning": "South",
+    "skg": "SKG 015"
+  },
+  {
+    "kanji": "両",
+    "reading": "りょう",
+    "meaning": "Both",
+    "skg": "SKG 015"
+  },
+  {
+    "kanji": "満",
+    "reading": "まん",
+    "meaning": "Full",
+    "skg": "SKG 015"
+  },
+  {
+    "kanji": "画",
+    "reading": "が",
+    "meaning": "Image",
+    "skg": "SKG 015"
+  },
+  {
+    "kanji": "岡",
+    "reading": "おか",
+    "meaning": "Hill",
+    "skg": "SKG 015"
+  },
+  {
+    "kanji": "口",
+    "reading": "こう",
+    "meaning": "Mouth",
+    "skg": "SKG 016"
+  },
+  {
+    "kanji": "加",
+    "reading": "か",
+    "meaning": "Add",
+    "skg": "SKG 016"
+  },
+  {
+    "kanji": "和",
+    "reading": "わ",
+    "meaning": "Peace",
+    "skg": "SKG 016"
+  },
+  {
+    "kanji": "回",
+    "reading": "かい",
+    "meaning": "Times",
+    "skg": "SKG 016"
+  },
+  {
+    "kanji": "同",
+    "reading": "どう",
+    "meaning": "Same",
+    "skg": "SKG 016"
+  },
+  {
+    "kanji": "過",
+    "reading": "か",
+    "meaning": "Surpass",
+    "skg": "SKG 016"
+  },
+  {
+    "kanji": "向",
+    "reading": "こう",
+    "meaning": "Yonder",
+    "skg": "SKG 016"
+  },
+  {
+    "kanji": "句",
+    "reading": "く",
+    "meaning": "Paragraph",
+    "skg": "SKG 017"
+  },
+  {
+    "kanji": "可",
+    "reading": "か",
+    "meaning": "Possible",
+    "skg": "SKG 017"
+  },
+  {
+    "kanji": "司",
+    "reading": "し",
+    "meaning": "Director",
+    "skg": "SKG 017"
+  },
+  {
+    "kanji": "詞",
+    "reading": "し",
+    "meaning": "Part Of Speech",
+    "skg": "SKG 017"
+  },
+  {
+    "kanji": "何",
+    "reading": "なに",
+    "meaning": "What",
+    "skg": "SKG 017"
+  },
+  {
+    "kanji": "崎",
+    "reading": "さき",
+    "meaning": "Cape",
+    "skg": "SKG 017"
+  },
+  {
+    "kanji": "苛",
+    "reading": "いじ",
+    "meaning": "Frustration",
+    "skg": "SKG 017"
+  },
+  {
+    "kanji": "荷",
+    "reading": "に",
+    "meaning": "Luggage",
+    "skg": "SKG 017"
+  },
+  {
+    "kanji": "脳",
+    "reading": "のう",
+    "meaning": "Brain",
+    "skg": "SKG 018"
+  },
+  {
+    "kanji": "胸",
+    "reading": "むね",
+    "meaning": "Chest",
+    "skg": "SKG 018"
+  },
+  {
+    "kanji": "腕",
+    "reading": "うで",
+    "meaning": "Arm",
+    "skg": "SKG 018"
+  },
+  {
+    "kanji": "古",
+    "reading": "こ",
+    "meaning": "Old",
+    "skg": "SKG 019"
+  },
+  {
+    "kanji": "固",
+    "reading": "こ",
+    "meaning": "Hard",
+    "skg": "SKG 019"
+  },
+  {
+    "kanji": "個",
+    "reading": "こ",
+    "meaning": "Individual",
+    "skg": "SKG 019"
+  },
+  {
+    "kanji": "居",
+    "reading": "きょ",
+    "meaning": "Alive",
+    "skg": "SKG 019"
+  },
+  {
+    "kanji": "告",
+    "reading": "こく",
+    "meaning": "Announce",
+    "skg": "SKG 019"
+  },
+  {
+    "kanji": "苦",
+    "reading": "く",
+    "meaning": "Suffering",
+    "skg": "SKG 019"
+  },
+  {
+    "kanji": "害",
+    "reading": "がい",
+    "meaning": "Damage",
+    "skg": "SKG 019"
+  },
+  {
+    "kanji": "舌",
+    "reading": "した",
+    "meaning": "Tongue",
+    "skg": "SKG 019"
+  },
+  {
+    "kanji": "活",
+    "reading": "かつ",
+    "meaning": "Lively",
+    "skg": "SKG 019"
+  },
+  {
+    "kanji": "話",
+    "reading": "わ",
+    "meaning": "Talk",
+    "skg": "SKG 019"
+  },
+  {
+    "kanji": "舐",
+    "reading": "な",
+    "meaning": "Lick",
+    "skg": "SKG 019"
+  },
+  {
+    "kanji": "区",
+    "reading": "く",
+    "meaning": "District",
+    "skg": "SKG 020"
+  },
+  {
+    "kanji": "図",
+    "reading": "ず",
+    "meaning": "Diagram",
+    "skg": "SKG 020"
+  },
+  {
+    "kanji": "四",
+    "reading": "し",
+    "meaning": "Four",
+    "skg": "SKG 020"
+  },
+  {
+    "kanji": "匹",
+    "reading": "ひき",
+    "meaning": "Small Animal",
+    "skg": "SKG 020"
+  },
+  {
+    "kanji": "西",
+    "reading": "せい",
+    "meaning": "West",
+    "skg": "SKG 020"
+  },
+  {
+    "kanji": "酒",
+    "reading": "しゅ",
+    "meaning": "Alcohol",
+    "skg": "SKG 020"
+  },
+  {
+    "kanji": "商",
+    "reading": "しょう",
+    "meaning": "Merchandise",
+    "skg": "SKG 020"
+  },
+  {
+    "kanji": "円",
+    "reading": "えん",
+    "meaning": "Yen",
+    "skg": "SKG 021"
+  },
+  {
+    "kanji": "用",
+    "reading": "よう",
+    "meaning": "Task",
+    "skg": "SKG 021"
+  },
+  {
+    "kanji": "色",
+    "reading": "いろ",
+    "meaning": "Color",
+    "skg": "SKG 021"
+  },
+  {
+    "kanji": "肥",
+    "reading": "ひ",
+    "meaning": "Obese",
+    "skg": "SKG 021"
+  },
+  {
+    "kanji": "絶",
+    "reading": "ぜつ",
+    "meaning": "Extinction",
+    "skg": "SKG 021"
+  },
+  {
+    "kanji": "角",
+    "reading": "かく",
+    "meaning": "Angle",
+    "skg": "SKG 021"
+  },
+  {
+    "kanji": "魚",
+    "reading": "ぎょ",
+    "meaning": "Fish",
+    "skg": "SKG 021"
+  },
+  {
+    "kanji": "母",
+    "reading": "はは",
+    "meaning": "Mother",
+    "skg": "SKG 022"
+  },
+  {
+    "kanji": "苺",
+    "reading": "いちご",
+    "meaning": "Strawberry",
+    "skg": "SKG 022"
+  },
+  {
+    "kanji": "毎",
+    "reading": "まい",
+    "meaning": "Every",
+    "skg": "SKG 022"
+  },
+  {
+    "kanji": "海",
+    "reading": "かい",
+    "meaning": "Sea",
+    "skg": "SKG 022"
+  },
+  {
+    "kanji": "梅",
+    "reading": "うめ",
+    "meaning": "Ume",
+    "skg": "SKG 022"
+  },
+  {
+    "kanji": "慣",
+    "reading": "かん",
+    "meaning": "Accustomed",
+    "skg": "SKG 022"
+  },
+  {
+    "kanji": "毒",
+    "reading": "どく",
+    "meaning": "Poison",
+    "skg": "SKG 022"
+  },
+  {
+    "kanji": "田",
+    "reading": "た",
+    "meaning": "Rice Paddy",
+    "skg": "SKG 023"
+  },
+  {
+    "kanji": "細",
+    "reading": "さい",
+    "meaning": "Thin",
+    "skg": "SKG 023"
+  },
+  {
+    "kanji": "留",
+    "reading": "る",
+    "meaning": "Detain",
+    "skg": "SKG 023"
+  },
+  {
+    "kanji": "界",
+    "reading": "かい",
+    "meaning": "World",
+    "skg": "SKG 023"
+  },
+  {
+    "kanji": "由",
+    "reading": "ゆう",
+    "meaning": "Reason",
+    "skg": "SKG 023"
+  },
+  {
+    "kanji": "袖",
+    "reading": "そで",
+    "meaning": "Sleeve",
+    "skg": "SKG 023"
+  },
+  {
+    "kanji": "宙",
+    "reading": "ちゅう",
+    "meaning": "Midair",
+    "skg": "SKG 023"
+  },
+  {
+    "kanji": "笛",
+    "reading": "てき",
+    "meaning": "Flute",
+    "skg": "SKG 023"
+  },
+  {
+    "kanji": "猫",
+    "reading": "ねこ",
+    "meaning": "Cat",
+    "skg": "SKG 023"
+  },
+  {
+    "kanji": "届",
+    "reading": "とど",
+    "meaning": "Deliver",
+    "skg": "SKG 023"
+  },
+  {
+    "kanji": "曲",
+    "reading": "きょく",
+    "meaning": "Music",
+    "skg": "SKG 024"
+  },
+  {
+    "kanji": "典",
+    "reading": "てん",
+    "meaning": "Rule",
+    "skg": "SKG 024"
+  },
+  {
+    "kanji": "皿",
+    "reading": "さら",
+    "meaning": "Plate",
+    "skg": "SKG 024"
+  },
+  {
+    "kanji": "血",
+    "reading": "けつ",
+    "meaning": "Blood",
+    "skg": "SKG 024"
+  },
+  {
+    "kanji": "塩",
+    "reading": "しお",
+    "meaning": "Salt",
+    "skg": "SKG 024"
+  },
+  {
+    "kanji": "温",
+    "reading": "おん",
+    "meaning": "Warm",
+    "skg": "SKG 024"
+  },
+  {
+    "kanji": "無",
+    "reading": "む",
+    "meaning": "Nothing",
+    "skg": "SKG 024"
+  },
+  {
+    "kanji": "中",
+    "reading": "ちゅう",
+    "meaning": "Middle",
+    "skg": "SKG 025"
+  },
+  {
+    "kanji": "仲",
+    "reading": "なか",
+    "meaning": "Relationship",
+    "skg": "SKG 025"
+  },
+  {
+    "kanji": "束",
+    "reading": "そく",
+    "meaning": "Bundle",
+    "skg": "SKG 025"
+  },
+  {
+    "kanji": "速",
+    "reading": "そく",
+    "meaning": "Fast",
+    "skg": "SKG 025"
+  },
+  {
+    "kanji": "園",
+    "reading": "えん",
+    "meaning": "Garden",
+    "skg": "SKG 025"
+  },
+  {
+    "kanji": "遠",
+    "reading": "えん",
+    "meaning": "Far",
+    "skg": "SKG 025"
+  },
+  {
+    "kanji": "環",
+    "reading": "かん",
+    "meaning": "Loop",
+    "skg": "SKG 025"
+  },
+  {
+    "kanji": "虫",
+    "reading": "むし",
+    "meaning": "Insect",
+    "skg": "SKG 025"
+  },
+  {
+    "kanji": "触",
+    "reading": "しょく",
+    "meaning": "Touch",
+    "skg": "SKG 025"
+  },
+  {
+    "kanji": "風",
+    "reading": "ふう",
+    "meaning": "Wind",
+    "skg": "SKG 025"
+  },
+  {
+    "kanji": "属",
+    "reading": "ぞく",
+    "meaning": "Belong",
+    "skg": "SKG 025"
+  },
+  {
+    "kanji": "早",
+    "reading": "そう",
+    "meaning": "Early",
+    "skg": "SKG 026"
+  },
+  {
+    "kanji": "草",
+    "reading": "くさ",
+    "meaning": "Grass",
+    "skg": "SKG 026"
+  },
+  {
+    "kanji": "章",
+    "reading": "しょう",
+    "meaning": "Chapter",
+    "skg": "SKG 026"
+  },
+  {
+    "kanji": "革",
+    "reading": "かく",
+    "meaning": "Leather",
+    "skg": "SKG 026"
+  },
+  {
+    "kanji": "申",
+    "reading": "もう",
+    "meaning": "Say Humbly",
+    "skg": "SKG 026"
+  },
+  {
+    "kanji": "神",
+    "reading": "しん",
+    "meaning": "God",
+    "skg": "SKG 026"
+  },
+  {
+    "kanji": "単",
+    "reading": "たん",
+    "meaning": "Simple",
+    "skg": "SKG 026"
+  },
+  {
+    "kanji": "禅",
+    "reading": "ぜん",
+    "meaning": "Zen",
+    "skg": "SKG 026"
+  },
+  {
+    "kanji": "車",
+    "reading": "しゃ",
+    "meaning": "Car",
+    "skg": "SKG 027"
+  },
+  {
+    "kanji": "連",
+    "reading": "れん",
+    "meaning": "Take Along",
+    "skg": "SKG 027"
+  },
+  {
+    "kanji": "運",
+    "reading": "うん",
+    "meaning": "Carry",
+    "skg": "SKG 027"
+  },
+  {
+    "kanji": "軍",
+    "reading": "ぐん",
+    "meaning": "Army",
+    "skg": "SKG 027"
+  },
+  {
+    "kanji": "臭",
+    "reading": "くさ",
+    "meaning": "Stinking",
+    "skg": "SKG 027"
+  },
+  {
+    "kanji": "莫",
+    "reading": "ばく",
+    "meaning": "Endless",
+    "skg": "SKG 027"
+  },
+  {
+    "kanji": "模",
+    "reading": "も",
+    "meaning": "Imitation",
+    "skg": "SKG 027"
+  },
+  {
+    "kanji": "果",
+    "reading": "か",
+    "meaning": "Fruit",
+    "skg": "SKG 027"
+  },
+  {
+    "kanji": "東",
+    "reading": "とう",
+    "meaning": "East",
+    "skg": "SKG 027"
+  },
+  {
+    "kanji": "練",
+    "reading": "れん",
+    "meaning": "Practice",
+    "skg": "SKG 027"
+  },
+  {
+    "kanji": "課",
+    "reading": "か",
+    "meaning": "Section",
+    "skg": "SKG 027"
+  },
+  {
+    "kanji": "堂",
+    "reading": "どう",
+    "meaning": "Hall",
+    "skg": "SKG 028"
+  },
+  {
+    "kanji": "里",
+    "reading": "さと",
+    "meaning": "Hometown",
+    "skg": "SKG 028"
+  },
+  {
+    "kanji": "埋",
+    "reading": "う",
+    "meaning": "Bury",
+    "skg": "SKG 028"
+  },
+  {
+    "kanji": "理",
+    "reading": "り",
+    "meaning": "Reason",
+    "skg": "SKG 028"
+  },
+  {
+    "kanji": "黒",
+    "reading": "こく",
+    "meaning": "Black",
+    "skg": "SKG 028"
+  },
+  {
+    "kanji": "量",
+    "reading": "りょう",
+    "meaning": "Quantity",
+    "skg": "SKG 028"
+  },
+  {
+    "kanji": "重",
+    "reading": "じゅう",
+    "meaning": "Heavy",
+    "skg": "SKG 028"
+  },
+  {
+    "kanji": "種",
+    "reading": "しゅ",
+    "meaning": "Kind",
+    "skg": "SKG 028"
+  },
+  {
+    "kanji": "童",
+    "reading": "どう",
+    "meaning": "Juvenile",
+    "skg": "SKG 028"
+  },
+  {
+    "kanji": "父",
+    "reading": "ちち",
+    "meaning": "Father",
+    "skg": "SKG 029"
+  },
+  {
+    "kanji": "交",
+    "reading": "こう",
+    "meaning": "Mix",
+    "skg": "SKG 029"
+  },
+  {
+    "kanji": "校",
+    "reading": "こう",
+    "meaning": "School",
+    "skg": "SKG 029"
+  },
+  {
+    "kanji": "絞",
+    "reading": "こう",
+    "meaning": "Strangle",
+    "skg": "SKG 029"
+  },
+  {
+    "kanji": "文",
+    "reading": "ぶん",
+    "meaning": "Writing",
+    "skg": "SKG 029"
+  },
+  {
+    "kanji": "央",
+    "reading": "おう",
+    "meaning": "Center",
+    "skg": "SKG 030"
+  },
+  {
+    "kanji": "映",
+    "reading": "えい",
+    "meaning": "Reflect",
+    "skg": "SKG 030"
+  },
+  {
+    "kanji": "険",
+    "reading": "けん",
+    "meaning": "Risky",
+    "skg": "SKG 030"
+  },
+  {
+    "kanji": "検",
+    "reading": "けん",
+    "meaning": "Examine",
+    "skg": "SKG 030"
+  },
+  {
+    "kanji": "験",
+    "reading": "けん",
+    "meaning": "Test",
+    "skg": "SKG 030"
+  },
+  {
+    "kanji": "英",
+    "reading": "えい",
+    "meaning": "England",
+    "skg": "SKG 030"
+  },
+  {
+    "kanji": "漢",
+    "reading": "かん",
+    "meaning": "Chinese",
+    "skg": "SKG 030"
+  },
+  {
+    "kanji": "実",
+    "reading": "じつ",
+    "meaning": "Truth",
+    "skg": "SKG 030"
+  },
+  {
+    "kanji": "美",
+    "reading": "び",
+    "meaning": "Beauty",
+    "skg": "SKG 030"
+  },
+  {
+    "kanji": "業",
+    "reading": "ぎょう",
+    "meaning": "Business",
+    "skg": "SKG 030"
+  },
+  {
+    "kanji": "僕",
+    "reading": "ぼく",
+    "meaning": "I/Me",
+    "skg": "SKG 030"
+  },
+  {
+    "kanji": "参",
+    "reading": "さん",
+    "meaning": "Participate",
+    "skg": "SKG 031"
+  },
+  {
+    "kanji": "登",
+    "reading": "とう",
+    "meaning": "Climb",
+    "skg": "SKG 031"
+  },
+  {
+    "kanji": "発",
+    "reading": "はつ",
+    "meaning": "Departure",
+    "skg": "SKG 031"
+  },
+  {
+    "kanji": "春",
+    "reading": "はる",
+    "meaning": "Spring",
+    "skg": "SKG 031"
+  },
+  {
+    "kanji": "寒",
+    "reading": "さむ",
+    "meaning": "Cold",
+    "skg": "SKG 031"
+  },
+  {
+    "kanji": "基",
+    "reading": "き",
+    "meaning": "Foundation",
+    "skg": "SKG 031"
+  },
+  {
+    "kanji": "番",
+    "reading": "ばん",
+    "meaning": "Ordinal",
+    "skg": "SKG 031"
+  },
+  {
+    "kanji": "審",
+    "reading": "しん",
+    "meaning": "Judge",
+    "skg": "SKG 031"
+  },
+  {
+    "kanji": "季",
+    "reading": "き",
+    "meaning": "Seasons",
+    "skg": "SKG 031"
+  },
+  {
+    "kanji": "秀",
+    "reading": "しゅう",
+    "meaning": "Excel",
+    "skg": "SKG 031"
+  },
+  {
+    "kanji": "委",
+    "reading": "い",
+    "meaning": "Committee",
+    "skg": "SKG 031"
+  },
+  {
+    "kanji": "乗",
+    "reading": "の",
+    "meaning": "Ride",
+    "skg": "SKG 031"
+  },
+  {
+    "kanji": "立",
+    "reading": "りつ",
+    "meaning": "Stand",
+    "skg": "SKG 032"
+  },
+  {
+    "kanji": "泣",
+    "reading": "な",
+    "meaning": "Cry",
+    "skg": "SKG 032"
+  },
+  {
+    "kanji": "位",
+    "reading": "い",
+    "meaning": "Rank",
+    "skg": "SKG 032"
+  },
+  {
+    "kanji": "倍",
+    "reading": "ばい",
+    "meaning": "Double",
+    "skg": "SKG 032"
+  },
+  {
+    "kanji": "音",
+    "reading": "おん",
+    "meaning": "Sound",
+    "skg": "SKG 032"
+  },
+  {
+    "kanji": "暗",
+    "reading": "あん",
+    "meaning": "Dark",
+    "skg": "SKG 032"
+  },
+  {
+    "kanji": "響",
+    "reading": "きょう",
+    "meaning": "Echo",
+    "skg": "SKG 032"
+  },
+  {
+    "kanji": "昔",
+    "reading": "むかし",
+    "meaning": "Long Ago",
+    "skg": "SKG 033"
+  },
+  {
+    "kanji": "借",
+    "reading": "しゃく",
+    "meaning": "Borrow",
+    "skg": "SKG 033"
+  },
+  {
+    "kanji": "備",
+    "reading": "び",
+    "meaning": "Provide",
+    "skg": "SKG 033"
+  },
+  {
+    "kanji": "僧",
+    "reading": "そう",
+    "meaning": "Priest",
+    "skg": "SKG 033"
+  },
+  {
+    "kanji": "増",
+    "reading": "ぞう",
+    "meaning": "Increase",
+    "skg": "SKG 033"
+  },
+  {
+    "kanji": "層",
+    "reading": "そう",
+    "meaning": "Layer",
+    "skg": "SKG 033"
+  },
+  {
+    "kanji": "黄",
+    "reading": "き",
+    "meaning": "Yellow",
+    "skg": "SKG 033"
+  },
+  {
+    "kanji": "横",
+    "reading": "よこ",
+    "meaning": "Side",
+    "skg": "SKG 033"
+  },
+  {
+    "kanji": "構",
+    "reading": "こう",
+    "meaning": "Set Up",
+    "skg": "SKG 033"
+  },
+  {
+    "kanji": "補",
+    "reading": "ほ",
+    "meaning": "Supplement",
+    "skg": "SKG 033"
+  },
+  {
+    "kanji": "捕",
+    "reading": "ほ",
+    "meaning": "Catch",
+    "skg": "SKG 033"
+  },
+  {
+    "kanji": "演",
+    "reading": "えん",
+    "meaning": "Acting",
+    "skg": "SKG 033"
+  },
+  {
+    "kanji": "骨",
+    "reading": "こつ",
+    "meaning": "Bone",
+    "skg": "SKG 034"
+  },
+  {
+    "kanji": "育",
+    "reading": "いく",
+    "meaning": "Nurture",
+    "skg": "SKG 034"
+  },
+  {
+    "kanji": "青",
+    "reading": "せい",
+    "meaning": "Blue",
+    "skg": "SKG 034"
+  },
+  {
+    "kanji": "情",
+    "reading": "じょう",
+    "meaning": "Emotion",
+    "skg": "SKG 034"
+  },
+  {
+    "kanji": "晴",
+    "reading": "は",
+    "meaning": "Clear Up",
+    "skg": "SKG 034"
+  },
+  {
+    "kanji": "言",
+    "reading": "げん",
+    "meaning": "Say",
+    "skg": "SKG 034"
+  },
+  {
+    "kanji": "信",
+    "reading": "しん",
+    "meaning": "Believe",
+    "skg": "SKG 034"
+  },
+  {
+    "kanji": "警",
+    "reading": "けい",
+    "meaning": "Warn",
+    "skg": "SKG 034"
+  },
+  {
+    "kanji": "井",
+    "reading": "い",
+    "meaning": "Well",
+    "skg": "SKG 035"
+  },
+  {
+    "kanji": "囲",
+    "reading": "い",
+    "meaning": "Surround",
+    "skg": "SKG 035"
+  },
+  {
+    "kanji": "弁",
+    "reading": "べん",
+    "meaning": "Dialect",
+    "skg": "SKG 035"
+  },
+  {
+    "kanji": "共",
+    "reading": "きょう",
+    "meaning": "Together",
+    "skg": "SKG 035"
+  },
+  {
+    "kanji": "供",
+    "reading": "きょう",
+    "meaning": "Offer",
+    "skg": "SKG 035"
+  },
+  {
+    "kanji": "巻",
+    "reading": "かん",
+    "meaning": "Scroll",
+    "skg": "SKG 035"
+  },
+  {
+    "kanji": "港",
+    "reading": "こう",
+    "meaning": "Harbor",
+    "skg": "SKG 035"
+  },
+  {
+    "kanji": "選",
+    "reading": "せん",
+    "meaning": "Choose",
+    "skg": "SKG 035"
+  },
+  {
+    "kanji": "暴",
+    "reading": "ぼう",
+    "meaning": "Violence",
+    "skg": "SKG 035"
+  },
+  {
+    "kanji": "叩",
+    "reading": "たた",
+    "meaning": "Tap",
+    "skg": "SKG 036"
+  },
+  {
+    "kanji": "節",
+    "reading": "せつ",
+    "meaning": "Season",
+    "skg": "SKG 036"
+  },
+  {
+    "kanji": "品",
+    "reading": "ひん",
+    "meaning": "Product",
+    "skg": "SKG 036"
+  },
+  {
+    "kanji": "器",
+    "reading": "き",
+    "meaning": "Container",
+    "skg": "SKG 036"
+  },
+  {
+    "kanji": "高",
+    "reading": "こう",
+    "meaning": "Tall",
+    "skg": "SKG 036"
+  },
+  {
+    "kanji": "橋",
+    "reading": "はし",
+    "meaning": "Bridge",
+    "skg": "SKG 036"
+  },
+  {
+    "kanji": "福",
+    "reading": "ふく",
+    "meaning": "Luck",
+    "skg": "SKG 036"
+  },
+  {
+    "kanji": "喜",
+    "reading": "き",
+    "meaning": "Rejoice",
+    "skg": "SKG 036"
+  },
+  {
+    "kanji": "豊",
+    "reading": "ほう",
+    "meaning": "Plentiful",
+    "skg": "SKG 036"
+  },
+  {
+    "kanji": "丁",
+    "reading": "ちょう",
+    "meaning": "Street",
+    "skg": "SKG 037"
+  },
+  {
+    "kanji": "庁",
+    "reading": "ちょう",
+    "meaning": "Agency",
+    "skg": "SKG 037"
+  },
+  {
+    "kanji": "町",
+    "reading": "ちょう",
+    "meaning": "Town",
+    "skg": "SKG 037"
+  },
+  {
+    "kanji": "打",
+    "reading": "だ",
+    "meaning": "Hit",
+    "skg": "SKG 037"
+  },
+  {
+    "kanji": "示",
+    "reading": "じ",
+    "meaning": "Indicate",
+    "skg": "SKG 037"
+  },
+  {
+    "kanji": "宇",
+    "reading": "う",
+    "meaning": "Outer Space",
+    "skg": "SKG 037"
+  },
+  {
+    "kanji": "停",
+    "reading": "てい",
+    "meaning": "Halt",
+    "skg": "SKG 037"
+  },
+  {
+    "kanji": "芋",
+    "reading": "いも",
+    "meaning": "Potato",
+    "skg": "SKG 037"
+  },
+  {
+    "kanji": "手",
+    "reading": "て",
+    "meaning": "Hand",
+    "skg": "SKG 037"
+  },
+  {
+    "kanji": "挙",
+    "reading": "きょ",
+    "meaning": "Raise",
+    "skg": "SKG 037"
+  },
+  {
+    "kanji": "藤",
+    "reading": "ふじ",
+    "meaning": "Wisteria",
+    "skg": "SKG 037"
+  },
+  {
+    "kanji": "才",
+    "reading": "さい",
+    "meaning": "Talent",
+    "skg": "SKG 038"
+  },
+  {
+    "kanji": "財",
+    "reading": "さい",
+    "meaning": "Wealth",
+    "skg": "SKG 038"
+  },
+  {
+    "kanji": "了",
+    "reading": "りょう",
+    "meaning": "Finish",
+    "skg": "SKG 038"
+  },
+  {
+    "kanji": "子",
+    "reading": "し",
+    "meaning": "Child",
+    "skg": "SKG 038"
+  },
+  {
+    "kanji": "存",
+    "reading": "そん",
+    "meaning": "Exist",
+    "skg": "SKG 038"
+  },
+  {
+    "kanji": "好",
+    "reading": "こう",
+    "meaning": "Like",
+    "skg": "SKG 038"
+  },
+  {
+    "kanji": "字",
+    "reading": "じ",
+    "meaning": "Letter",
+    "skg": "SKG 038"
+  },
+  {
+    "kanji": "学",
+    "reading": "がく",
+    "meaning": "Study",
+    "skg": "SKG 038"
+  },
+  {
+    "kanji": "予",
+    "reading": "よ",
+    "meaning": "Beforehand",
+    "skg": "SKG 038"
+  },
+  {
+    "kanji": "野",
+    "reading": "や",
+    "meaning": "Field",
+    "skg": "SKG 038"
+  },
+  {
+    "kanji": "小",
+    "reading": "しょう",
+    "meaning": "Small",
+    "skg": "SKG 039"
+  },
+  {
+    "kanji": "少",
+    "reading": "しょう",
+    "meaning": "Few",
+    "skg": "SKG 039"
+  },
+  {
+    "kanji": "秒",
+    "reading": "びょう",
+    "meaning": "Second",
+    "skg": "SKG 039"
+  },
+  {
+    "kanji": "水",
+    "reading": "すい",
+    "meaning": "Water",
+    "skg": "SKG 039"
+  },
+  {
+    "kanji": "氷",
+    "reading": "こおり",
+    "meaning": "Ice",
+    "skg": "SKG 039"
+  },
+  {
+    "kanji": "泳",
+    "reading": "およ",
+    "meaning": "Swim",
+    "skg": "SKG 039"
+  },
+  {
+    "kanji": "求",
+    "reading": "きゅう",
+    "meaning": "Request",
+    "skg": "SKG 039"
+  },
+  {
+    "kanji": "球",
+    "reading": "きゅう",
+    "meaning": "Sphere",
+    "skg": "SKG 039"
+  },
+  {
+    "kanji": "京",
+    "reading": "きょう",
+    "meaning": "Capital",
+    "skg": "SKG 040"
+  },
+  {
+    "kanji": "涼",
+    "reading": "すず",
+    "meaning": "Cool",
+    "skg": "SKG 040"
+  },
+  {
+    "kanji": "景",
+    "reading": "けい",
+    "meaning": "Scene",
+    "skg": "SKG 040"
+  },
+  {
+    "kanji": "泉",
+    "reading": "せん",
+    "meaning": "Fountain",
+    "skg": "SKG 040"
+  },
+  {
+    "kanji": "線",
+    "reading": "せん",
+    "meaning": "Line",
+    "skg": "SKG 040"
+  },
+  {
+    "kanji": "原",
+    "reading": "げん",
+    "meaning": "Original",
+    "skg": "SKG 040"
+  },
+  {
+    "kanji": "厚",
+    "reading": "あつ",
+    "meaning": "Thick",
+    "skg": "SKG 040"
+  },
+  {
+    "kanji": "禁",
+    "reading": "きん",
+    "meaning": "Prohibit",
+    "skg": "SKG 040"
+  },
+  {
+    "kanji": "票",
+    "reading": "ひょう",
+    "meaning": "Ballot",
+    "skg": "SKG 040"
+  },
+  {
+    "kanji": "標",
+    "reading": "ひょう",
+    "meaning": "Signpost",
+    "skg": "SKG 040"
+  },
+  {
+    "kanji": "緑",
+    "reading": "みどり",
+    "meaning": "Green",
+    "skg": "SKG 040"
+  },
+  {
+    "kanji": "様",
+    "reading": "さま",
+    "meaning": "Formal Name",
+    "skg": "SKG 040"
+  },
+  {
+    "kanji": "祭",
+    "reading": "さい",
+    "meaning": "Festival",
+    "skg": "SKG 041"
+  },
+  {
+    "kanji": "際",
+    "reading": "さい",
+    "meaning": "Occasion",
+    "skg": "SKG 041"
+  },
+  {
+    "kanji": "察",
+    "reading": "さつ",
+    "meaning": "Guess",
+    "skg": "SKG 041"
+  },
+  {
+    "kanji": "赤",
+    "reading": "あか",
+    "meaning": "Red",
+    "skg": "SKG 041"
+  },
+  {
+    "kanji": "歩",
+    "reading": "ほ",
+    "meaning": "Walk",
+    "skg": "SKG 041"
+  },
+  {
+    "kanji": "渉",
+    "reading": "しょう",
+    "meaning": "Ford",
+    "skg": "SKG 041"
+  },
+  {
+    "kanji": "寺",
+    "reading": "てら",
+    "meaning": "Temple",
+    "skg": "SKG 042"
+  },
+  {
+    "kanji": "詩",
+    "reading": "し",
+    "meaning": "Poem",
+    "skg": "SKG 042"
+  },
+  {
+    "kanji": "時",
+    "reading": "じ",
+    "meaning": "Time",
+    "skg": "SKG 042"
+  },
+  {
+    "kanji": "待",
+    "reading": "たい",
+    "meaning": "Wait",
+    "skg": "SKG 042"
+  },
+  {
+    "kanji": "持",
+    "reading": "じ",
+    "meaning": "Hold",
+    "skg": "SKG 042"
+  },
+  {
+    "kanji": "特",
+    "reading": "とく",
+    "meaning": "Special",
+    "skg": "SKG 042"
+  },
+  {
+    "kanji": "得",
+    "reading": "とく",
+    "meaning": "Acquire",
+    "skg": "SKG 042"
+  },
+  {
+    "kanji": "等",
+    "reading": "とう",
+    "meaning": "Equal",
+    "skg": "SKG 042"
+  },
+  {
+    "kanji": "専",
+    "reading": "せん",
+    "meaning": "Specialty",
+    "skg": "SKG 042"
+  },
+  {
+    "kanji": "当",
+    "reading": "とう",
+    "meaning": "Correct",
+    "skg": "SKG 043"
+  },
+  {
+    "kanji": "君",
+    "reading": "くん",
+    "meaning": "Buddy",
+    "skg": "SKG 043"
+  },
+  {
+    "kanji": "争",
+    "reading": "そう",
+    "meaning": "Conflict",
+    "skg": "SKG 043"
+  },
+  {
+    "kanji": "静",
+    "reading": "せい",
+    "meaning": "Quiet",
+    "skg": "SKG 043"
+  },
+  {
+    "kanji": "事",
+    "reading": "じ",
+    "meaning": "Occurrence",
+    "skg": "SKG 043"
+  },
+  {
+    "kanji": "沢",
+    "reading": "たく",
+    "meaning": "Swamp",
+    "skg": "SKG 044"
+  },
+  {
+    "kanji": "駅",
+    "reading": "えき",
+    "meaning": "Station",
+    "skg": "SKG 044"
+  },
+  {
+    "kanji": "馬",
+    "reading": "ば",
+    "meaning": "Horse",
+    "skg": "SKG 044"
+  },
+  {
+    "kanji": "鳥",
+    "reading": "ちょう",
+    "meaning": "Bird",
+    "skg": "SKG 044"
+  },
+  {
+    "kanji": "島",
+    "reading": "しま",
+    "meaning": "Island",
+    "skg": "SKG 044"
+  },
+  {
+    "kanji": "鳴",
+    "reading": "な",
+    "meaning": "Chirp",
+    "skg": "SKG 044"
+  },
+  {
+    "kanji": "物",
+    "reading": "ぶつ",
+    "meaning": "Thing",
+    "skg": "SKG 045"
+  },
+  {
+    "kanji": "易",
+    "reading": "い",
+    "meaning": "Easy",
+    "skg": "SKG 045"
+  },
+  {
+    "kanji": "湯",
+    "reading": "ゆ",
+    "meaning": "Hot Water",
+    "skg": "SKG 045"
+  },
+  {
+    "kanji": "場",
+    "reading": "じょう",
+    "meaning": "Location",
+    "skg": "SKG 045"
+  },
+  {
+    "kanji": "陽",
+    "reading": "よう",
+    "meaning": "Sunshine",
+    "skg": "SKG 045"
+  },
+  {
+    "kanji": "弟",
+    "reading": "だい",
+    "meaning": "Younger Brother",
+    "skg": "SKG 046"
+  },
+  {
+    "kanji": "笑",
+    "reading": "わら",
+    "meaning": "Laugh",
+    "skg": "SKG 046"
+  },
+  {
+    "kanji": "第",
+    "reading": "だい",
+    "meaning": "Ordinal Prefix",
+    "skg": "SKG 046"
+  },
+  {
+    "kanji": "算",
+    "reading": "さん",
+    "meaning": "Calculate",
+    "skg": "SKG 046"
+  },
+  {
+    "kanji": "箱",
+    "reading": "はこ",
+    "meaning": "Box",
+    "skg": "SKG 046"
+  },
+  {
+    "kanji": "弓",
+    "reading": "きゅう",
+    "meaning": "Bow",
+    "skg": "SKG 047"
+  },
+  {
+    "kanji": "紀",
+    "reading": "き",
+    "meaning": "Account",
+    "skg": "SKG 047"
+  },
+  {
+    "kanji": "起",
+    "reading": "お",
+    "meaning": "Wake Up",
+    "skg": "SKG 047"
+  },
+  {
+    "kanji": "記",
+    "reading": "き",
+    "meaning": "Write Down",
+    "skg": "SKG 047"
+  },
+  {
+    "kanji": "配",
+    "reading": "はい",
+    "meaning": "Distribute",
+    "skg": "SKG 047"
+  },
+  {
+    "kanji": "引",
+    "reading": "ひ",
+    "meaning": "Pull",
+    "skg": "SKG 047"
+  },
+  {
+    "kanji": "強",
+    "reading": "きょう",
+    "meaning": "Strong",
+    "skg": "SKG 047"
+  },
+  {
+    "kanji": "弱",
+    "reading": "じゃく",
+    "meaning": "Weak",
+    "skg": "SKG 047"
+  },
+  {
+    "kanji": "戸",
+    "reading": "と",
+    "meaning": "Door",
+    "skg": "SKG 048"
+  },
+  {
+    "kanji": "声",
+    "reading": "こえ",
+    "meaning": "Voice",
+    "skg": "SKG 048"
+  },
+  {
+    "kanji": "局",
+    "reading": "きょく",
+    "meaning": "Bureau",
+    "skg": "SKG 048"
+  },
+  {
+    "kanji": "履",
+    "reading": "り",
+    "meaning": "Footwear",
+    "skg": "SKG 048"
+  },
+  {
+    "kanji": "腹",
+    "reading": "ふく",
+    "meaning": "Stomach",
+    "skg": "SKG 048"
+  },
+  {
+    "kanji": "復",
+    "reading": "ふく",
+    "meaning": "Restore",
+    "skg": "SKG 048"
+  },
+  {
+    "kanji": "与",
+    "reading": "よ",
+    "meaning": "Give",
+    "skg": "SKG 049"
+  },
+  {
+    "kanji": "写",
+    "reading": "しゃ",
+    "meaning": "Copy",
+    "skg": "SKG 049"
+  },
+  {
+    "kanji": "号",
+    "reading": "ごう",
+    "meaning": "Number",
+    "skg": "SKG 049"
+  },
+  {
+    "kanji": "考",
+    "reading": "こう",
+    "meaning": "Think",
+    "skg": "SKG 049"
+  },
+  {
+    "kanji": "者",
+    "reading": "しゃ",
+    "meaning": "Someone",
+    "skg": "SKG 049"
+  },
+  {
+    "kanji": "身",
+    "reading": "しん",
+    "meaning": "Somebody",
+    "skg": "SKG 049"
+  },
+  {
+    "kanji": "看",
+    "reading": "かん",
+    "meaning": "Watch Over",
+    "skg": "SKG 050"
+  },
+  {
+    "kanji": "着",
+    "reading": "ちゃく",
+    "meaning": "Wear",
+    "skg": "SKG 050"
+  },
+  {
+    "kanji": "差",
+    "reading": "さ",
+    "meaning": "Distinction",
+    "skg": "SKG 050"
+  },
+  {
+    "kanji": "書",
+    "reading": "しょ",
+    "meaning": "Write",
+    "skg": "SKG 050"
+  },
+  {
+    "kanji": "律",
+    "reading": "りつ",
+    "meaning": "Law",
+    "skg": "SKG 050"
+  },
+  {
+    "kanji": "建",
+    "reading": "けん",
+    "meaning": "Build",
+    "skg": "SKG 050"
+  },
+  {
+    "kanji": "逮",
+    "reading": "たい",
+    "meaning": "Apprehend",
+    "skg": "SKG 050"
+  },
+  {
+    "kanji": "暑",
+    "reading": "あつ",
+    "meaning": "Hot",
+    "skg": "SKG 050"
+  },
+  {
+    "kanji": "署",
+    "reading": "しょ",
+    "meaning": "Government Office",
+    "skg": "SKG 050"
+  },
+  {
+    "kanji": "万",
+    "reading": "まん",
+    "meaning": "10 000",
+    "skg": "SKG 051"
+  },
+  {
+    "kanji": "方",
+    "reading": "ほう",
+    "meaning": "Direction",
+    "skg": "SKG 051"
+  },
+  {
+    "kanji": "坊",
+    "reading": "ぼう",
+    "meaning": "Monk",
+    "skg": "SKG 051"
+  },
+  {
+    "kanji": "防",
+    "reading": "ぼう",
+    "meaning": "Prevent",
+    "skg": "SKG 051"
+  },
+  {
+    "kanji": "男",
+    "reading": "だん",
+    "meaning": "Man",
+    "skg": "SKG 051"
+  },
+  {
+    "kanji": "勇",
+    "reading": "ゆう",
+    "meaning": "Courage",
+    "skg": "SKG 051"
+  },
+  {
+    "kanji": "五",
+    "reading": "ご",
+    "meaning": "Five",
+    "skg": "SKG 052"
+  },
+  {
+    "kanji": "語",
+    "reading": "ご",
+    "meaning": "Language",
+    "skg": "SKG 052"
+  },
+  {
+    "kanji": "刀",
+    "reading": "とう",
+    "meaning": "Sword",
+    "skg": "SKG 052"
+  },
+  {
+    "kanji": "分",
+    "reading": "ぶん",
+    "meaning": "Part",
+    "skg": "SKG 052"
+  },
+  {
+    "kanji": "辺",
+    "reading": "へん",
+    "meaning": "Area",
+    "skg": "SKG 052"
+  },
+  {
+    "kanji": "切",
+    "reading": "せつ",
+    "meaning": "Cut",
+    "skg": "SKG 052"
+  },
+  {
+    "kanji": "初",
+    "reading": "しょ",
+    "meaning": "First",
+    "skg": "SKG 052"
+  },
+  {
+    "kanji": "力",
+    "reading": "りょく",
+    "meaning": "Power",
+    "skg": "SKG 053"
+  },
+  {
+    "kanji": "労",
+    "reading": "ろう",
+    "meaning": "Labor",
+    "skg": "SKG 053"
+  },
+  {
+    "kanji": "努",
+    "reading": "ど",
+    "meaning": "Toil",
+    "skg": "SKG 053"
+  },
+  {
+    "kanji": "勢",
+    "reading": "せい",
+    "meaning": "Force",
+    "skg": "SKG 053"
+  },
+  {
+    "kanji": "功",
+    "reading": "こう",
+    "meaning": "Achievement",
+    "skg": "SKG 053"
+  },
+  {
+    "kanji": "効",
+    "reading": "こう",
+    "meaning": "Effective",
+    "skg": "SKG 053"
+  },
+  {
+    "kanji": "勉",
+    "reading": "べん",
+    "meaning": "Exertion",
+    "skg": "SKG 053"
+  },
+  {
+    "kanji": "協",
+    "reading": "きょう",
+    "meaning": "Cooperation",
+    "skg": "SKG 053"
+  },
+  {
+    "kanji": "助",
+    "reading": "じょ",
+    "meaning": "Help",
+    "skg": "SKG 053"
+  },
+  {
+    "kanji": "勝",
+    "reading": "しょう",
+    "meaning": "Win",
+    "skg": "SKG 053"
+  },
+  {
+    "kanji": "務",
+    "reading": "む",
+    "meaning": "Task",
+    "skg": "SKG 053"
+  },
+  {
+    "kanji": "動",
+    "reading": "どう",
+    "meaning": "Move",
+    "skg": "SKG 053"
+  },
+  {
+    "kanji": "働",
+    "reading": "どう",
+    "meaning": "Work",
+    "skg": "SKG 053"
+  },
+  {
+    "kanji": "九",
+    "reading": "く",
+    "meaning": "Nine",
+    "skg": "SKG 054"
+  },
+  {
+    "kanji": "尻",
+    "reading": "しり",
+    "meaning": "Butt",
+    "skg": "SKG 054"
+  },
+  {
+    "kanji": "究",
+    "reading": "きゅう",
+    "meaning": "Research",
+    "skg": "SKG 054"
+  },
+  {
+    "kanji": "丸",
+    "reading": "まる",
+    "meaning": "Circle",
+    "skg": "SKG 054"
+  },
+  {
+    "kanji": "熱",
+    "reading": "ねつ",
+    "meaning": "Heat",
+    "skg": "SKG 054"
+  },
+  {
+    "kanji": "雨",
+    "reading": "あめ",
+    "meaning": "Rain",
+    "skg": "SKG 055"
+  },
+  {
+    "kanji": "雪",
+    "reading": "ゆき",
+    "meaning": "Snow",
+    "skg": "SKG 055"
+  },
+  {
+    "kanji": "震",
+    "reading": "しん",
+    "meaning": "Earthquake",
+    "skg": "SKG 055"
+  },
+  {
+    "kanji": "雲",
+    "reading": "くも",
+    "meaning": "Cloud",
+    "skg": "SKG 055"
+  },
+  {
+    "kanji": "雰",
+    "reading": "ふん",
+    "meaning": "Atmosphere",
+    "skg": "SKG 055"
+  },
+  {
+    "kanji": "電",
+    "reading": "でん",
+    "meaning": "Electricity",
+    "skg": "SKG 055"
+  },
+  {
+    "kanji": "俺",
+    "reading": "おれ",
+    "meaning": "I/Me",
+    "skg": "SKG 055"
+  },
+  {
+    "kanji": "気",
+    "reading": "き",
+    "meaning": "Energy",
+    "skg": "SKG 055"
+  },
+  {
+    "kanji": "汽",
+    "reading": "き",
+    "meaning": "Steam",
+    "skg": "SKG 055"
+  },
+  {
+    "kanji": "丈",
+    "reading": "じょう",
+    "meaning": "Height",
+    "skg": "SKG 055"
+  },
+  {
+    "kanji": "以",
+    "reading": "い",
+    "meaning": "From",
+    "skg": "SKG 055"
+  },
+  {
+    "kanji": "代",
+    "reading": "だい",
+    "meaning": "Substitute",
+    "skg": "SKG 056"
+  },
+  {
+    "kanji": "式",
+    "reading": "しき",
+    "meaning": "Ritual",
+    "skg": "SKG 056"
+  },
+  {
+    "kanji": "試",
+    "reading": "し",
+    "meaning": "Try",
+    "skg": "SKG 056"
+  },
+  {
+    "kanji": "武",
+    "reading": "ぶ",
+    "meaning": "Military",
+    "skg": "SKG 056"
+  },
+  {
+    "kanji": "成",
+    "reading": "せい",
+    "meaning": "Become",
+    "skg": "SKG 056"
+  },
+  {
+    "kanji": "城",
+    "reading": "しろ",
+    "meaning": "Castle",
+    "skg": "SKG 056"
+  },
+  {
+    "kanji": "減",
+    "reading": "げん",
+    "meaning": "Decrease",
+    "skg": "SKG 056"
+  },
+  {
+    "kanji": "域",
+    "reading": "いき",
+    "meaning": "Region",
+    "skg": "SKG 056"
+  },
+  {
+    "kanji": "戦",
+    "reading": "せん",
+    "meaning": "War",
+    "skg": "SKG 056"
+  },
+  {
+    "kanji": "裁",
+    "reading": "さい",
+    "meaning": "Judge",
+    "skg": "SKG 056"
+  },
+  {
+    "kanji": "載",
+    "reading": "さい",
+    "meaning": "Place On",
+    "skg": "SKG 056"
+  },
+  {
+    "kanji": "識",
+    "reading": "しき",
+    "meaning": "Discerning",
+    "skg": "SKG 056"
+  },
+  {
+    "kanji": "職",
+    "reading": "しょく",
+    "meaning": "Employment",
+    "skg": "SKG 056"
+  },
+  {
+    "kanji": "七",
+    "reading": "しち",
+    "meaning": "Seven",
+    "skg": "SKG 057"
+  },
+  {
+    "kanji": "宅",
+    "reading": "たく",
+    "meaning": "House",
+    "skg": "SKG 057"
+  },
+  {
+    "kanji": "毛",
+    "reading": "もう",
+    "meaning": "Fur",
+    "skg": "SKG 057"
+  },
+  {
+    "kanji": "尾",
+    "reading": "び",
+    "meaning": "Tail",
+    "skg": "SKG 057"
+  },
+  {
+    "kanji": "老",
+    "reading": "ろう",
+    "meaning": "Elderly",
+    "skg": "SKG 057"
+  },
+  {
+    "kanji": "心",
+    "reading": "しん",
+    "meaning": "Heart",
+    "skg": "SKG 058"
+  },
+  {
+    "kanji": "応",
+    "reading": "おう",
+    "meaning": "Respond",
+    "skg": "SKG 058"
+  },
+  {
+    "kanji": "必",
+    "reading": "ひつ",
+    "meaning": "Certain",
+    "skg": "SKG 058"
+  },
+  {
+    "kanji": "感",
+    "reading": "かん",
+    "meaning": "Feeling",
+    "skg": "SKG 058"
+  },
+  {
+    "kanji": "認",
+    "reading": "にん",
+    "meaning": "Recognize",
+    "skg": "SKG 058"
+  },
+  {
+    "kanji": "総",
+    "reading": "そう",
+    "meaning": "Whole",
+    "skg": "SKG 058"
+  },
+  {
+    "kanji": "念",
+    "reading": "ねん",
+    "meaning": "Thought",
+    "skg": "SKG 059"
+  },
+  {
+    "kanji": "忘",
+    "reading": "ぼう",
+    "meaning": "Forget",
+    "skg": "SKG 059"
+  },
+  {
+    "kanji": "急",
+    "reading": "きゅう",
+    "meaning": "Hurry",
+    "skg": "SKG 059"
+  },
+  {
+    "kanji": "隠",
+    "reading": "いん",
+    "meaning": "Hide",
+    "skg": "SKG 059"
+  },
+  {
+    "kanji": "悪",
+    "reading": "あく",
+    "meaning": "Bad",
+    "skg": "SKG 059"
+  },
+  {
+    "kanji": "思",
+    "reading": "おも",
+    "meaning": "Think",
+    "skg": "SKG 059"
+  },
+  {
+    "kanji": "息",
+    "reading": "そく",
+    "meaning": "Breath",
+    "skg": "SKG 059"
+  },
+  {
+    "kanji": "想",
+    "reading": "そう",
+    "meaning": "Imagine",
+    "skg": "SKG 059"
+  },
+  {
+    "kanji": "態",
+    "reading": "たい",
+    "meaning": "Appearance",
+    "skg": "SKG 059"
+  },
+  {
+    "kanji": "意",
+    "reading": "い",
+    "meaning": "Idea",
+    "skg": "SKG 059"
+  },
+  {
+    "kanji": "億",
+    "reading": "おく",
+    "meaning": "100.000.000",
+    "skg": "SKG 059"
+  },
+  {
+    "kanji": "恋",
+    "reading": "れん",
+    "meaning": "Romance",
+    "skg": "SKG 059"
+  },
+  {
+    "kanji": "悲",
+    "reading": "ひ",
+    "meaning": "Sad",
+    "skg": "SKG 060"
+  },
+  {
+    "kanji": "非",
+    "reading": "ひ",
+    "meaning": "Injustice",
+    "skg": "SKG 060"
+  },
+  {
+    "kanji": "輩",
+    "reading": "はい",
+    "meaning": "Comrade",
+    "skg": "SKG 060"
+  },
+  {
+    "kanji": "俳",
+    "reading": "はい",
+    "meaning": "Haiku",
+    "skg": "SKG 060"
+  },
+  {
+    "kanji": "罪",
+    "reading": "ざい",
+    "meaning": "Guilt",
+    "skg": "SKG 060"
+  },
+  {
+    "kanji": "作",
+    "reading": "さく",
+    "meaning": "Make",
+    "skg": "SKG 060"
+  },
+  {
+    "kanji": "昨",
+    "reading": "さく",
+    "meaning": "Yesterday",
+    "skg": "SKG 060"
+  },
+  {
+    "kanji": "集",
+    "reading": "しゅう",
+    "meaning": "Collect",
+    "skg": "SKG 061"
+  },
+  {
+    "kanji": "葉",
+    "reading": "は",
+    "meaning": "Leaf",
+    "skg": "SKG 061"
+  },
+  {
+    "kanji": "長",
+    "reading": "ちょう",
+    "meaning": "Long",
+    "skg": "SKG 061"
+  },
+  {
+    "kanji": "張",
+    "reading": "ちょう",
+    "meaning": "Stretch",
+    "skg": "SKG 061"
+  },
+  {
+    "kanji": "衣",
+    "reading": "い",
+    "meaning": "Clothes",
+    "skg": "SKG 062"
+  },
+  {
+    "kanji": "表",
+    "reading": "ひょう",
+    "meaning": "Express",
+    "skg": "SKG 062"
+  },
+  {
+    "kanji": "製",
+    "reading": "せい",
+    "meaning": "Manufacture",
+    "skg": "SKG 062"
+  },
+  {
+    "kanji": "展",
+    "reading": "てん",
+    "meaning": "Expand",
+    "skg": "SKG 062"
+  },
+  {
+    "kanji": "良",
+    "reading": "りょう",
+    "meaning": "Good",
+    "skg": "SKG 062"
+  },
+  {
+    "kanji": "狼",
+    "reading": "おおかみ",
+    "meaning": "Wolf",
+    "skg": "SKG 062"
+  },
+  {
+    "kanji": "銀",
+    "reading": "ぎん",
+    "meaning": "Silver",
+    "skg": "SKG 062"
+  },
+  {
+    "kanji": "限",
+    "reading": "げん",
+    "meaning": "Limit",
+    "skg": "SKG 062"
+  },
+  {
+    "kanji": "根",
+    "reading": "こん",
+    "meaning": "Root",
+    "skg": "SKG 062"
+  },
+  {
+    "kanji": "食",
+    "reading": "しょく",
+    "meaning": "Eat",
+    "skg": "SKG 062"
+  },
+  {
+    "kanji": "養",
+    "reading": "よう",
+    "meaning": "Foster",
+    "skg": "SKG 062"
+  },
+  {
+    "kanji": "農",
+    "reading": "のう",
+    "meaning": "Farming",
+    "skg": "SKG 062"
+  },
+  {
+    "kanji": "空",
+    "reading": "くう",
+    "meaning": "Sky",
+    "skg": "SKG 063"
+  },
+  {
+    "kanji": "冗",
+    "reading": "じょう",
+    "meaning": "Unnecessary",
+    "skg": "SKG 063"
+  },
+  {
+    "kanji": "光",
+    "reading": "こう",
+    "meaning": "Light",
+    "skg": "SKG 063"
+  },
+  {
+    "kanji": "先",
+    "reading": "せん",
+    "meaning": "Previous",
+    "skg": "SKG 063"
+  },
+  {
+    "kanji": "洗",
+    "reading": "せん",
+    "meaning": "Wash",
+    "skg": "SKG 063"
+  },
+  {
+    "kanji": "元",
+    "reading": "げん",
+    "meaning": "Origin",
+    "skg": "SKG 063"
+  },
+  {
+    "kanji": "完",
+    "reading": "かん",
+    "meaning": "Perfect",
+    "skg": "SKG 063"
+  },
+  {
+    "kanji": "院",
+    "reading": "いん",
+    "meaning": "Institution",
+    "skg": "SKG 063"
+  },
+  {
+    "kanji": "売",
+    "reading": "ばい",
+    "meaning": "Sell",
+    "skg": "SKG 063"
+  },
+  {
+    "kanji": "読",
+    "reading": "よ",
+    "meaning": "Read",
+    "skg": "SKG 063"
+  },
+  {
+    "kanji": "続",
+    "reading": "ぞく",
+    "meaning": "Continue",
+    "skg": "SKG 063"
+  },
+  {
+    "kanji": "統",
+    "reading": "とう",
+    "meaning": "Unite",
+    "skg": "SKG 063"
+  },
+  {
+    "kanji": "焼",
+    "reading": "や",
+    "meaning": "Bake",
+    "skg": "SKG 063"
+  },
+  {
+    "kanji": "煙",
+    "reading": "えん",
+    "meaning": "Smoke",
+    "skg": "SKG 063"
+  },
+  {
+    "kanji": "鬼",
+    "reading": "き",
+    "meaning": "Demon",
+    "skg": "SKG 064"
+  },
+  {
+    "kanji": "兄",
+    "reading": "きょう",
+    "meaning": "Older Brother",
+    "skg": "SKG 064"
+  },
+  {
+    "kanji": "況",
+    "reading": "きょう",
+    "meaning": "Condition",
+    "skg": "SKG 064"
+  },
+  {
+    "kanji": "祝",
+    "reading": "しゅく",
+    "meaning": "Celebrate",
+    "skg": "SKG 064"
+  },
+  {
+    "kanji": "競",
+    "reading": "きょう",
+    "meaning": "Compete",
+    "skg": "SKG 064"
+  },
+  {
+    "kanji": "脱",
+    "reading": "だつ",
+    "meaning": "Undress",
+    "skg": "SKG 064"
+  },
+  {
+    "kanji": "説",
+    "reading": "せつ",
+    "meaning": "Theory",
+    "skg": "SKG 064"
+  },
+  {
+    "kanji": "税",
+    "reading": "ぜい",
+    "meaning": "Tax",
+    "skg": "SKG 064"
+  },
+  {
+    "kanji": "見",
+    "reading": "み",
+    "meaning": "See",
+    "skg": "SKG 065"
+  },
+  {
+    "kanji": "現",
+    "reading": "げん",
+    "meaning": "Present Time",
+    "skg": "SKG 065"
+  },
+  {
+    "kanji": "視",
+    "reading": "し",
+    "meaning": "Look At",
+    "skg": "SKG 065"
+  },
+  {
+    "kanji": "規",
+    "reading": "き",
+    "meaning": "Standard",
+    "skg": "SKG 065"
+  },
+  {
+    "kanji": "観",
+    "reading": "かん",
+    "meaning": "View",
+    "skg": "SKG 065"
+  },
+  {
+    "kanji": "親",
+    "reading": "しん",
+    "meaning": "Parent",
+    "skg": "SKG 065"
+  },
+  {
+    "kanji": "境",
+    "reading": "きょう",
+    "meaning": "Boundary",
+    "skg": "SKG 065"
+  },
+  {
+    "kanji": "鏡",
+    "reading": "かがみ",
+    "meaning": "Mirror",
+    "skg": "SKG 065"
+  },
+  {
+    "kanji": "覚",
+    "reading": "かく",
+    "meaning": "Memorize",
+    "skg": "SKG 065"
+  },
+  {
+    "kanji": "月",
+    "reading": "げつ",
+    "meaning": "Moon",
+    "skg": "SKG 066"
+  },
+  {
+    "kanji": "明",
+    "reading": "めい",
+    "meaning": "Bright",
+    "skg": "SKG 066"
+  },
+  {
+    "kanji": "朝",
+    "reading": "あさ",
+    "meaning": "Morning",
+    "skg": "SKG 066"
+  },
+  {
+    "kanji": "期",
+    "reading": "き",
+    "meaning": "Period Of Time",
+    "skg": "SKG 066"
+  },
+  {
+    "kanji": "棚",
+    "reading": "たな",
+    "meaning": "Shelf",
+    "skg": "SKG 066"
+  },
+  {
+    "kanji": "肩",
+    "reading": "かた",
+    "meaning": "Shoulder",
+    "skg": "SKG 066"
+  },
+  {
+    "kanji": "有",
+    "reading": "ゆう",
+    "meaning": "Have",
+    "skg": "SKG 066"
+  },
+  {
+    "kanji": "消",
+    "reading": "しょう",
+    "meaning": "Extinguish",
+    "skg": "SKG 066"
+  },
+  {
+    "kanji": "目",
+    "reading": "め",
+    "meaning": "Eye",
+    "skg": "SKG 067"
+  },
+  {
+    "kanji": "相",
+    "reading": "そう",
+    "meaning": "Mutual",
+    "skg": "SKG 067"
+  },
+  {
+    "kanji": "自",
+    "reading": "じ",
+    "meaning": "Self",
+    "skg": "SKG 067"
+  },
+  {
+    "kanji": "省",
+    "reading": "しょう",
+    "meaning": "Conserve",
+    "skg": "SKG 067"
+  },
+  {
+    "kanji": "鼻",
+    "reading": "はな",
+    "meaning": "Nose",
+    "skg": "SKG 067"
+  },
+  {
+    "kanji": "冒",
+    "reading": "ぼう",
+    "meaning": "Dare",
+    "skg": "SKG 067"
+  },
+  {
+    "kanji": "耳",
+    "reading": "みみ",
+    "meaning": "Ear",
+    "skg": "SKG 067"
+  },
+  {
+    "kanji": "餌",
+    "reading": "えさ",
+    "meaning": "Feed",
+    "skg": "SKG 067"
+  },
+  {
+    "kanji": "日",
+    "reading": "にち",
+    "meaning": "Sun",
+    "skg": "SKG 068"
+  },
+  {
+    "kanji": "白",
+    "reading": "はく",
+    "meaning": "White",
+    "skg": "SKG 068"
+  },
+  {
+    "kanji": "替",
+    "reading": "か",
+    "meaning": "Replace",
+    "skg": "SKG 068"
+  },
+  {
+    "kanji": "昼",
+    "reading": "ひる",
+    "meaning": "Noon",
+    "skg": "SKG 068"
+  },
+  {
+    "kanji": "百",
+    "reading": "ひゃく",
+    "meaning": "Hundred",
+    "skg": "SKG 068"
+  },
+  {
+    "kanji": "宿",
+    "reading": "しゅく",
+    "meaning": "Lodge",
+    "skg": "SKG 068"
+  },
+  {
+    "kanji": "面",
+    "reading": "めん",
+    "meaning": "Face",
+    "skg": "SKG 068"
+  },
+  {
+    "kanji": "貝",
+    "reading": "かい",
+    "meaning": "Shell",
+    "skg": "SKG 069"
+  },
+  {
+    "kanji": "具",
+    "reading": "ぐ",
+    "meaning": "Tool",
+    "skg": "SKG 069"
+  },
+  {
+    "kanji": "責",
+    "reading": "せき",
+    "meaning": "Blame",
+    "skg": "SKG 069"
+  },
+  {
+    "kanji": "負",
+    "reading": "ふ",
+    "meaning": "Lose",
+    "skg": "SKG 069"
+  },
+  {
+    "kanji": "資",
+    "reading": "し",
+    "meaning": "Resources",
+    "skg": "SKG 069"
+  },
+  {
+    "kanji": "賀",
+    "reading": "が",
+    "meaning": "Congratulations",
+    "skg": "SKG 069"
+  },
+  {
+    "kanji": "贅",
+    "reading": "ぜい",
+    "meaning": "Extravagant",
+    "skg": "SKG 069"
+  },
+  {
+    "kanji": "貰",
+    "reading": "もら",
+    "meaning": "Receive",
+    "skg": "SKG 069"
+  },
+  {
+    "kanji": "買",
+    "reading": "か",
+    "meaning": "Buy",
+    "skg": "SKG 069"
+  },
+  {
+    "kanji": "真",
+    "reading": "しん",
+    "meaning": "Reality",
+    "skg": "SKG 069"
+  },
+  {
+    "kanji": "費",
+    "reading": "ひ",
+    "meaning": "Expense",
+    "skg": "SKG 069"
+  },
+  {
+    "kanji": "質",
+    "reading": "しつ",
+    "meaning": "Quality",
+    "skg": "SKG 069"
+  },
+  {
+    "kanji": "員",
+    "reading": "いん",
+    "meaning": "Member",
+    "skg": "SKG 069"
+  },
+  {
+    "kanji": "賞",
+    "reading": "しょう",
+    "meaning": "Prize",
+    "skg": "SKG 069"
+  },
+  {
+    "kanji": "査",
+    "reading": "さ",
+    "meaning": "Inspect",
+    "skg": "SKG 069"
+  },
+  {
+    "kanji": "頁",
+    "reading": "ページ",
+    "meaning": "Page",
+    "skg": "SKG 070"
+  },
+  {
+    "kanji": "額",
+    "reading": "がく",
+    "meaning": "Amount",
+    "skg": "SKG 070"
+  },
+  {
+    "kanji": "題",
+    "reading": "だい",
+    "meaning": "Topic",
+    "skg": "SKG 070"
+  },
+  {
+    "kanji": "頑",
+    "reading": "がん",
+    "meaning": "Stubborn",
+    "skg": "SKG 070"
+  },
+  {
+    "kanji": "顔",
+    "reading": "かお",
+    "meaning": "Face",
+    "skg": "SKG 070"
+  },
+  {
+    "kanji": "頭",
+    "reading": "あたま",
+    "meaning": "Head",
+    "skg": "SKG 070"
+  },
+  {
+    "kanji": "領",
+    "reading": "りょう",
+    "meaning": "Territory",
+    "skg": "SKG 070"
+  },
+  {
+    "kanji": "願",
+    "reading": "がん",
+    "meaning": "Request",
+    "skg": "SKG 070"
+  },
+  {
+    "kanji": "類",
+    "reading": "るい",
+    "meaning": "Type",
+    "skg": "SKG 070"
+  },
+  {
+    "kanji": "順",
+    "reading": "じゅん",
+    "meaning": "Order",
+    "skg": "SKG 070"
+  },
+  {
+    "kanji": "県",
+    "reading": "けん",
+    "meaning": "Prefecture",
+    "skg": "SKG 071"
+  },
+  {
+    "kanji": "直",
+    "reading": "ちょく",
+    "meaning": "Fix",
+    "skg": "SKG 071"
+  },
+  {
+    "kanji": "置",
+    "reading": "ち",
+    "meaning": "Put",
+    "skg": "SKG 071"
+  },
+  {
+    "kanji": "値",
+    "reading": "ち",
+    "meaning": "Value",
+    "skg": "SKG 071"
+  },
+  {
+    "kanji": "価",
+    "reading": "か",
+    "meaning": "Value",
+    "skg": "SKG 071"
+  },
+  {
+    "kanji": "植",
+    "reading": "しょく",
+    "meaning": "Plant",
+    "skg": "SKG 071"
+  },
+  {
+    "kanji": "首",
+    "reading": "くび",
+    "meaning": "Neck",
+    "skg": "SKG 071"
+  },
+  {
+    "kanji": "道",
+    "reading": "どう",
+    "meaning": "Road",
+    "skg": "SKG 071"
+  },
+  {
+    "kanji": "導",
+    "reading": "どう",
+    "meaning": "Lead",
+    "skg": "SKG 071"
+  },
+  {
+    "kanji": "今",
+    "reading": "こん",
+    "meaning": "Now",
+    "skg": "SKG 072"
+  },
+  {
+    "kanji": "令",
+    "reading": "れい",
+    "meaning": "Orders",
+    "skg": "SKG 072"
+  },
+  {
+    "kanji": "命",
+    "reading": "めい",
+    "meaning": "Fate",
+    "skg": "SKG 072"
+  },
+  {
+    "kanji": "合",
+    "reading": "ごう",
+    "meaning": "Suit",
+    "skg": "SKG 072"
+  },
+  {
+    "kanji": "拾",
+    "reading": "ひろ",
+    "meaning": "Pick Up",
+    "skg": "SKG 072"
+  },
+  {
+    "kanji": "給",
+    "reading": "きゅう",
+    "meaning": "Salary",
+    "skg": "SKG 072"
+  },
+  {
+    "kanji": "含",
+    "reading": "がん",
+    "meaning": "Include",
+    "skg": "SKG 072"
+  },
+  {
+    "kanji": "谷",
+    "reading": "たに",
+    "meaning": "Valley",
+    "skg": "SKG 072"
+  },
+  {
+    "kanji": "容",
+    "reading": "よう",
+    "meaning": "Form",
+    "skg": "SKG 072"
+  },
+  {
+    "kanji": "浴",
+    "reading": "よく",
+    "meaning": "Bathe",
+    "skg": "SKG 072"
+  },
+  {
+    "kanji": "裕",
+    "reading": "ゆう",
+    "meaning": "Abundant",
+    "skg": "SKG 072"
+  },
+  {
+    "kanji": "答",
+    "reading": "こた",
+    "meaning": "Answer",
+    "skg": "SKG 072"
+  },
+  {
+    "kanji": "全",
+    "reading": "ぜん",
+    "meaning": "All",
+    "skg": "SKG 072"
+  },
+  {
+    "kanji": "金",
+    "reading": "きん",
+    "meaning": "Gold",
+    "skg": "SKG 072"
+  },
+  {
+    "kanji": "余",
+    "reading": "よ",
+    "meaning": "Surplus",
+    "skg": "SKG 072"
+  },
+  {
+    "kanji": "仏",
+    "reading": "ぶつ",
+    "meaning": "Buddha",
+    "skg": "SKG 073"
+  },
+  {
+    "kanji": "払",
+    "reading": "はら",
+    "meaning": "Pay",
+    "skg": "SKG 073"
+  },
+  {
+    "kanji": "私",
+    "reading": "し",
+    "meaning": "I",
+    "skg": "SKG 073"
+  },
+  {
+    "kanji": "公",
+    "reading": "こう",
+    "meaning": "Public",
+    "skg": "SKG 073"
+  },
+  {
+    "kanji": "訟",
+    "reading": "しょう",
+    "meaning": "Lawsuit",
+    "skg": "SKG 073"
+  },
+  {
+    "kanji": "広",
+    "reading": "ひろ",
+    "meaning": "Wide",
+    "skg": "SKG 073"
+  },
+  {
+    "kanji": "台",
+    "reading": "だい",
+    "meaning": "Machine",
+    "skg": "SKG 074"
+  },
+  {
+    "kanji": "治",
+    "reading": "じ",
+    "meaning": "Cure",
+    "skg": "SKG 074"
+  },
+  {
+    "kanji": "始",
+    "reading": "し",
+    "meaning": "Begin",
+    "skg": "SKG 074"
+  },
+  {
+    "kanji": "飴",
+    "reading": "あめ",
+    "meaning": "Candy",
+    "skg": "SKG 074"
+  },
+  {
+    "kanji": "船",
+    "reading": "せん",
+    "meaning": "Boat",
+    "skg": "SKG 074"
+  },
+  {
+    "kanji": "去",
+    "reading": "きょ",
+    "meaning": "Past",
+    "skg": "SKG 075"
+  },
+  {
+    "kanji": "法",
+    "reading": "ほう",
+    "meaning": "Method",
+    "skg": "SKG 075"
+  },
+  {
+    "kanji": "伝",
+    "reading": "でん",
+    "meaning": "Transmit",
+    "skg": "SKG 075"
+  },
+  {
+    "kanji": "転",
+    "reading": "てん",
+    "meaning": "Revolve",
+    "skg": "SKG 075"
+  },
+  {
+    "kanji": "芸",
+    "reading": "げい",
+    "meaning": "Art",
+    "skg": "SKG 075"
+  },
+  {
+    "kanji": "会",
+    "reading": "かい",
+    "meaning": "Meet",
+    "skg": "SKG 075"
+  },
+  {
+    "kanji": "絵",
+    "reading": "え",
+    "meaning": "Picture",
+    "skg": "SKG 075"
+  },
+  {
+    "kanji": "石",
+    "reading": "せき",
+    "meaning": "Stone",
+    "skg": "SKG 076"
+  },
+  {
+    "kanji": "岩",
+    "reading": "いわ",
+    "meaning": "Boulder",
+    "skg": "SKG 076"
+  },
+  {
+    "kanji": "岸",
+    "reading": "がん",
+    "meaning": "Coast",
+    "skg": "SKG 076"
+  },
+  {
+    "kanji": "幹",
+    "reading": "かん",
+    "meaning": "Tree Trunk",
+    "skg": "SKG 076"
+  },
+  {
+    "kanji": "若",
+    "reading": "わか",
+    "meaning": "Young",
+    "skg": "SKG 076"
+  },
+  {
+    "kanji": "右",
+    "reading": "ゆう",
+    "meaning": "Right",
+    "skg": "SKG 076"
+  },
+  {
+    "kanji": "左",
+    "reading": "さ",
+    "meaning": "Left",
+    "skg": "SKG 076"
+  },
+  {
+    "kanji": "友",
+    "reading": "ゆう",
+    "meaning": "Friend",
+    "skg": "SKG 077"
+  },
+  {
+    "kanji": "抜",
+    "reading": "ぬ",
+    "meaning": "Pull Out",
+    "skg": "SKG 077"
+  },
+  {
+    "kanji": "反",
+    "reading": "はん",
+    "meaning": "Anti",
+    "skg": "SKG 077"
+  },
+  {
+    "kanji": "返",
+    "reading": "へん",
+    "meaning": "Return",
+    "skg": "SKG 077"
+  },
+  {
+    "kanji": "仮",
+    "reading": "か",
+    "meaning": "Temporary",
+    "skg": "SKG 077"
+  },
+  {
+    "kanji": "坂",
+    "reading": "さか",
+    "meaning": "Slope",
+    "skg": "SKG 077"
+  },
+  {
+    "kanji": "阪",
+    "reading": "はん",
+    "meaning": "Heights",
+    "skg": "SKG 077"
+  },
+  {
+    "kanji": "飯",
+    "reading": "はん",
+    "meaning": "Meal",
+    "skg": "SKG 077"
+  },
+  {
+    "kanji": "販",
+    "reading": "はん",
+    "meaning": "Sales",
+    "skg": "SKG 077"
+  },
+  {
+    "kanji": "支",
+    "reading": "し",
+    "meaning": "Support",
+    "skg": "SKG 078"
+  },
+  {
+    "kanji": "技",
+    "reading": "ぎ",
+    "meaning": "Skill",
+    "skg": "SKG 078"
+  },
+  {
+    "kanji": "捜",
+    "reading": "そう",
+    "meaning": "Search",
+    "skg": "SKG 078"
+  },
+  {
+    "kanji": "皮",
+    "reading": "ひ",
+    "meaning": "Skin",
+    "skg": "SKG 078"
+  },
+  {
+    "kanji": "彼",
+    "reading": "かれ",
+    "meaning": "He",
+    "skg": "SKG 078"
+  },
+  {
+    "kanji": "被",
+    "reading": "ひ",
+    "meaning": "Incur",
+    "skg": "SKG 078"
+  },
+  {
+    "kanji": "波",
+    "reading": "は",
+    "meaning": "Wave",
+    "skg": "SKG 078"
+  },
+  {
+    "kanji": "疲",
+    "reading": "ひ",
+    "meaning": "Tired",
+    "skg": "SKG 078"
+  },
+  {
+    "kanji": "度",
+    "reading": "ど",
+    "meaning": "Degree",
+    "skg": "SKG 078"
+  },
+  {
+    "kanji": "渡",
+    "reading": "わた",
+    "meaning": "Transit",
+    "skg": "SKG 078"
+  },
+  {
+    "kanji": "受",
+    "reading": "じゅ",
+    "meaning": "Accept",
+    "skg": "SKG 079"
+  },
+  {
+    "kanji": "取",
+    "reading": "と",
+    "meaning": "Take",
+    "skg": "SKG 079"
+  },
+  {
+    "kanji": "収",
+    "reading": "しゅう",
+    "meaning": "Obtain",
+    "skg": "SKG 079"
+  },
+  {
+    "kanji": "服",
+    "reading": "ふく",
+    "meaning": "Clothes",
+    "skg": "SKG 079"
+  },
+  {
+    "kanji": "報",
+    "reading": "ほう",
+    "meaning": "News",
+    "skg": "SKG 079"
+  },
+  {
+    "kanji": "最",
+    "reading": "さい",
+    "meaning": "Most",
+    "skg": "SKG 079"
+  },
+  {
+    "kanji": "寝",
+    "reading": "ね",
+    "meaning": "Sleep",
+    "skg": "SKG 079"
+  },
+  {
+    "kanji": "投",
+    "reading": "とう",
+    "meaning": "Throw",
+    "skg": "SKG 079"
+  },
+  {
+    "kanji": "役",
+    "reading": "やく",
+    "meaning": "Duty",
+    "skg": "SKG 079"
+  },
+  {
+    "kanji": "殺",
+    "reading": "さつ",
+    "meaning": "Kill",
+    "skg": "SKG 079"
+  },
+  {
+    "kanji": "設",
+    "reading": "せつ",
+    "meaning": "Establish",
+    "skg": "SKG 079"
+  },
+  {
+    "kanji": "軽",
+    "reading": "かる",
+    "meaning": "Lightweight",
+    "skg": "SKG 079"
+  },
+  {
+    "kanji": "経",
+    "reading": "けい",
+    "meaning": "Passage Of Time",
+    "skg": "SKG 079"
+  },
+  {
+    "kanji": "冬",
+    "reading": "ふゆ",
+    "meaning": "Winter",
+    "skg": "SKG 080"
+  },
+  {
+    "kanji": "終",
+    "reading": "しゅう",
+    "meaning": "End",
+    "skg": "SKG 080"
+  },
+  {
+    "kanji": "各",
+    "reading": "かく",
+    "meaning": "Each",
+    "skg": "SKG 080"
+  },
+  {
+    "kanji": "枚",
+    "reading": "まい",
+    "meaning": "Flat Object Counter",
+    "skg": "SKG 080"
+  },
+  {
+    "kanji": "放",
+    "reading": "ほう",
+    "meaning": "Release",
+    "skg": "SKG 080"
+  },
+  {
+    "kanji": "改",
+    "reading": "かい",
+    "meaning": "Renew",
+    "skg": "SKG 080"
+  },
+  {
+    "kanji": "政",
+    "reading": "せい",
+    "meaning": "Politics",
+    "skg": "SKG 080"
+  },
+  {
+    "kanji": "教",
+    "reading": "きょう",
+    "meaning": "Teach",
+    "skg": "SKG 080"
+  },
+  {
+    "kanji": "数",
+    "reading": "すう",
+    "meaning": "Count",
+    "skg": "SKG 080"
+  },
+  {
+    "kanji": "敵",
+    "reading": "てき",
+    "meaning": "Enemy",
+    "skg": "SKG 080"
+  },
+  {
+    "kanji": "敗",
+    "reading": "はい",
+    "meaning": "Failure",
+    "skg": "SKG 080"
+  },
+  {
+    "kanji": "降",
+    "reading": "こう",
+    "meaning": "Descend",
+    "skg": "SKG 080"
+  },
+  {
+    "kanji": "夜",
+    "reading": "や",
+    "meaning": "Night",
+    "skg": "SKG 081"
+  },
+  {
+    "kanji": "後",
+    "reading": "ご",
+    "meaning": "Behind",
+    "skg": "SKG 081"
+  },
+  {
+    "kanji": "麦",
+    "reading": "むぎ",
+    "meaning": "Wheat",
+    "skg": "SKG 081"
+  },
+  {
+    "kanji": "夏",
+    "reading": "なつ",
+    "meaning": "Summer",
+    "skg": "SKG 081"
+  },
+  {
+    "kanji": "変",
+    "reading": "へん",
+    "meaning": "Change",
+    "skg": "SKG 081"
+  },
+  {
+    "kanji": "愛",
+    "reading": "あい",
+    "meaning": "Love",
+    "skg": "SKG 081"
+  },
+  {
+    "kanji": "優",
+    "reading": "ゆう",
+    "meaning": "Superior",
+    "skg": "SKG 081"
+  },
+  {
+    "kanji": "客",
+    "reading": "きゃく",
+    "meaning": "Guest",
+    "skg": "SKG 081"
+  },
+  {
+    "kanji": "落",
+    "reading": "らく",
+    "meaning": "Fall",
+    "skg": "SKG 081"
+  },
+  {
+    "kanji": "格",
+    "reading": "かく",
+    "meaning": "Status",
+    "skg": "SKG 081"
+  },
+  {
+    "kanji": "絡",
+    "reading": "らく",
+    "meaning": "Entangle",
+    "skg": "SKG 081"
+  },
+  {
+    "kanji": "路",
+    "reading": "ろ",
+    "meaning": "Road",
+    "skg": "SKG 081"
+  },
+  {
+    "kanji": "援",
+    "reading": "えん",
+    "meaning": "Aid",
+    "skg": "SKG 081"
+  },
+  {
+    "kanji": "女",
+    "reading": "じょ",
+    "meaning": "Woman",
+    "skg": "SKG 082"
+  },
+  {
+    "kanji": "安",
+    "reading": "あん",
+    "meaning": "Relax",
+    "skg": "SKG 082"
+  },
+  {
+    "kanji": "妻",
+    "reading": "さい",
+    "meaning": "Wife",
+    "skg": "SKG 082"
+  },
+  {
+    "kanji": "要",
+    "reading": "よう",
+    "meaning": "Need",
+    "skg": "SKG 082"
+  },
+  {
+    "kanji": "腰",
+    "reading": "こし",
+    "meaning": "Waist",
+    "skg": "SKG 082"
+  },
+  {
+    "kanji": "妥",
+    "reading": "だ",
+    "meaning": "Gentle",
+    "skg": "SKG 082"
+  },
+  {
+    "kanji": "姿",
+    "reading": "し",
+    "meaning": "Figure",
+    "skg": "SKG 082"
+  },
+  {
+    "kanji": "夕",
+    "reading": "ゆう",
+    "meaning": "Evening",
+    "skg": "SKG 082"
+  },
+  {
+    "kanji": "名",
+    "reading": "めい",
+    "meaning": "Name",
+    "skg": "SKG 082"
+  },
+  {
+    "kanji": "多",
+    "reading": "た",
+    "meaning": "Many",
+    "skg": "SKG 082"
+  },
+  {
+    "kanji": "夢",
+    "reading": "む",
+    "meaning": "Dream",
+    "skg": "SKG 082"
+  },
+  {
+    "kanji": "浅",
+    "reading": "あさ",
+    "meaning": "Shallow",
+    "skg": "SKG 083"
+  },
+  {
+    "kanji": "残",
+    "reading": "ざん",
+    "meaning": "Remainder",
+    "skg": "SKG 083"
+  },
+  {
+    "kanji": "外",
+    "reading": "がい",
+    "meaning": "Outside",
+    "skg": "SKG 083"
+  },
+  {
+    "kanji": "死",
+    "reading": "し",
+    "meaning": "Death",
+    "skg": "SKG 083"
+  },
+  {
+    "kanji": "利",
+    "reading": "り",
+    "meaning": "Profit",
+    "skg": "SKG 084"
+  },
+  {
+    "kanji": "判",
+    "reading": "はん",
+    "meaning": "Judge",
+    "skg": "SKG 084"
+  },
+  {
+    "kanji": "制",
+    "reading": "せい",
+    "meaning": "Control",
+    "skg": "SKG 084"
+  },
+  {
+    "kanji": "別",
+    "reading": "べつ",
+    "meaning": "Separate",
+    "skg": "SKG 084"
+  },
+  {
+    "kanji": "倒",
+    "reading": "とう",
+    "meaning": "Overthrow",
+    "skg": "SKG 084"
+  },
+  {
+    "kanji": "刺",
+    "reading": "さ",
+    "meaning": "Stab",
+    "skg": "SKG 084"
+  },
+  {
+    "kanji": "割",
+    "reading": "わり",
+    "meaning": "Divide",
+    "skg": "SKG 084"
+  },
+  {
+    "kanji": "前",
+    "reading": "ぜん",
+    "meaning": "Front",
+    "skg": "SKG 084"
+  },
+  {
+    "kanji": "副",
+    "reading": "ふく",
+    "meaning": "Vice",
+    "skg": "SKG 084"
+  },
+  {
+    "kanji": "則",
+    "reading": "そく",
+    "meaning": "Rule",
+    "skg": "SKG 084"
+  },
+  {
+    "kanji": "側",
+    "reading": "がわ",
+    "meaning": "Side",
+    "skg": "SKG 084"
+  },
+  {
+    "kanji": "劇",
+    "reading": "げき",
+    "meaning": "Drama",
+    "skg": "SKG 084"
+  },
+  {
+    "kanji": "罰",
+    "reading": "ばつ",
+    "meaning": "Penalty",
+    "skg": "SKG 084"
+  },
+  {
+    "kanji": "帰",
+    "reading": "かえ",
+    "meaning": "Return Home",
+    "skg": "SKG 084"
+  },
+  {
+    "kanji": "列",
+    "reading": "れつ",
+    "meaning": "Row",
+    "skg": "SKG 084"
+  },
+  {
+    "kanji": "例",
+    "reading": "れい",
+    "meaning": "Example",
+    "skg": "SKG 084"
+  },
+  {
+    "kanji": "門",
+    "reading": "もん",
+    "meaning": "Gates",
+    "skg": "SKG 085"
+  },
+  {
+    "kanji": "問",
+    "reading": "もん",
+    "meaning": "Problem",
+    "skg": "SKG 085"
+  },
+  {
+    "kanji": "間",
+    "reading": "かん",
+    "meaning": "Interval",
+    "skg": "SKG 085"
+  },
+  {
+    "kanji": "聞",
+    "reading": "ぶん",
+    "meaning": "Hear",
+    "skg": "SKG 085"
+  },
+  {
+    "kanji": "開",
+    "reading": "かい",
+    "meaning": "Open",
+    "skg": "SKG 085"
+  },
+  {
+    "kanji": "閉",
+    "reading": "へい",
+    "meaning": "Closed",
+    "skg": "SKG 085"
+  },
+  {
+    "kanji": "関",
+    "reading": "かん",
+    "meaning": "Related",
+    "skg": "SKG 085"
+  },
+  {
+    "kanji": "閥",
+    "reading": "ばつ",
+    "meaning": "Clique",
+    "skg": "SKG 085"
+  },
+  {
+    "kanji": "科",
+    "reading": "か",
+    "meaning": "Science",
+    "skg": "SKG 086"
+  },
+  {
+    "kanji": "料",
+    "reading": "りょう",
+    "meaning": "Fee",
+    "skg": "SKG 086"
+  },
+  {
+    "kanji": "羽",
+    "reading": "はね",
+    "meaning": "Feathers",
+    "skg": "SKG 086"
+  },
+  {
+    "kanji": "習",
+    "reading": "しゅう",
+    "meaning": "Learn",
+    "skg": "SKG 086"
+  },
+  {
+    "kanji": "竹",
+    "reading": "たけ",
+    "meaning": "Bamboo",
+    "skg": "SKG 086"
+  },
+  {
+    "kanji": "約",
+    "reading": "やく",
+    "meaning": "Promise",
+    "skg": "SKG 086"
+  },
+  {
+    "kanji": "的",
+    "reading": "てき",
+    "meaning": "Typical",
+    "skg": "SKG 086"
+  },
+  {
+    "kanji": "守",
+    "reading": "す",
+    "meaning": "Protect",
+    "skg": "SKG 087"
+  },
+  {
+    "kanji": "団",
+    "reading": "だん",
+    "meaning": "Group",
+    "skg": "SKG 087"
+  },
+  {
+    "kanji": "付",
+    "reading": "つ",
+    "meaning": "Attach",
+    "skg": "SKG 087"
+  },
+  {
+    "kanji": "府",
+    "reading": "ふ",
+    "meaning": "Government",
+    "skg": "SKG 087"
+  },
+  {
+    "kanji": "村",
+    "reading": "むら",
+    "meaning": "Village",
+    "skg": "SKG 087"
+  },
+  {
+    "kanji": "対",
+    "reading": "たい",
+    "meaning": "Versus",
+    "skg": "SKG 087"
+  },
+  {
+    "kanji": "謝",
+    "reading": "しゃ",
+    "meaning": "Apologize",
+    "skg": "SKG 087"
+  },
+  {
+    "kanji": "掛",
+    "reading": "か",
+    "meaning": "Hang",
+    "skg": "SKG 087"
+  },
+  {
+    "kanji": "械",
+    "reading": "かい",
+    "meaning": "Contraption",
+    "skg": "SKG 088"
+  },
+  {
+    "kanji": "機",
+    "reading": "き",
+    "meaning": "Machine",
+    "skg": "SKG 088"
+  },
+  {
+    "kanji": "義",
+    "reading": "ぎ",
+    "meaning": "Righteousness",
+    "skg": "SKG 088"
+  },
+  {
+    "kanji": "議",
+    "reading": "ぎ",
+    "meaning": "Deliberation",
+    "skg": "SKG 088"
+  },
+  {
+    "kanji": "礼",
+    "reading": "れい",
+    "meaning": "Thanks",
+    "skg": "SKG 089"
+  },
+  {
+    "kanji": "札",
+    "reading": "さつ",
+    "meaning": "Bill",
+    "skg": "SKG 089"
+  },
+  {
+    "kanji": "乱",
+    "reading": "らん",
+    "meaning": "Riot",
+    "skg": "SKG 089"
+  },
+  {
+    "kanji": "乳",
+    "reading": "にゅう",
+    "meaning": "Milk",
+    "skg": "SKG 089"
+  },
+  {
+    "kanji": "北",
+    "reading": "ほく",
+    "meaning": "North",
+    "skg": "SKG 089"
+  },
+  {
+    "kanji": "化",
+    "reading": "か",
+    "meaning": "Change",
+    "skg": "SKG 089"
+  },
+  {
+    "kanji": "靴",
+    "reading": "くつ",
+    "meaning": "Shoes",
+    "skg": "SKG 089"
+  },
+  {
+    "kanji": "花",
+    "reading": "はな",
+    "meaning": "Flower",
+    "skg": "SKG 089"
+  },
+  {
+    "kanji": "比",
+    "reading": "ひ",
+    "meaning": "Compare",
+    "skg": "SKG 089"
+  },
+  {
+    "kanji": "批",
+    "reading": "ひ",
+    "meaning": "Criticism",
+    "skg": "SKG 089"
+  },
+  {
+    "kanji": "昆",
+    "reading": "こん",
+    "meaning": "Insect",
+    "skg": "SKG 090"
+  },
+  {
+    "kanji": "混",
+    "reading": "こん",
+    "meaning": "Mix",
+    "skg": "SKG 090"
+  },
+  {
+    "kanji": "指",
+    "reading": "し",
+    "meaning": "Finger",
+    "skg": "SKG 090"
+  },
+  {
+    "kanji": "能",
+    "reading": "のう",
+    "meaning": "Ability",
+    "skg": "SKG 090"
+  },
+  {
+    "kanji": "皆",
+    "reading": "みな",
+    "meaning": "All",
+    "skg": "SKG 090"
+  },
+  {
+    "kanji": "階",
+    "reading": "かい",
+    "meaning": "Floor",
+    "skg": "SKG 090"
+  },
+  {
+    "kanji": "池",
+    "reading": "ち",
+    "meaning": "Pond",
+    "skg": "SKG 091"
+  },
+  {
+    "kanji": "地",
+    "reading": "ち",
+    "meaning": "Earth",
+    "skg": "SKG 091"
+  },
+  {
+    "kanji": "他",
+    "reading": "た",
+    "meaning": "Other",
+    "skg": "SKG 091"
+  },
+  {
+    "kanji": "施",
+    "reading": "し",
+    "meaning": "Carry Out",
+    "skg": "SKG 091"
+  },
+  {
+    "kanji": "斤",
+    "reading": "きん",
+    "meaning": "Axe",
+    "skg": "SKG 092"
+  },
+  {
+    "kanji": "近",
+    "reading": "きん",
+    "meaning": "Near",
+    "skg": "SKG 092"
+  },
+  {
+    "kanji": "新",
+    "reading": "しん",
+    "meaning": "New",
+    "skg": "SKG 092"
+  },
+  {
+    "kanji": "祈",
+    "reading": "き",
+    "meaning": "Pray",
+    "skg": "SKG 092"
+  },
+  {
+    "kanji": "折",
+    "reading": "せつ",
+    "meaning": "Fold",
+    "skg": "SKG 092"
+  },
+  {
+    "kanji": "所",
+    "reading": "しょ",
+    "meaning": "Place",
+    "skg": "SKG 092"
+  },
+  {
+    "kanji": "断",
+    "reading": "だん",
+    "meaning": "Cut Off",
+    "skg": "SKG 092"
+  },
+  {
+    "kanji": "訴",
+    "reading": "そ",
+    "meaning": "Sue",
+    "skg": "SKG 092"
+  },
+  {
+    "kanji": "兵",
+    "reading": "へい",
+    "meaning": "Soldier",
+    "skg": "SKG 093"
+  },
+  {
+    "kanji": "氏",
+    "reading": "し",
+    "meaning": "Family Name",
+    "skg": "SKG 093"
+  },
+  {
+    "kanji": "低",
+    "reading": "てい",
+    "meaning": "Low",
+    "skg": "SKG 093"
+  },
+  {
+    "kanji": "底",
+    "reading": "そこ",
+    "meaning": "Bottom",
+    "skg": "SKG 093"
+  },
+  {
+    "kanji": "紙",
+    "reading": "かみ",
+    "meaning": "Paper",
+    "skg": "SKG 093"
+  },
+  {
+    "kanji": "民",
+    "reading": "みん",
+    "meaning": "Peoples",
+    "skg": "SKG 093"
+  },
+  {
+    "kanji": "旅",
+    "reading": "りょ",
+    "meaning": "Trip",
+    "skg": "SKG 093"
+  },
+  {
+    "kanji": "派",
+    "reading": "は",
+    "meaning": "Sect",
+    "skg": "SKG 093"
+  },
+  {
+    "kanji": "家",
+    "reading": "いえ",
+    "meaning": "House",
+    "skg": "SKG 094"
+  },
+  {
+    "kanji": "豚",
+    "reading": "ぶた",
+    "meaning": "Pig",
+    "skg": "SKG 094"
+  },
+  {
+    "kanji": "象",
+    "reading": "ぞう",
+    "meaning": "Elephant",
+    "skg": "SKG 094"
+  },
+  {
+    "kanji": "像",
+    "reading": "ぞう",
+    "meaning": "Image",
+    "skg": "SKG 094"
+  },
+  {
+    "kanji": "晩",
+    "reading": "ばん",
+    "meaning": "Late Evening",
+    "skg": "SKG 094"
+  },
+  {
+    "kanji": "山",
+    "reading": "さん",
+    "meaning": "Mountain",
+    "skg": "SKG 095"
+  },
+  {
+    "kanji": "出",
+    "reading": "しゅつ",
+    "meaning": "Exit",
+    "skg": "SKG 095"
+  },
+  {
+    "kanji": "六",
+    "reading": "ろく",
+    "meaning": "Six",
+    "skg": "SKG 095"
+  },
+  {
+    "kanji": "穴",
+    "reading": "あな",
+    "meaning": "Hole",
+    "skg": "SKG 095"
+  },
+  {
+    "kanji": "川",
+    "reading": "かわ",
+    "meaning": "River",
+    "skg": "SKG 095"
+  },
+  {
+    "kanji": "訓",
+    "reading": "くん",
+    "meaning": "Instruction",
+    "skg": "SKG 095"
+  },
+  {
+    "kanji": "州",
+    "reading": "しゅう",
+    "meaning": "State",
+    "skg": "SKG 095"
+  },
+  {
+    "kanji": "流",
+    "reading": "りゅう",
+    "meaning": "Stream",
+    "skg": "SKG 095"
+  },
+  {
+    "kanji": "済",
+    "reading": "さい",
+    "meaning": "Come to An End",
+    "skg": "SKG 095"
+  },
+  {
+    "kanji": "行",
+    "reading": "こう",
+    "meaning": "Go",
+    "skg": "SKG 096"
+  },
+  {
+    "kanji": "術",
+    "reading": "じゅつ",
+    "meaning": "Technique",
+    "skg": "SKG 096"
+  },
+  {
+    "kanji": "述",
+    "reading": "じゅつ",
+    "meaning": "Mention",
+    "skg": "SKG 096"
+  },
+  {
+    "kanji": "走",
+    "reading": "そう",
+    "meaning": "Run",
+    "skg": "SKG 096"
+  },
+  {
+    "kanji": "徒",
+    "reading": "と",
+    "meaning": "Follower",
+    "skg": "SKG 096"
+  },
+  {
+    "kanji": "定",
+    "reading": "てい",
+    "meaning": "Determine",
+    "skg": "SKG 096"
+  },
+  {
+    "kanji": "足",
+    "reading": "そく",
+    "meaning": "Foot",
+    "skg": "SKG 096"
+  },
+  {
+    "kanji": "是",
+    "reading": "ぜ",
+    "meaning": "Absolutely",
+    "skg": "SKG 096"
+  },
+  {
+    "kanji": "提",
+    "reading": "てい",
+    "meaning": "Present",
+    "skg": "SKG 096"
+  },
+  {
+    "kanji": "担",
+    "reading": "たん",
+    "meaning": "Carry",
+    "skg": "SKG 096"
+  },
+  {
+    "kanji": "店",
+    "reading": "てん",
+    "meaning": "Shop",
+    "skg": "SKG 097"
+  },
+  {
+    "kanji": "点",
+    "reading": "てん",
+    "meaning": "Point",
+    "skg": "SKG 097"
+  },
+  {
+    "kanji": "形",
+    "reading": "けい",
+    "meaning": "Shape",
+    "skg": "SKG 097"
+  },
+  {
+    "kanji": "影",
+    "reading": "えい",
+    "meaning": "Shadow",
+    "skg": "SKG 097"
+  },
+  {
+    "kanji": "研",
+    "reading": "けん",
+    "meaning": "Sharpen",
+    "skg": "SKG 097"
+  },
+  {
+    "kanji": "型",
+    "reading": "けい",
+    "meaning": "Model",
+    "skg": "SKG 097"
+  },
+  {
+    "kanji": "部",
+    "reading": "ぶ",
+    "meaning": "Part",
+    "skg": "SKG 098"
+  },
+  {
+    "kanji": "都",
+    "reading": "と",
+    "meaning": "Metropolis",
+    "skg": "SKG 098"
+  },
+  {
+    "kanji": "史",
+    "reading": "し",
+    "meaning": "History",
+    "skg": "SKG 098"
+  },
+  {
+    "kanji": "使",
+    "reading": "し",
+    "meaning": "Use",
+    "skg": "SKG 098"
+  },
+  {
+    "kanji": "更",
+    "reading": "こう",
+    "meaning": "Renew",
+    "skg": "SKG 098"
+  },
+  {
+    "kanji": "便",
+    "reading": "べん",
+    "meaning": "Convenience",
+    "skg": "SKG 098"
+  },
+  {
+    "kanji": "糸",
+    "reading": "いと",
+    "meaning": "Thread",
+    "skg": "SKG 099"
+  },
+  {
+    "kanji": "系",
+    "reading": "けい",
+    "meaning": "Lineage",
+    "skg": "SKG 099"
+  },
+  {
+    "kanji": "係",
+    "reading": "けい",
+    "meaning": "Connection",
+    "skg": "SKG 099"
+  },
+  {
+    "kanji": "素",
+    "reading": "そ",
+    "meaning": "Element",
+    "skg": "SKG 099"
+  },
+  {
+    "kanji": "紫",
+    "reading": "むらさき",
+    "meaning": "Purple",
+    "skg": "SKG 099"
+  },
+  {
+    "kanji": "繋",
+    "reading": "つな",
+    "meaning": "Connect",
+    "skg": "SKG 099"
+  },
+  {
+    "kanji": "組",
+    "reading": "くみ",
+    "meaning": "Group",
+    "skg": "SKG 099"
+  },
+  {
+    "kanji": "吸",
+    "reading": "きゅう",
+    "meaning": "Suck",
+    "skg": "SKG 099"
+  },
+  {
+    "kanji": "級",
+    "reading": "きゅう",
+    "meaning": "Level",
+    "skg": "SKG 099"
+  },
+  {
+    "kanji": "飛",
+    "reading": "ひ",
+    "meaning": "Fly",
+    "skg": "SKG 099"
+  },
+  {
+    "kanji": "官",
+    "reading": "かん",
+    "meaning": "Bureaucrat",
+    "skg": "SKG 100"
+  },
+  {
+    "kanji": "管",
+    "reading": "かん",
+    "meaning": "Pipe",
+    "skg": "SKG 100"
+  },
+  {
+    "kanji": "館",
+    "reading": "かん",
+    "meaning": "Public Building",
+    "skg": "SKG 100"
+  },
+  {
+    "kanji": "追",
+    "reading": "お",
+    "meaning": "Follow",
+    "skg": "SKG 100"
+  },
+  {
+    "kanji": "違",
+    "reading": "ちが",
+    "meaning": "Different",
+    "skg": "SKG 100"
+  },
+  {
+    "kanji": "宮",
+    "reading": "みや",
+    "meaning": "Shinto Shrine",
+    "skg": "SKG 100"
+  },
+  {
+    "kanji": "営",
+    "reading": "えい",
+    "meaning": "Manage",
+    "skg": "SKG 100"
+  },
+  {
+    "kanji": "亡",
+    "reading": "ぼう",
+    "meaning": "Death",
+    "skg": "SKG 101"
+  },
+  {
+    "kanji": "忙",
+    "reading": "ぼう",
+    "meaning": "Busy",
+    "skg": "SKG 101"
+  },
+  {
+    "kanji": "世",
+    "reading": "せい",
+    "meaning": "World",
+    "skg": "SKG 101"
+  },
+  {
+    "kanji": "周",
+    "reading": "しゅう",
+    "meaning": "Circumference",
+    "skg": "SKG 101"
+  },
+  {
+    "kanji": "調",
+    "reading": "ちょう",
+    "meaning": "Tone",
+    "skg": "SKG 101"
+  },
+  {
+    "kanji": "週",
+    "reading": "しゅう",
+    "meaning": "Week",
+    "skg": "SKG 101"
+  },
+  {
+    "kanji": "通",
+    "reading": "つう",
+    "meaning": "Pass Through",
+    "skg": "SKG 101"
+  },
+  {
+    "kanji": "痛",
+    "reading": "つう",
+    "meaning": "Pain",
+    "skg": "SKG 101"
+  },
+  {
+    "kanji": "準",
+    "reading": "じゅん",
+    "meaning": "Standard",
+    "skg": "SKG 102"
+  },
+  {
+    "kanji": "進",
+    "reading": "しん",
+    "meaning": "Advance",
+    "skg": "SKG 102"
+  },
+  {
+    "kanji": "誰",
+    "reading": "だれ",
+    "meaning": "Who",
+    "skg": "SKG 102"
+  },
+  {
+    "kanji": "権",
+    "reading": "けん",
+    "meaning": "Rights",
+    "skg": "SKG 102"
+  },
+  {
+    "kanji": "難",
+    "reading": "なん",
+    "meaning": "Difficult",
+    "skg": "SKG 102"
+  },
+  {
+    "kanji": "確",
+    "reading": "かく",
+    "meaning": "Certain",
+    "skg": "SKG 102"
+  },
+  {
+    "kanji": "護",
+    "reading": "ご",
+    "meaning": "Defend",
+    "skg": "SKG 102"
+  },
+  {
+    "kanji": "曜",
+    "reading": "よう",
+    "meaning": "Weekday",
+    "skg": "SKG 102"
+  },
+  {
+    "kanji": "嫌",
+    "reading": "けん",
+    "meaning": "Dislike",
+    "skg": "SKG 102"
+  },
+  {
+    "kanji": "冊",
+    "reading": "さつ",
+    "meaning": "Book Counter",
+    "skg": "SKG 103"
+  },
+  {
+    "kanji": "論",
+    "reading": "ろん",
+    "meaning": "Theory",
+    "skg": "SKG 103"
+  },
+  {
+    "kanji": "輪",
+    "reading": "りん",
+    "meaning": "Wheel",
+    "skg": "SKG 103"
+  },
+  {
+    "kanji": "輸",
+    "reading": "ゆ",
+    "meaning": "Transport",
+    "skg": "SKG 103"
+  },
+  {
+    "kanji": "幻",
+    "reading": "げん",
+    "meaning": "Illusion",
+    "skg": "SKG 103"
+  },
+  {
+    "kanji": "庭",
+    "reading": "てい",
+    "meaning": "Garden",
+    "skg": "SKG 103"
+  },
+  {
+    "kanji": "危",
+    "reading": "き",
+    "meaning": "Dangerous",
+    "skg": "SKG 103"
+  },
+  {
+    "kanji": "犯",
+    "reading": "はん",
+    "meaning": "Crime",
+    "skg": "SKG 103"
+  },
+  {
+    "kanji": "疑",
+    "reading": "ぎ",
+    "meaning": "Doubt",
+    "skg": "SKG 103"
+  },
+  {
+    "kanji": "々",
+    "reading": "のま",
+    "meaning": "Repeater",
+    "skg": "SKG 104"
+  }
+]
