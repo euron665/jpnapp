@@ -14,7 +14,7 @@
 <style>
 :root {
   --bg:#0c0c0e; --surface:#141416; --surface2:#1c1c20;
-  --border:#2a2a30; --text:#e8e8f0; --text-dim:#666680; --text-muted:#333345;
+  --border:#2a2a30; --text:#e8e8f0; --text-dim:#8a8aa3; --text-muted:var(--text-dim); /* one grey: muted (#333345, 1.6:1) retired, kept as alias */
   --accent:#e8193c; --accent-glow:rgba(232,25,60,0.4); --gold:#c9a84c;
   --pass:#1a3a2a; --fail:#3a1a1a; --pass-text:#4af080; --fail-text:#f04a4a;
   /* Fonts: ONE text stack. Inter draws Latin; it has no Japanese glyphs, so every kana/kanji
@@ -27,6 +27,9 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
 /* line-height 1.45 = Noto Sans JP's natural line height, so switching the primary font to Inter
    keeps every existing gap. Form controls don't inherit fonts by default (that made Close Arial). */
 button,input,select,textarea{font-family:inherit;line-height:inherit;}
+/* Column headings are centred in every table. !important because 41 grammar <th> carry an
+   inline text-align:left. */
+thead th{text-align:center !important;}
 
 .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
   justify-content:center;padding:24px;opacity:0;pointer-events:none;
@@ -66,9 +69,9 @@ button,input,select,textarea{font-family:inherit;line-height:inherit;}
   font-size:13px;font-weight:500;cursor:pointer;transition:color .15s,border-color .15s;}
 .ts-btn:hover:not(:disabled){color:var(--accent);border-color:var(--accent);}
 .ts-btn:disabled{opacity:.35;cursor:default;}
-.ts-btn .zl,#zoom-ctl .zl{font-size:10px;margin-left:1px;}
-.ts-val{min-width:46px;text-align:center;font-family:var(--font-num);font-size:12px;color:var(--text);}
-.home-title{font-family:var(--font-ui);font-size:30px;font-weight:600;letter-spacing:0.02em;
+.ts-btn .zl,#zoom-ctl .zl{font-size:11px;margin-left:1px;}
+.ts-val{min-width:46px;text-align:center;font-family:var(--font-num);font-size:13px;color:var(--text);}
+.home-title{font-family:var(--font-ui);font-size:26px;font-weight:600;letter-spacing:0.02em;
   color:var(--text);text-align:center;padding-top:20px;}
 .home-stamp{font-size:11px;color:var(--text-dim);text-align:center;letter-spacing:0.04em;
   font-weight:400;padding-bottom:8px;}
@@ -85,7 +88,7 @@ button,input,select,textarea{font-family:inherit;line-height:inherit;}
 #zoom-ctl button:hover:not(:disabled){color:var(--accent);border-color:var(--accent);}
 #zoom-ctl button:disabled{opacity:.35;cursor:default;}
 .home-buttons{display:flex;flex-direction:column;gap:10px;width:100%;max-width:360px;}
-.home-divider{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--text-dim);
+.home-divider{font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--text-dim);
   text-align:center;padding:4px 0;font-family:var(--font-ui);}
 
 .btn-primary{background:transparent;color:var(--text);border:1px solid var(--border);border-radius:var(--r);
@@ -117,9 +120,9 @@ button,input,select,textarea{font-family:inherit;line-height:inherit;}
   padding:18px 12px 12px;cursor:pointer;transition:all 0.15s;text-align:center;position:relative;}
 .skg-card:hover{border-color:var(--accent);background:var(--surface2);}
 .skg-card:active{transform:scale(0.97);}
-.skg-card-id{position:absolute;top:4px;right:7px;font-size:9px;letter-spacing:0.05em;color:var(--text-muted);font-family:var(--font-num);}
+.skg-card-id{position:absolute;top:4px;right:7px;font-size:11px;letter-spacing:0.05em;color:var(--text-muted);font-family:var(--font-num);}
 .skg-card-kanji{font-family:var(--font-jp);font-weight:300;font-size:25px;line-height:1.1;}
-.skg-card-count{font-size:10px;color:var(--text);margin-top:7px;}
+.skg-card-count{font-size:11px;color:var(--text);margin-top:7px;}
 .picker-label{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);font-family:var(--font-ui);padding:4px 0 10px;}
 .picker-divider{height:1px;background:var(--border);margin:6px 0 20px;}
 .picker-head{display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;}
@@ -161,9 +164,9 @@ button,input,select,textarea{font-family:inherit;line-height:inherit;}
   flex-direction:column;align-items:center;gap:8px;cursor:pointer;}
 .study-kanji-card:active{opacity:0.7;}
 .skh-kanji{font-family:var(--font-jp);font-weight:300;font-size:64px;line-height:1;}
-.skh-reading{font-size:12px;color:var(--text-dim);font-family:var(--font-jp);}
+.skh-reading{font-size:13px;color:var(--text-dim);font-family:var(--font-jp);}
 .skh-meaning{font-size:13px;color:var(--text);font-family:var(--font-ui);}
-.skh-count{font-size:10px;color:var(--text-dim);font-family:var(--font-mono);margin-top:2px;}
+.skh-count{font-size:11px;color:var(--text-dim);font-family:var(--font-mono);margin-top:2px;}
 .kv-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:200;overflow-y:auto;}
 .kv-modal-overlay.open{display:block;}
 .kv-modal{background:var(--bg);margin:60px 16px 32px;border-radius:var(--r);border:1px solid var(--border);padding:20px 16px;}
@@ -171,24 +174,24 @@ button,input,select,textarea{font-family:inherit;line-height:inherit;}
 .kv-modal-kanji{font-family:var(--font-jp);font-weight:300;font-size:48px;line-height:1;}
 .kv-modal-info{flex:1;padding-left:16px;}
 .kv-modal-reading{font-size:13px;color:var(--text-dim);font-family:var(--font-jp);}
-.kv-modal-meaning{font-size:14px;color:var(--text);}
+.kv-modal-meaning{font-size:15px;color:var(--text);}
 .kv-modal-close{background:none;border:1px solid var(--border);color:var(--text);border-radius:var(--r);padding:6px 12px;font-size:13px;cursor:pointer;}
 
 .rg-block{margin-bottom:14px;}
 .rg-block:last-child{margin-bottom:0;}
-.rg-label{font-size:12px;letter-spacing:0.05em;
+.rg-label{font-size:13px;letter-spacing:0.05em;
   color:#e8a0b0;margin-bottom:8px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;}
 .rg-label-num{font-weight:500;}
 .rg-label-kana{font-family:var(--font-jp);font-weight:400;font-size:17px;color:#f0d0d8;}
-.rg-label-romaji{font-style:italic;font-size:12px;color:#a07888;font-family:var(--font-mono);}
+.rg-label-romaji{font-style:italic;font-size:13px;color:#a07888;font-family:var(--font-mono);}
 .rg-vocab-grid{display:flex;flex-wrap:wrap;gap:6px;}
 .vocab-pill{background:var(--surface2);border:1px solid var(--border);
   border-radius:6px;padding:12px 14px;font-family:var(--font-jp);min-width:100px;}
 .vocab-pill .vp-word{font-size:21px;display:block;color:#f0f0f8;font-weight:300;margin-bottom:4px;}
-.vocab-pill .vp-reading{font-size:14px;color:#b0b8d8;display:block;margin-bottom:2px;font-family:var(--font-jp);}
+.vocab-pill .vp-reading{font-size:13px;color:#b0b8d8;display:block;margin-bottom:2px;font-family:var(--font-jp);}
 .vocab-pill .vp-meaning{font-size:13px;color:#8890aa;display:block;font-family:var(--font-ui);font-weight:300;}
 .vp-tags{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap;}
-.vp-tag{font-size:10px;font-weight:700;color:#fff;padding:2px 6px;border-radius:3px;font-family:var(--font-ui);letter-spacing:0.3px;white-space:nowrap;}
+.vp-tag{font-size:11px;font-weight:700;color:#fff;padding:2px 6px;border-radius:3px;font-family:var(--font-ui);letter-spacing:0.3px;white-space:nowrap;}
 .vp-tag-noun{background:#5090d0;}
 .vp-tag-i-adj{background:#5db89a;}
 .vp-tag-na-adj{background:#a07ed4;}
@@ -206,7 +209,7 @@ button,input,select,textarea{font-family:inherit;line-height:inherit;}
 .sm-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:300;align-items:center;justify-content:center;padding:24px;}
 .sm-modal-overlay.open{display:flex;}
 .sm-modal{background:var(--surface);border:1px solid var(--border);border-radius:8px;max-width:460px;width:100%;max-height:80vh;overflow-y:auto;padding:22px 22px 26px;position:relative;}
-.sm-modal-close{position:absolute;top:8px;right:14px;color:var(--text-dim);font-size:18px;cursor:pointer;}
+.sm-modal-close{position:absolute;top:8px;right:14px;color:var(--text-dim);font-size:19px;cursor:pointer;}
 .sm-meaning{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:#3dd6c8;font-family:var(--font-mono);margin:4px 0 10px;}
 .sm-meaning ~ .sm-meaning{margin-top:20px;border-top:1px solid var(--border);padding-top:18px;}
 .sm-words{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;}
@@ -256,11 +259,11 @@ button,input,select,textarea{font-family:inherit;line-height:inherit;}
 .review-kanji-display{font-family:var(--font-jp);font-weight:300;font-size:clamp(75px,19vw,140px);
   line-height:1;color:var(--text);margin-bottom:10px;
   text-shadow:0 0 60px rgba(232,25,60,0.15);}
-.review-known-meaning{font-size:14px;color:var(--gold);min-height:20px;font-weight:400;font-family:var(--font-ui);}
+.review-known-meaning{font-size:15px;color:var(--gold);min-height:20px;font-weight:400;font-family:var(--font-ui);}
 .conj-stem-hint{display:none;justify-content:center;align-items:center;gap:9px;margin:10px 0 2px;cursor:pointer;user-select:none;}
 .conj-stem-hint.on{display:flex;}
-.conj-stem-hint .csh-label{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-dim);font-family:var(--font-mono);}
-.conj-stem-hint .csh-value{font-size:20px;font-family:var(--font-jp);color:var(--text);letter-spacing:0.06em;filter:blur(6px);transition:filter .18s;}
+.conj-stem-hint .csh-label{font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-dim);font-family:var(--font-mono);}
+.conj-stem-hint .csh-value{font-size:19px;font-family:var(--font-jp);color:var(--text);letter-spacing:0.06em;filter:blur(6px);transition:filter .18s;}
 .conj-stem-hint.revealed .csh-value{filter:none;}
 
 .review-input-area{width:100%;max-width:480px;display:flex;flex-direction:column;gap:8px;}
@@ -269,7 +272,7 @@ button,input,select,textarea{font-family:inherit;line-height:inherit;}
 .review-input{flex:1;background:var(--surface);border:1px solid var(--border);
   border-radius:var(--r);padding:13px 15px;font-family:var(--font-jp);font-size:19px;font-weight:300;
   color:var(--text);outline:none;transition:border-color 0.15s;-webkit-appearance:none;}
-.review-input::placeholder{color:var(--text-muted);font-family:var(--font-ui);font-size:14px;}
+.review-input::placeholder{color:var(--text-muted);font-family:var(--font-ui);font-size:15px;}
 .review-input:focus{border-color:var(--accent);}
 .review-input.correct{border-color:var(--pass-text);background:rgba(74,240,128,0.05);}
 .review-input.wrong{border-color:var(--fail-text);background:rgba(240,74,74,0.05);animation:shake 0.3s ease;}
@@ -277,7 +280,7 @@ button,input,select,textarea{font-family:inherit;line-height:inherit;}
 @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
 
 .submit-btn{background:var(--accent);border:none;border-radius:var(--r);padding:13px 18px;
-  color:#fff;font-family:var(--font-ui);font-size:12px;letter-spacing:0.05em;
+  color:#fff;font-family:var(--font-ui);font-size:13px;letter-spacing:0.05em;
   text-transform:uppercase;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
 .submit-btn:hover{opacity:0.9;} .submit-btn:active{transform:scale(0.97);}
 .submit-btn:disabled{opacity:0.4;cursor:default;}
@@ -309,11 +312,11 @@ button,input,select,textarea{font-family:inherit;line-height:inherit;}
 .feedback-row{display:none;gap:8px;}
 .feedback-row.show{display:flex;}
 .btn-pass{flex:1;padding:13px;border:none;border-radius:var(--r);background:var(--pass);
-  color:var(--pass-text);font-family:var(--font-ui);font-size:12px;letter-spacing:0.05em;
+  color:var(--pass-text);font-family:var(--font-ui);font-size:13px;letter-spacing:0.05em;
   text-transform:uppercase;cursor:pointer;transition:all 0.15s;}
 .btn-pass:hover{background:#224433;}
 .btn-fail{flex:1;padding:13px;border:none;border-radius:var(--r);background:var(--fail);
-  color:var(--fail-text);font-family:var(--font-ui);font-size:12px;letter-spacing:0.05em;
+  color:var(--fail-text);font-family:var(--font-ui);font-size:13px;letter-spacing:0.05em;
   text-transform:uppercase;cursor:pointer;transition:all 0.15s;}
 .btn-fail:hover{background:#442222;}
 
@@ -330,7 +333,7 @@ button,input,select,textarea{font-family:inherit;line-height:inherit;}
   background:var(--border);border:1px solid var(--border);border-radius:var(--r);
   overflow:hidden;width:100%;max-width:340px;}
 .done-cell{background:var(--surface);padding:16px;text-align:center;}
-.done-cell-label{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
+.done-cell-label{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;
   color:var(--text-muted);margin-bottom:6px;}
 .done-cell-val{font-size:29px;font-weight:500;line-height:1;}
 .done-cell-val.p{color:var(--pass-text);} .done-cell-val.f{color:var(--fail-text);}
@@ -406,13 +409,13 @@ body.search-open.home-active #search-fab{top:97px;}
 #global-search-bar input{
   flex:1;background:var(--surface);border:1px solid var(--border);
   border-radius:var(--r);padding:9px 14px;
-  font-family:var(--font-jp);font-size:14px;font-weight:300;
+  font-family:var(--font-jp);font-size:15px;font-weight:300;
   color:var(--text);outline:none;transition:border-color 0.15s;
 }
 #global-search-bar input:focus{border-color:var(--accent);}
 #global-search-bar input::placeholder{color:var(--text-muted);font-size:13px;}
 #search-clear{background:none;border:none;color:var(--text-muted);
-  font-size:16px;cursor:pointer;padding:0 4px;display:none;line-height:1;}
+  font-size:17px;cursor:pointer;padding:0 4px;display:none;line-height:1;}
 #search-clear.show{display:block;}
 #search-kb-row{display:flex;gap:6px;}
 .kb-btn{
@@ -423,7 +426,7 @@ body.search-open.home-active #search-fab{top:97px;}
 }
 .kb-btn:hover{border-color:var(--text-dim);color:var(--text);}
 .kb-btn.active{background:var(--surface2);border-color:var(--accent);color:var(--accent);}
-.kb-btn-kana{font-family:var(--font-jp);font-size:12px;}
+.kb-btn-kana{font-family:var(--font-jp);font-size:13px;}
 
 #search-results{
   position:fixed;top:88px;left:0;right:0;bottom:0;
@@ -433,7 +436,7 @@ body.search-open.home-active #search-fab{top:97px;}
 #search-results.show{display:block;}
 .search-section{margin-bottom:20px;}
 .search-section-label{
-  font-size:10px;letter-spacing:0.25em;text-transform:uppercase;
+  font-size:11px;letter-spacing:0.25em;text-transform:uppercase;
   color:var(--accent);margin-bottom:8px;font-family:var(--font-mono);
   padding-bottom:6px;border-bottom:1px solid var(--border);
 }
@@ -448,9 +451,9 @@ body.search-open.home-active #search-fab{top:97px;}
 .sr-kanji{font-family:var(--font-jp);font-size:26px;
   font-weight:400;color:#f0f0f8;min-width:36px;line-height:1;}
 .sr-info{flex:1;}
-.sr-main{font-size:14px;color:#f0f0f8;font-family:var(--font-jp);}
+.sr-main{font-size:15px;color:#f0f0f8;font-family:var(--font-jp);}
 .sr-sub{font-size:11px;color:#b0b8d8;font-family:var(--font-jp);margin-top:1px;}
-.sr-meta{font-size:10px;color:#666680;white-space:nowrap;font-family:var(--font-mono);}
+.sr-meta{font-size:11px;color:var(--text-dim);white-space:nowrap;font-family:var(--font-mono);}
 .search-empty{color:var(--text-muted);font-size:13px;text-align:center;padding:40px 0;}
 
 /* Push all screen content down to account for search bar */
@@ -460,7 +463,7 @@ body.search-open.home-active #search-fab{top:97px;}
 /* ── KANA TABLE ── */
 .kana-script-toggle{display:flex;gap:8px;width:100%;max-width:600px;padding:8px 0 4px;}
 .kana-script-btn{flex:1;background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--r);padding:8px;font-family:var(--font-jp);font-size:14px;
+  border-radius:var(--r);padding:8px;font-family:var(--font-jp);font-size:15px;
   color:var(--text-dim);cursor:pointer;transition:all 0.15s;text-align:center;}
 .kana-script-btn:hover{border-color:var(--text-dim);color:var(--text);}
 .kana-script-btn.active{background:var(--surface2);border-color:var(--accent);color:var(--accent);}
@@ -471,15 +474,15 @@ body.search-open.home-active #search-fab{top:97px;}
 .kana-table{display:grid;gap:4px;width:100%;max-width:600px;margin-bottom:8px;}
 .kana-table-5{grid-template-columns:36px repeat(5,1fr);}
 .kana-table-3{grid-template-columns:36px repeat(3,1fr);}
-.kana-col-header{font-family:var(--font-mono);font-size:10px;color:var(--text-dim);
+.kana-col-header{font-family:var(--font-mono);font-size:11px;color:var(--text-dim);
   text-align:center;padding:4px 0;}
-.kana-row-label{font-family:var(--font-mono);font-size:10px;color:var(--text-dim);
+.kana-row-label{font-family:var(--font-mono);font-size:11px;color:var(--text-dim);
   display:flex;align-items:center;justify-content:flex-end;padding-right:6px;}
 .kana-cell{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
   padding:8px 4px;text-align:center;display:flex;flex-direction:column;gap:2px;align-items:center;}
 .kana-cell-empty{background:transparent;border-color:transparent;}
 .kana-char{font-family:var(--font-jp);font-weight:300;font-size:22px;line-height:1;color:var(--text);}
-.kana-romaji{font-family:var(--font-mono);font-size:9px;color:var(--text-dim);}
+.kana-romaji{font-family:var(--font-mono);font-size:11px;color:var(--text-dim);}
 /* Large layout */
 .kana-layout-large .kana-cell{padding:14px 6px;}
 .kana-layout-large .kana-char{font-size:34px;}
@@ -488,11 +491,11 @@ body.search-open.home-active #search-fab{top:97px;}
 .kana-layout-large .kana-row-label{font-size:11px;}
 /* Both-script separator */
 .kana-script-separator{width:100%;max-width:600px;border-top:1px solid var(--border);
-  margin:20px 0 4px;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
+  margin:20px 0 4px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;
   color:var(--accent);font-family:var(--font-mono);padding-top:12px;}
 /* Kana picker */
 .kana-set-group{margin-bottom:20px;}
-.kana-set-group-title{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
+.kana-set-group-title{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;
   color:var(--accent);font-family:var(--font-mono);margin-bottom:8px;}
 
 /* ── SORT BAR ── */
@@ -524,20 +527,20 @@ body.search-open.home-active #search-fab{top:97px;}
 #adj-type-toggle .verb-subtype-btn.active{border-color:var(--accent);color:var(--accent);}
 .vc-block{width:100%;max-width:680px;margin-bottom:28px;overflow-x:auto;}
 .vc-title{font-family:var(--font-jp);font-size:17px;font-weight:400;color:var(--text);margin-bottom:2px;}
-.vc-title-sub{font-size:12px;font-weight:300;color:var(--text-dim);}
+.vc-title-sub{font-size:13px;font-weight:300;color:var(--text-dim);}
 .vc-desc{font-size:11px;color:var(--text-dim);letter-spacing:0.04em;margin-bottom:10px;}
 .vc-table{width:max-content;min-width:100%;border-collapse:collapse;}
 .vc-table th,.vc-table td{padding:8px 10px;border:1px solid var(--border);vertical-align:middle;}
-.vc-table thead th{font-size:10px;font-weight:500;color:var(--text-dim);text-transform:uppercase;
+.vc-table thead th{font-size:11px;font-weight:500;color:var(--text-dim);text-transform:uppercase;
   letter-spacing:0.08em;background:var(--surface2);}
 .vc-table col.vc-col-l{width:15%;}
 .vc-table.vc-adj col.vc-col-l{width:10%;}
 .vc-table.vc-adj col:nth-child(2){width:34%;}
 .vc-table.vc-na-adj col:nth-child(2){width:38%;}
 .vc-rl{font-size:11px;font-weight:500;color:var(--text-dim);}
-.vc-tb{display:inline-block;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:3px;}
+.vc-tb{display:inline-block;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:3px;}
 .vc-ci{display:flex;align-items:center;gap:7px;}
-.vc-et{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;font-weight:500;
+.vc-et{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;font-weight:500;
   padding:5px 5px;border-radius:4px;font-family:var(--font-jp);flex-shrink:0;}
 .vc-et-jp{white-space:nowrap;}
 .vc-et-rom{font-size:11px;font-style:italic;font-family:var(--font-mono);margin-top:2px;opacity:0.8;text-align:center;line-height:1.2;white-space:nowrap;}
@@ -550,20 +553,20 @@ body.search-open.home-active #search-fab{top:97px;}
 .vc-vb{display:flex;flex-direction:column;}
 .vc-vj{font-family:var(--font-jp);font-weight:300;font-size:15px;color:var(--text);line-height:1.3;}
 .vc-vj.exc-mark{text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;}
-.vc-vr{font-size:14px;color:#9090b0;font-style:italic;}
+.vc-vr{font-size:15px;color:#9090b0;font-style:italic;}
 .vc-tec{display:flex;align-items:center;justify-content:center;gap:7px;}
 .vc-et-adj-q{min-width:140px;font-size:11px;}
-.vc-or{font-size:10px;color:var(--text-muted);letter-spacing:0.08em;padding:3px 4px;}
+.vc-or{font-size:11px;color:var(--text-muted);letter-spacing:0.08em;padding:3px 4px;}
 
 /* ── CONJUGATION PICKER ─── */
 #conj-picker .scrollable{align-items:flex-start;padding-left:20px;padding-right:20px;display:block;}
 .cp-heading{font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);
   font-family:var(--font-mono);padding-bottom:8px;margin-bottom:10px;
   border-bottom:1px solid var(--border);}
-.cp-section{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);
+.cp-section{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);
   font-family:var(--font-mono);margin:12px 0 5px;border-top:1px solid var(--border);padding-top:8px;}
 .cp-row{display:flex;align-items:center;gap:9px;padding:6px 2px;cursor:pointer;
-  font-size:14px;color:var(--text);font-family:var(--font-jp);}
+  font-size:15px;color:var(--text);font-family:var(--font-jp);}
 .cp-row input[type=checkbox]{accent-color:var(--accent);width:15px;height:15px;cursor:pointer;flex-shrink:0;}
 .cp-indent{padding-left:16px;}
 .cp-form-btn{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
@@ -625,13 +628,13 @@ body.search-open.home-active #search-fab{top:97px;}
   letter-spacing: 0.05em;
 }
 #grammar .subtitle-meaning{
-  font-size: 21px;
+  font-size: 19px;
   font-weight: 400;
   color: var(--text);
 }
 /* ── SECTION LABEL ── */
 #grammar .section-label{
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--accent);
@@ -653,7 +656,7 @@ body.search-open.home-active #search-fab{top:97px;}
   align-items: center;
   gap: 5px;
   opacity: 0.7;
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   font-family: var(--font-mono);
@@ -674,7 +677,7 @@ body.search-open.home-active #search-fab{top:97px;}
   display: flex;
 }
 #grammar .filter-tag{
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   font-family: var(--font-mono);
@@ -692,7 +695,7 @@ body.search-open.home-active #search-fab{top:97px;}
   border-color: var(--text);
 }
 #grammar .examples-toggle .toggle-icon{
-  font-size: 9px;
+  font-size: 11px;
   line-height: 1;
 }
 #grammar .card.examples-hidden .example, #grammar .card.examples-hidden .formula-group-label{
@@ -717,7 +720,7 @@ body.search-open.home-active #search-fab{top:97px;}
   margin-bottom: 12px;
 }
 #grammar .recap-title{
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 400;
   color: var(--text);
   margin-bottom: 8px;
@@ -735,7 +738,7 @@ body.search-open.home-active #search-fab{top:97px;}
   margin-bottom: 32px;
 }
 #grammar .recap-table th{
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: #888899;
@@ -771,13 +774,13 @@ body.search-open.home-active #search-fab{top:97px;}
   white-space: nowrap;
 }
 #grammar .recap-reg-polite{
-  font-size: 10px;
+  font-size: 11px;
   font-family: var(--font-mono);
   letter-spacing: 0.1em;
   color: #7888b8;
 }
 #grammar .recap-reg-casual{
-  font-size: 10px;
+  font-size: 11px;
   font-family: var(--font-mono);
   letter-spacing: 0.1em;
   color: #7888b8;
@@ -862,14 +865,14 @@ body.search-open.home-active #search-fab{top:97px;}
   gap: 4px;
 }
 #grammar .formula-var-type{
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--gold);
   font-family: var(--font-mono);
 }
 #grammar .formula-var{
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -877,7 +880,7 @@ body.search-open.home-active #search-fab{top:97px;}
   font-family: var(--font-mono);
 }
 #grammar .formula-plus{
-  font-size: 20px;
+  font-size: 19px;
   color: var(--text-dim);
   font-family: var(--font-mono);
 }
@@ -896,7 +899,7 @@ body.search-open.home-active #search-fab{top:97px;}
   top: 100%;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 0.18em;
   font-family: var(--font-mono);
   color: var(--text-dim);
@@ -909,7 +912,7 @@ body.search-open.home-active #search-fab{top:97px;}
   color: var(--text-dim);
 }
 #grammar .formula-box-label{
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--text-muted);
@@ -919,7 +922,7 @@ body.search-open.home-active #search-fab{top:97px;}
   text-align: center;
 }
 #grammar .formula-group-label{
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--text-dim);
@@ -928,7 +931,7 @@ body.search-open.home-active #search-fab{top:97px;}
   margin-top: 20px;
 }
 #grammar .formula-box-label{
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--text-dim);
@@ -945,7 +948,7 @@ body.search-open.home-active #search-fab{top:97px;}
   margin-bottom: 0;
 }
 #grammar .description{
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 300;
   line-height: 1.8;
   color: var(--text);
@@ -981,7 +984,7 @@ body.search-open.home-active #search-fab{top:97px;}
   font-weight: 300;
 }
 #grammar .example-note{
-  font-size: 11px;
+  font-size: 13px;
   color: var(--text-dim);
   font-family: var(--font-mono);
   letter-spacing: 0.04em;
@@ -1007,7 +1010,7 @@ body.search-open.home-active #search-fab{top:97px;}
   align-items: center;
   padding: 1px 6px;
   border-radius: 3px;
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.1em;
   font-family: var(--font-mono);
@@ -1051,7 +1054,7 @@ body.search-open.home-active #search-fab{top:97px;}
   border-bottom: 1px solid var(--border);
 }
 #grammar .menu-title{
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--text);
   letter-spacing: 0.28em;
@@ -1098,7 +1101,7 @@ body.search-open.home-active #search-fab{top:97px;}
 }
 #grammar .btn-numeral::before{ content: "CH."; }
 #grammar .btn-name{
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 300;
   color: var(--text);
   flex: 1;
@@ -1106,7 +1109,7 @@ body.search-open.home-active #search-fab{top:97px;}
   letter-spacing: 0.02em;
 }
 #grammar .btn-count{
-  font-size: 10px;
+  font-size: 11px;
   font-family: var(--font-mono);
   color: var(--text-dim);
   letter-spacing: 0.1em;
@@ -1196,7 +1199,7 @@ body.search-open.home-active #search-fab{top:97px;}
   border-bottom: none;
 }
 #grammar .toc-lv-n5::before, #grammar .toc-lv-n4::before, #grammar .toc-lv-n3::before, #grammar .toc-lv-n2::before, #grammar .toc-lv-n1::before{
-  font-size: 8px;
+  font-size: 11px;
   font-family: var(--font-mono);
   letter-spacing: 0.06em;
   border: 1px solid;
@@ -1227,7 +1230,7 @@ body.search-open.home-active #search-fab{top:97px;}
 }
 #grammar .toc-item a::before{
   content: counter(toc-counter, decimal);
-  font-size: 10px;
+  font-size: 11px;
   font-family: var(--font-mono);
   color: var(--text-muted);
   min-width: 22px;
@@ -1237,7 +1240,7 @@ body.search-open.home-active #search-fab{top:97px;}
   color: var(--accent);
 }
 #grammar .toc-jp{
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 300;
   color: var(--text);
   font-family: var(--font-jp);
@@ -1254,7 +1257,7 @@ body.search-open.home-active #search-fab{top:97px;}
 }
 #grammar .toc-recap .toc-jp{
   color: var(--text);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 300;
   font-family: var(--font-jp);
   letter-spacing: 0;
@@ -1267,7 +1270,7 @@ body.search-open.home-active #search-fab{top:97px;}
 #grammar .card-coord{
   display: inline-block;
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 11px;
   letter-spacing: 0.12em;
   color: var(--text-dim);
   margin-left: 10px;
@@ -1323,7 +1326,7 @@ body.search-open.home-active #search-fab{top:97px;}
   margin-bottom: 4px;
 }
 #grammar .settings-note{
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.06em;
   color: var(--text-dim);
   font-family: var(--font-mono);
@@ -1341,7 +1344,7 @@ body.search-open.home-active #search-fab{top:97px;}
 #grammar .settings-row.is-locked, #grammar .settings-row.is-empty{ cursor: default; }
 #grammar .settings-row.is-empty{ opacity: 0.32; }
 #grammar .settings-lvl{
-  font-size: 9px;
+  font-size: 11px;
   font-family: var(--font-mono);
   letter-spacing: 0.06em;
   border: 1px solid;
@@ -1351,13 +1354,13 @@ body.search-open.home-active #search-fab{top:97px;}
 }
 #grammar .settings-name{
   flex: 1;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text);
   font-family: var(--font-jp);
   font-weight: 300;
 }
 #grammar .settings-state{
-  font-size: 9px;
+  font-size: 11px;
   font-family: var(--font-mono);
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -1384,7 +1387,7 @@ body.search-open.home-active #search-fab{top:97px;}
   border-radius: var(--r);
   color: var(--text-dim);
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   cursor: pointer;
@@ -1452,6 +1455,35 @@ body.hide-n4 #grammar .chapter-btn.lv-n4{ opacity: 0.28; pointer-events: none; }
 #grammar .formula-box .xscroll-track{ margin-top: 6px; }
 #grammar .xscroll-wrap .formula-row{ overflow-x: visible; max-width: none; flex: 0 0 auto; }
 #grammar .recap-table + .xscroll-track{ margin-top: -27px; margin-bottom: 27px; }
+/* Japanese in tables never splits mid-word: form cells stay on one line (the table scrolls
+   further instead); mixed English/Japanese cells may still wrap at spaces and 、. */
+#grammar .recap-table td{ word-break: keep-all; }
+#grammar .recap-table td[style*="font-family:var(--font-jp)"]{ white-space: nowrap; }
+
+/* ── Sideways-scrolling boxes, every table and formula box, one behaviour ──
+   The app's own permanent bar (.xscroll-track) is the only scroll hint. On touch screens:
+   (A) the browser's temporary scroll indicator is hidden, and (B) the scroller gets 10px of
+   empty space at the bottom, so if an iOS version still draws its indicator it lands in that
+   gap instead of over text. Desktop keeps its normal, draggable scrollbar. */
+.xscroll-track{ display: block; width: 100%; height: 3px; border-radius: 2px; background: var(--surface2); overflow: hidden; }
+.xscroll-thumb{ height: 100%; border-radius: 2px; background: #44445c; }
+.vc-block + .xscroll-track{ max-width: 680px; margin-top: -22px; margin-bottom: 22px; }
+@media (hover: none) and (pointer: coarse){
+  #grammar .xscroll-wrap, #grammar .formula-row, #grammar .formula-box, #grammar .recap-table, .vc-block{ scrollbar-width: none; }
+  #grammar .xscroll-wrap::-webkit-scrollbar, #grammar .formula-row::-webkit-scrollbar,
+  #grammar .formula-box::-webkit-scrollbar, #grammar .recap-table::-webkit-scrollbar,
+  .vc-block::-webkit-scrollbar{ display: none; width: 0; height: 0; }
+  #grammar .xscroll-wrap, #grammar .formula-row[data-xhint], #grammar .recap-table[data-xhint],
+  .vc-block[data-xhint]{ padding-bottom: 10px; }
+}
+
+/* ── Grammar card titles keep words whole on narrow screens ──
+   Japanese titles only break at ・ / spaces (never mid-word); both lines are balanced so no
+   word sits alone. keepTitleWordsWhole() glues · and — to the word before them and keeps
+   hyphenated words (non-exhaustive) together. */
+#grammar .title{ word-break: keep-all; overflow-wrap: anywhere; text-wrap: balance; }
+#grammar .subtitle-meaning{ text-wrap: balance; }
+#grammar .subtitle-meaning .keep-word{ white-space: nowrap; }
 /* ---- guided learning path ---- */
 #grammar .guide-row{ display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 0 26px; }
 #grammar .guide-btn{ background: var(--surface); border: 1px solid var(--border); border-radius: var(--r);
@@ -1460,19 +1492,19 @@ body.hide-n4 #grammar .chapter-btn.lv-n4{ opacity: 0.28; pointer-events: none; }
 #grammar .guide-btn:hover{ border-color: #3dd6c8; background: rgba(61,214,200,0.05); }
 #grammar .guide-btn.lv-n4:hover{ border-color: #4ecb6e; background: rgba(78,203,110,0.05); }
 #grammar .guide-btn .level-badge{ position: static; }
-#grammar .guide-btn-label{ font-family: var(--font-jp); font-size: 14px; font-weight: 300; color: var(--text); letter-spacing: .02em; }
-#grammar .guide-btn-sub{ font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-dim); }
+#grammar .guide-btn-label{ font-family: var(--font-jp); font-size: 15px; font-weight: 300; color: var(--text); letter-spacing: .02em; }
+#grammar .guide-btn-sub{ font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-dim); }
 body.hide-n4 #grammar .guide-btn.lv-n4{ opacity: .28; pointer-events: none; }
 #grammar .guide-section{ width: 100%; max-width: 640px; margin: 0 auto; padding: 0 24px 80px; }
 #grammar .guide-body{ padding-top: 4px; }
-#grammar .guide-intro{ font-family: var(--font-jp); font-size: 13.5px; font-weight: 300; line-height: 1.8;
+#grammar .guide-intro{ font-family: var(--font-jp); font-size: 13px; font-weight: 300; line-height: 1.8;
   color: var(--text-dim); margin: 0 0 14px; text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
 #grammar .guide-stage{ margin-top: 38px; padding-top: 22px; border-top: 1px solid var(--border); }
 #grammar .guide-stage-head{ display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px; }
-#grammar .guide-stage-num{ font-family: var(--font-mono); font-size: 10px; letter-spacing: .18em;
+#grammar .guide-stage-num{ font-family: var(--font-mono); font-size: 11px; letter-spacing: .18em;
   text-transform: uppercase; color: var(--accent); font-weight: 500; white-space: nowrap; }
 #grammar .guide-stage-name{ font-family: var(--font-jp); font-size: 15px; font-weight: 300; color: var(--text); letter-spacing: .02em; }
-#grammar .guide-p{ font-family: var(--font-jp); font-size: 14px; font-weight: 300; line-height: 1.8;
+#grammar .guide-p{ font-family: var(--font-jp); font-size: 15px; font-weight: 300; line-height: 1.8;
   color: var(--text); margin: 0 0 16px; text-align: justify; hyphens: auto; -webkit-hyphens: auto;
   text-align-last: left; overflow-wrap: break-word; }
 #grammar .guide-refs{ display: flex; flex-direction: column; gap: 6px; }
@@ -1480,7 +1512,7 @@ body.hide-n4 #grammar .guide-btn.lv-n4{ opacity: .28; pointer-events: none; }
   background: transparent; border: 1px solid var(--border); border-radius: var(--r);
   padding: 8px 12px; cursor: pointer; transition: border-color .15s, background .15s; }
 #grammar .guide-ref:hover{ border-color: var(--accent); background: rgba(232,25,60,0.04); }
-#grammar .gr-coord{ font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .1em; color: var(--text-dim);
+#grammar .gr-coord{ font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; color: var(--text-dim);
   min-width: 82px; white-space: nowrap; }
 #grammar .gr-name{ font-family: var(--font-jp); font-size: 13px; font-weight: 400; color: var(--accent); }
 #grammar .guide-outro{ font-family: var(--font-jp); font-size: 13px; font-weight: 300; line-height: 1.8;
@@ -1668,7 +1700,7 @@ body.gr-reading #gr-top-btn{display:flex;}
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-10-05 19:57 · v117</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-10-05 21:03 · v119</div>
 </div>
 
 <!-- POS PICKER -->
@@ -1799,13 +1831,13 @@ body.gr-reading #gr-top-btn{display:flex;}
     <div class="mode-skg-kanji" id="os-kanji"></div>
   </div>
   <div class="order-buttons">
-    <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-dim);font-family:var(--font-mono);margin-bottom:4px;">Test</div>
+    <div style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-dim);font-family:var(--font-mono);margin-bottom:4px;">Test</div>
     <div style="display:flex;gap:8px;margin-bottom:16px;">
       <button class="sort-btn" id="os-steps-both"    onclick="setKanjiSteps('both')"   style="flex:1;padding:10px 8px;">Meaning + Reading</button>
       <button class="sort-btn" id="os-steps-meaning" onclick="setKanjiSteps('meaning')" style="flex:1;padding:10px 8px;">Meaning only</button>
       <button class="sort-btn" id="os-steps-reading" onclick="setKanjiSteps('reading')" style="flex:1;padding:10px 8px;">Reading only</button>
     </div>
-    <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-dim);font-family:var(--font-mono);margin-bottom:4px;">Order</div>
+    <div style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-dim);font-family:var(--font-mono);margin-bottom:4px;">Order</div>
     <button class="btn-primary" onclick="startKanjiReview(false)">Sequential</button>
     <button class="btn-secondary" onclick="startKanjiReview(true)">Randomised</button>
   </div>
@@ -1841,7 +1873,7 @@ body.gr-reading #gr-top-btn{display:flex;}
       <span class="pos-check-label">False Friends only</span>
       <span class="pos-check-count" id="kata-ff-count"></span>
     </label>
-    <div style="font-size:12px;color:var(--text-dim);font-family:var(--font-ui);margin-bottom:16px;" id="katakana-total-count"></div>
+    <div style="font-size:13px;color:var(--text-dim);font-family:var(--font-ui);margin-bottom:16px;" id="katakana-total-count"></div>
     <button class="btn-primary" style="width:100%;" id="katakana-go-btn" onclick="startKatakanaReview()" disabled>Begin Review</button>
   </div>
 </div>
@@ -1883,7 +1915,7 @@ body.gr-reading #gr-top-btn{display:flex;}
     <span class="sm-modal-close" onclick="closeSingleVocabLimit()">✕</span>
     <div class="sm-meaning" style="margin-bottom:4px;">1 Kanji &#8211; 1 Vocab</div>
     <div style="font-size:13px;color:var(--text-dim);margin:8px 0 16px;font-family:var(--font-ui);">How many words?<br><span style="font-size:11px;">(blank = all <span id="sv-limit-total">0</span>)</span></div>
-    <input type="number" id="sv-limit" min="1" placeholder="all" onkeydown="if(event.key==='Enter')beginSingleVocabReview()" style="width:96px;padding:9px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-family:var(--font-mono);font-size:16px;text-align:center;margin-bottom:18px;">
+    <input type="number" id="sv-limit" min="1" placeholder="all" onkeydown="if(event.key==='Enter')beginSingleVocabReview()" style="width:96px;padding:9px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-family:var(--font-mono);font-size:17px;text-align:center;margin-bottom:18px;">
     <button class="btn-primary" style="width:100%;" onclick="beginSingleVocabReview()">Begin Review</button>
   </div>
 </div>
@@ -1894,7 +1926,7 @@ body.gr-reading #gr-top-btn{display:flex;}
     <span class="sm-modal-close" onclick="closeSameMeaningLimit()">✕</span>
     <div class="sm-meaning" style="margin-bottom:4px;">Same-Meaning Review</div>
     <div style="font-size:13px;color:var(--text-dim);margin:8px 0 16px;font-family:var(--font-ui);">How many words?<br><span style="font-size:11px;">(blank = all <span id="sm-limit-total">0</span>)</span></div>
-    <input type="number" id="sm-limit" min="1" placeholder="all" onkeydown="if(event.key==='Enter')beginSameMeaningReview()" style="width:96px;padding:9px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-family:var(--font-mono);font-size:16px;text-align:center;margin-bottom:18px;">
+    <input type="number" id="sm-limit" min="1" placeholder="all" onkeydown="if(event.key==='Enter')beginSameMeaningReview()" style="width:96px;padding:9px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-family:var(--font-mono);font-size:17px;text-align:center;margin-bottom:18px;">
     <button class="btn-primary" style="width:100%;" onclick="beginSameMeaningReview()">Begin Review</button>
   </div>
 </div>
@@ -2044,7 +2076,7 @@ body.gr-reading #gr-top-btn{display:flex;}
         </div>
       </div>
     </div>
-    <div style="font-size:12px;color:var(--text-dim);font-family:var(--font-ui);margin-bottom:16px;" id="kana-total-count"></div>
+    <div style="font-size:13px;color:var(--text-dim);font-family:var(--font-ui);margin-bottom:16px;" id="kana-total-count"></div>
     <button class="btn-primary" style="width:100%;" id="kana-go-btn" onclick="startKanaReview()" disabled>Begin Review</button>
   </div>
 </div>
@@ -2993,7 +3025,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 <div class="section-label" style="margin-top:24px;">About へ</div>
 <div class="description">
 <p><span class="jp">へ</span> is a particle that marks direction or goal of movement with motion verbs. <span class="jp">に</span> specifies the arrival point precisely; <span class="jp">へ</span> is more abstract — <em>toward</em>. <span class="jp">に</span> is more common in everyday speech.</p>
-</div><div class="section-label lv-n4" style="margin-top:40px;">About に — frequency (per)<span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+</div><div class="section-label lv-n4" style="margin-top:40px;">About に — frequency (per)<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 <div class="description lv-n4">
 <p><span class="jp">Timeframe + に + count</span> expresses frequency: <span class="jp"><span class="fw" data-r="いっ">一</span><span class="fw" data-r="しゅうかん">週間</span>に<span class="fw" data-r="さん">三</span><span class="fw" data-r="かい">回</span></span> — <em>three times a (= per) week</em>. <span class="jp">に</span> keeps its usual sense of marking a target space — here the period of time inside which the count happens.</p>
 <p>Don't swap in <span class="jp">で</span>: <span class="jp">で</span> with time expresses how long something takes to complete (<span class="jp">2<span class="fw" data-r="ねんかん">年間</span>で<span class="fw" data-r="ごれいまん">50万</span><span class="fw" data-r="えん">円</span><span class="fw" data-r="た">貯</span>めた</span> — <em>saved 500,000 yen in two years</em>), not how often it happens.</p>
@@ -3148,7 +3180,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 <span class="etag" style="color:#c060c0; border-color:#c060c0;">PLAIN</span>
 </div>
 </div>
-<div class="formula-group-label lv-n4">Frequency — per<span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="formula-group-label lv-n4">Frequency — per<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 <div class="example lv-n4">
 <div class="example-jp"><span class="fw" data-r="いっ">一</span><span class="fw" data-r="しゅうかん">週間</span><span class="jp">に</span><span class="fw" data-r="さん">三</span><span class="fw" data-r="かい">回</span>、ジムに<span class="fw" data-r="い">行</span>っています。</div>
 <div class="example-en">I go to the gym three times a week.</div>
@@ -3759,7 +3791,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 <p><span class="jp">や</span> is a particle that connects nouns in a non-exhaustive list — the items are examples from a larger set. It may also follow the final item (<span class="jp">ビールやワインや</span>), but that closing <span class="jp">や</span> is usually dropped.</p>
 <p><strong style="color:var(--text);"><span class="jp">と</span> vs <span class="jp">や</span>:</strong> <span class="jp">と</span> = complete list. <span class="jp">や</span> = representative sample. <span class="jp">ビールとワインを<span class="fw" data-r="の">飲</span>んだ</span> — only those two. <span class="jp">ビールやワインを<span class="fw" data-r="の">飲</span>んだ</span> — among other drinks.</p>
 </div>
-<div class="section-label lv-n4" style="margin-top:40px;">About と — quotation<span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="section-label lv-n4" style="margin-top:40px;">About と — quotation<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 <div class="description lv-n4">
 <p>Beyond <em>and</em>/<em>with</em>, <span class="jp">と</span> marks a quotation: what was said, thought, heard or written, followed by a <span class="note">verb</span> like <span class="jp"><span class="fw" data-r="い">言</span>う</span>, <span class="jp"><span class="fw" data-r="おも">思</span>う</span>, <span class="jp"><span class="fw" data-r="き">聞</span>く</span>. Direct quotes take brackets — <span class="jp">「<span class="fw" data-r="い">行</span>きます」と<span class="fw" data-r="い">言</span>いました</span>; indirect quotes use the <span class="note">plain form</span> — <span class="jp"><span class="fw" data-r="い">行</span>くと<span class="fw" data-r="おも">思</span>います</span>.</p>
 <p>After <span class="note" style="color:#5090d0;">nouns</span> and <span class="note" style="color:#a07ed4;">な-adjectives</span>, <span class="jp">だ</span> is required before <span class="jp">と</span>: <span class="jp"><span class="fw" data-r="ねこ">猫</span>だと<span class="fw" data-r="おも">思</span>う</span>, <span class="jp"><span class="fw" data-r="むり">無理</span>だと<span class="fw" data-r="おも">思</span>う</span>. In casual speech <span class="jp">と</span> becomes <span class="jp">って</span> — covered in card CH.16 · CR.4.</p>
@@ -3889,7 +3921,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 <span class="etag" style="color:#a0a0a0; border-color:#a0a0a0;">POLITE</span>
 </div>
 </div>
-<div class="formula-group-label lv-n4">Quotation — と<span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="formula-group-label lv-n4">Quotation — と<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 <div class="example lv-n4">
 <div class="example-jp"><span class="fw" data-r="たなか">田中</span>さんは「<span class="fw" data-r="あす">明日</span>は<span class="fw" data-r="やす">休</span>みます」<span class="jp">と</span><span class="fw" data-r="い">言</span>いました。</div>
 <div class="example-en">Tanaka said, "I'm taking tomorrow off."</div>
@@ -3983,7 +4015,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 <p><strong style="color:var(--text);">Negative sentences:</strong> in a negative sentence, <span class="jp">も</span> shifts meaning from <em>also</em> to <em>either</em> or <em>neither</em>: <span class="jp"><span class="fw" data-r="わたし">私</span>も<span class="fw" data-r="い">行</span>きません</span>.</p>
 <p><strong style="color:var(--text);">Double <span class="jp">も</span> — both A and B:</strong> <span class="jp">も</span> can appear twice when two items share the same verb and grammatical role: <span class="jp">パンもたまごも<span class="fw" data-r="た">食</span>べました</span>.</p>
 </div>
-<div class="section-label lv-n4" style="margin-top:40px;">About Number + も — emphasis<span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="section-label lv-n4" style="margin-top:40px;">About Number + も — emphasis<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 <div class="description lv-n4">
 <p>After a number + counter, <span class="jp">も</span> flags the amount itself as surprising. With an affirmative predicate it reads <em>as many/much as</em> — <span class="jp">12<span class="fw" data-r="じかん">時間</span>も<span class="fw" data-r="ね">寝</span>た</span> — <em>slept a whole 12 hours</em>. It's the same <span class="jp">も</span> as <em>too/also</em>: the amount is being included in a group where you wouldn't expect it.</p>
 <p>With a negative predicate it flips to <em>not even</em>, and <span class="jp"><span class="fw" data-r="いち">一</span> + counter + も + negative</span> is the fixed <em>not even one</em>: <span class="jp"><span class="fw" data-r="いちかい">一回</span>も<span class="fw" data-r="み">見</span>ていない</span> — <em>haven't seen it even once</em>.</p>
@@ -4112,7 +4144,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 <span class="etag" style="color:#c060c0; border-color:#c060c0;">PLAIN</span>
 </div>
 </div>
-<div class="formula-group-label lv-n4">Amount + も<span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="formula-group-label lv-n4">Amount + も<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 <div class="example lv-n4">
 <div class="example-jp"><span class="fw" data-r="きのう">昨日</span>は10<span class="fw" data-r="じかん">時間</span><span class="jp">も</span><span class="fw" data-r="ね">寝</span>ました。</div>
 <div class="example-en">Yesterday I slept a full ten hours.</div>
@@ -4307,7 +4339,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 </div></div><div class="card examples-hidden" id="card-9">
 <div class="title-block">
 <span class="level-badge level-n5">N5</span><span class="card-coord">CH.1 · CR.9</span>
-<div class="title">けど · <span class="title-alt">けれども</span> · が</div>
+<div class="title">けど · <span class="title-alt">けれども · が</span></div>
 <div class="subtitle-romaji">(kedo · keredomo · ga)</div>
 <div class="subtitle-meaning">But · However — contrast &amp; concession</div>
 </div>
@@ -7607,25 +7639,25 @@ body.gr-reading #gr-top-btn{display:flex;}
 <td>"Becomes / Gets"</td>
 </tr>
 <tr class="lv-n4">
-<td><span class="recap-form">〜にする · 〜くする</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
+<td><span class="recap-form">〜にする · 〜くする</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
 <td>Change of state</td>
 <td>Somebody deliberately makes it so</td>
 <td>"Makes it / Turns it into"</td>
 </tr>
 <tr class="lv-n4">
-<td><span class="recap-form">ようになる · ようにする</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
+<td><span class="recap-form">ようになる · ようにする</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
 <td>Change of state</td>
 <td>Reach a point over time · make a standing effort</td>
 <td>"Came to / Make sure to"</td>
 </tr>
 <tr class="lv-n4">
-<td><span class="recap-form">をしている</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
+<td><span class="recap-form">をしている</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
 <td>State</td>
 <td>Describe a feature somebody or something has</td>
 <td>"Has / Is wearing"</td>
 </tr>
 <tr class="lv-n4">
-<td><span class="recap-form">〜く · 〜に</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
+<td><span class="recap-form">〜く · 〜に</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
 <td>Formation</td>
 <td>Adverbial form that both なる and する attach to</td>
 <td>"Quietly / Bigger"</td>
@@ -7639,10 +7671,10 @@ body.gr-reading #gr-top-btn{display:flex;}
 <div class="recap-rule">Saying an object, plant or abstract thing is there → <span class="jp">がある</span></div>
 <div class="recap-rule">Saying a person or animal is there → <span class="jp">がいる</span></div>
 <div class="recap-rule">The change happens by itself, nobody caused it → <span class="jp">〜になる · 〜くなる</span></div>
-<div class="recap-rule lv-n4">Somebody chooses to bring the change about → <span class="jp">〜にする · 〜くする</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
-<div class="recap-rule lv-n4">The change builds up over time, or you resolve to keep it up → <span class="jp">ようになる · ようにする</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
-<div class="recap-rule lv-n4">Describing a permanent feature — eyes, build, a voice, or something worn → <span class="jp">をしている</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
-<div class="recap-rule lv-n4">Key pairing: <span class="jp">なる</span> is what happens, <span class="jp">する</span> is what someone does — both take the same <span class="jp">〜く · 〜に</span> form in front<span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="recap-rule lv-n4">Somebody chooses to bring the change about → <span class="jp">〜にする · 〜くする</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="recap-rule lv-n4">The change builds up over time, or you resolve to keep it up → <span class="jp">ようになる · ようにする</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="recap-rule lv-n4">Describing a permanent feature — eyes, build, a voice, or something worn → <span class="jp">をしている</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="recap-rule lv-n4">Key pairing: <span class="jp">なる</span> is what happens, <span class="jp">する</span> is what someone does — both take the same <span class="jp">〜く · 〜に</span> form in front<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 </div>
 </div></div>
 <div class="chapter-section" id="chapter-3" style="display:none"><div class="chapter-header">
@@ -8812,7 +8844,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 </tr>
 </table>
 </div>
-<div class="section-label lv-n4" style="margin-top:40px;">About WH-word + でも — "any"<span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="section-label lv-n4" style="margin-top:40px;">About WH-word + でも — "any"<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 <div class="description lv-n4">
 <p><span class="jp">でも</span> completes the paradigm you know from <span class="jp">か</span> and <span class="jp">も</span>: <span class="jp">だれか</span> — <em>someone</em> · <span class="jp">だれも</span> — <em>no one (+ negative)</em> · <span class="jp">だれでも</span> — <em>anyone</em>. Likewise <span class="jp">なんでも</span> — <em>anything</em>, <span class="jp">どこでも</span> — <em>anywhere</em>, <span class="jp">いつでも</span> — <em>anytime</em>.</p>
 <p>The key contrast with <span class="jp">も</span>: <span class="jp">でも</span> takes an affirmative predicate — <span class="jp">だれでも<span class="fw" data-r="し">知</span>っている</span> — <em>everyone/anyone knows</em>, versus <span class="jp">だれも<span class="fw" data-r="し">知</span>らない</span> — <em>no one knows</em>. <em>No matter who/what/where</em> is often the most natural English.</p>
@@ -9087,7 +9119,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 <span class="etag" style="color:#f04a4a; border-color:#f04a4a;">NEGATIVE</span>
 <span class="etag" style="color:#c060c0; border-color:#c060c0;">PLAIN</span>
 </div>
-</div><div class="formula-group-label lv-n4">Any — question word + でも<span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+</div><div class="formula-group-label lv-n4">Any — question word + でも<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 <div class="example lv-n4">
 <div class="example-jp">この<span class="fw" data-r="うた">歌</span>はだれ<span class="jp">でも</span><span class="fw" data-r="し">知</span>っています。</div>
 <div class="example-en">Anyone knows this song.</div>
@@ -10476,15 +10508,15 @@ body.gr-reading #gr-top-btn{display:flex;}
 </div><div class="formula-row-group">
 <div class="formula-register">Question — which is more?</div>
 <div class="formula-row">
-<span class="formula-var" style="color:#5090d0; font-size:14px;">Noun A</span>
+<span class="formula-var" style="color:#5090d0; font-size:15px;">Noun A</span>
 <span class="formula-plus">+</span>
-<span class="formula-gram" style="white-space:nowrap; font-size:14px;">と</span>
+<span class="formula-gram" style="white-space:nowrap; font-size:15px;">と</span>
 <span class="formula-plus">+</span>
-<span class="formula-var" style="color:#5090d0; font-size:14px;">Noun B</span>
+<span class="formula-var" style="color:#5090d0; font-size:15px;">Noun B</span>
 <span class="formula-plus">+</span>
-<span class="formula-gram" style="white-space:nowrap; font-size:14px;">と　どっちのほうが</span>
+<span class="formula-gram" style="white-space:nowrap; font-size:15px;">と　どっちのほうが</span>
 <span class="formula-plus">+</span>
-<span class="formula-gram" style="white-space:nowrap; font-size:14px;">？</span>
+<span class="formula-gram" style="white-space:nowrap; font-size:15px;">？</span>
 </div>
 </div></div>
 <div class="formula-box-label">Formal</div>
@@ -10522,15 +10554,15 @@ body.gr-reading #gr-top-btn{display:flex;}
 </div><div class="formula-row-group">
 <div class="formula-register">Question — which is more?</div>
 <div class="formula-row">
-<span class="formula-var" style="color:#5090d0; font-size:14px;">Noun A</span>
+<span class="formula-var" style="color:#5090d0; font-size:15px;">Noun A</span>
 <span class="formula-plus">+</span>
-<span class="formula-gram" style="white-space:nowrap; font-size:14px;">と</span>
+<span class="formula-gram" style="white-space:nowrap; font-size:15px;">と</span>
 <span class="formula-plus">+</span>
-<span class="formula-var" style="color:#5090d0; font-size:14px;">Noun B</span>
+<span class="formula-var" style="color:#5090d0; font-size:15px;">Noun B</span>
 <span class="formula-plus">+</span>
-<span class="formula-gram" style="white-space:nowrap; font-size:14px;">と　どちらのほうが</span>
+<span class="formula-gram" style="white-space:nowrap; font-size:15px;">と　どちらのほうが</span>
 <span class="formula-plus">+</span>
-<span class="formula-gram" style="white-space:nowrap; font-size:14px;">ですか</span>
+<span class="formula-gram" style="white-space:nowrap; font-size:15px;">ですか</span>
 </div>
 </div></div>
 </div>
@@ -10548,7 +10580,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 </div>
 <p>Adding <span class="jp">です</span> to any form makes it polite.</p>
 </div>
-<div class="section-label lv-n4" style="margin-top:40px;">About より — standalone<span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="section-label lv-n4" style="margin-top:40px;">About より — standalone<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 <div class="description lv-n4">
 <p><span class="jp">より</span> also works without <span class="jp">のほうが</span>: <span class="jp"><span class="fw" data-r="ことし">今年</span>は<span class="fw" data-r="きょねん">去年</span>より<span class="fw" data-r="さむ">寒</span>い</span> — <em>this year is colder than last year</em>. The word <span class="jp">より</span> attaches to is always the lesser side of the comparison — a common trap, since English "more than" points the other way. <span class="note">Verbs</span> work too: <span class="jp"><span class="fw" data-r="ある">歩</span>くより</span> — <em>than walking</em>.</p>
 <p><span class="jp"><span class="fw" data-r="おも">思</span>ったより</span> — <em>than I expected</em> is worth memorising as a set pattern, as is bare <span class="jp">より</span> + adjective with no comparison target at all — <span class="jp">より<span class="fw" data-r="よ">良</span>い<span class="fw" data-r="ほうほう">方法</span></span> — <em>a better method</em>, a formal, written flavour meaning simply <em>more</em>.</p>
@@ -10850,7 +10882,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 <span class="etag" style="color:#c060c0; border-color:#c060c0;">PLAIN</span>
 </div>
 </div>
-<div class="formula-group-label lv-n4">Standalone より<span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="formula-group-label lv-n4">Standalone より<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 <div class="example lv-n4">
 <div class="example-jp"><span class="fw" data-r="ことし">今年</span>の<span class="fw" data-r="ふゆ">冬</span>は<span class="fw" data-r="きょねん">去年</span><span class="jp">より</span><span class="fw" data-r="さむ">寒</span>いです。</div>
 <div class="example-en">This winter is colder than last year.</div>
@@ -10895,7 +10927,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 </div></div>
 <div class="card examples-hidden" id="card-38">
 <div class="title-block"><span class="level-badge level-n5">N5</span><span class="card-coord">CH.4 · CR.5</span>
-<div class="title">〜のなかで〜がいちばん〜</div>
+<div class="title">〜のなかで<wbr>〜がいちばん〜</div>
 <div class="subtitle-romaji">(~no naka de ~ga ichiban ~)</div>
 <div class="subtitle-meaning">Among ~, ~ is the most ~</div>
 </div>
@@ -11034,7 +11066,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 <div class="recap-rule"><span class="note" style="color:#a07ed4;">な-adjective</span>: <span class="jp">いちばん<span class="fw" data-r="ゆうめい">有名</span></span> → <span class="jp"><span class="fw" data-r="ゆうめい">有名</span>じゃない</span> → <span class="jp"><span class="fw" data-r="ゆうめい">有名</span>だった</span> → <span class="jp"><span class="fw" data-r="ゆうめい">有名</span>じゃなかった</span>.</div>
 </div>
 <p>Adding <span class="jp">です</span> to any form makes it polite.</p></div>
-<div class="section-label lv-n4" style="margin-top:40px;">About の中で — "among" without いちばん<span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="section-label lv-n4" style="margin-top:40px;">About の中で — "among" without いちばん<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 <div class="description lv-n4">
 <p><span class="jp">の<span class="fw" data-r="なか">中</span>で</span> was introduced bound to <span class="jp">いちばん</span>, but it is also used on its own. <span class="note" style="color:#5090d0;">Noun</span> + <span class="jp">の<span class="fw" data-r="なか">中</span>で</span> marks off a group and locates something <em>among</em> it, with no superlative required: <span class="jp">ラーメンの<span class="fw" data-r="なか">中</span>では<span class="fw" data-r="みそ">味噌</span>が<span class="fw" data-r="す">好</span>き</span> — <em>among ramen, miso is the one I like</em>. <span class="jp">それ・これ</span> take it directly: <span class="jp">その<span class="fw" data-r="なか">中</span>で</span>.</p>
 <p>Since <span class="jp"><span class="fw" data-r="なか">中</span></span> is literally <em>inside</em>, the same structure also covers plain location: <span class="jp"><span class="fw" data-r="くるま">車</span>の<span class="fw" data-r="なか">中</span>で<span class="fw" data-r="ゆうしょく">夕食</span>を<span class="fw" data-r="た">食</span>べた</span> — <em>ate dinner in the car</em> — the <span class="jp">で</span> here is the ordinary place-of-action <span class="jp">で</span> from card CH.1 · CR.5.</p>
@@ -11336,7 +11368,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 <span class="etag" style="color:#c060c0; border-color:#c060c0;">PLAIN</span>
 </div>
 </div>
-<div class="formula-group-label lv-n4">Among — の中で<span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="formula-group-label lv-n4">Among — の中で<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 <div class="example lv-n4">
 <div class="example-jp"><span class="fw" data-r="にっぽん">日本</span>の<span class="fw" data-r="た">食</span>べ<span class="fw" data-r="もの">物</span><span class="jp">の<span class="fw" data-r="なか">中</span>で</span>は、<span class="fw" data-r="すし">寿司</span>をよく<span class="fw" data-r="た">食</span>べます。</div>
 <div class="example-en">Among Japanese foods, sushi is what I eat most often.</div>
@@ -11359,7 +11391,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 <span class="etag" style="color:#e07840; border-color:#e07840;">QUESTION</span>
 </div>
 </div>
-<div class="formula-group-label lv-n4">Inside — location<span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="formula-group-label lv-n4">Inside — location<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 <div class="example lv-n4">
 <div class="example-jp"><span class="fw" data-r="でんしゃ">電車</span><span class="jp">の<span class="fw" data-r="なか">中</span>で</span><span class="fw" data-r="でんわ">電話</span>しないでください。</div>
 <div class="example-en">Please don't talk on the phone inside the train.</div>
@@ -11873,12 +11905,12 @@ body.gr-reading #gr-top-btn{display:flex;}
 <p>This grammar structure is used to limit or restrict scope to only one thing, person, or action — equivalent to <em>only</em> or <em>just</em> in English. The implication is that other possibilities exist but are excluded.</p>
 <p>Attachment is straightforward for <span class="note">verbs</span> (<span class="note">plain form</span>), <span style="color:#5db89a;"><span class="jp">い</span>-adjectives</span>, and <span style="color:#5090d0;">nouns</span> — <span class="jp">だけ</span> attaches directly. For <span style="color:#a07ed4;"><span class="jp">な</span>-adjectives</span>, <span class="jp">な</span> is required before <span class="jp">だけ</span> when the adjective is used as a quality. If the <span class="jp">な</span> is dropped, the <span style="color:#a07ed4;"><span class="jp">な</span>-adjective</span> is treated as a noun instead, which slightly shifts the nuance: <span class="jp"><span class="fw" data-r="きれい">綺麗</span>なだけ</span> = <em>just beautiful (as a quality)</em>; <span class="jp"><span class="fw" data-r="きれい">綺麗</span>だけ</span> = <em>just beauty (as a concept/thing)</em>.</p>
 </div>
-<div class="section-label lv-n4" style="margin-top:40px;">About だけで — just by<span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="section-label lv-n4" style="margin-top:40px;">About だけで — just by<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 <div class="description lv-n4">
 <p><span class="jp">だけ</span> + the means-particle <span class="jp">で</span> gives <em>with only (A)</em> → <em>just by A</em>: (B) is achieved and nothing beyond A was needed. It follows a <span class="note">plain-form verb</span> or a <span class="note" style="color:#5090d0;">noun</span>: <span class="jp"><span class="fw" data-r="はな">話</span>すだけで<span class="fw" data-r="たの">楽</span>しい</span> — <em>just talking is fun</em>, <span class="jp"><span class="fw" data-r="やさい">野菜</span>だけで<span class="fw" data-r="つく">作</span>った</span> — <em>made with only vegetables</em>.</p>
 <p>The negative counterpart is <span class="jp">だけでは〜ない</span>: <em>A alone is not enough</em> — <span class="jp"><span class="fw" data-r="れんしゅう">練習</span>だけでは<span class="fw" data-r="じょうず">上手</span>になりません</span>.</p>
 </div>
-<div class="section-label lv-n4" style="margin-top:40px;">About だけでなく — not only<span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="section-label lv-n4" style="margin-top:40px;">About だけでなく — not only<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 <div class="description lv-n4">
 <p><span class="jp">だけでなく</span> — <span class="jp">だけ</span> plus the abbreviated negative <span class="jp">ではなく</span> — builds <em>not only (A), but also (B)</em>: <span class="jp"><span class="fw" data-r="やす">安</span>いだけでなく、おいしい</span>. It attaches wherever <span class="jp">だけ</span> attaches: <span class="note" style="color:#5090d0;">nouns</span>, plain-form <span class="note">verbs</span> and adjectives.</p>
 <p>The (B) clause usually carries <span class="jp">も</span> — <em>B too</em>: <span class="jp"><span class="fw" data-r="えいご">英語</span>だけでなく、<span class="fw" data-r="ちゅうごくご">中国語</span>も<span class="fw" data-r="はな">話</span>す</span>. The fuller variants <span class="jp">ではなく(て)</span> and <span class="jp">じゃなく(て)</span> express the same meaning at higher and lower formality respectively.</p>
@@ -12153,7 +12185,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 <span class="etag" style="color:#c060c0; border-color:#c060c0;">PLAIN</span>
 </div>
 </div>
-<div class="formula-group-label lv-n4">Just by — だけで<span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="formula-group-label lv-n4">Just by — だけで<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 <div class="example lv-n4">
 <div class="example-jp"><span class="fw" data-r="かのじょ">彼女</span>は<span class="fw" data-r="しゃしん">写真</span>を<span class="fw" data-r="み">見</span>る<span class="jp">だけで</span>、<span class="fw" data-r="ばしょ">場所</span>が<span class="fw" data-r="わ">分</span>かります。</div>
 <div class="example-en">Just by looking at a photo, she can tell where it is.</div>
@@ -12205,7 +12237,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 <span class="etag" style="color:#a0a0a0; border-color:#a0a0a0;">POLITE</span>
 </div>
 </div>
-<div class="formula-group-label lv-n4">だけでなく — not only<span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="formula-group-label lv-n4">だけでなく — not only<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 <div class="example lv-n4">
 <div class="example-jp"><span class="fw" data-r="かれ">彼</span>は<span class="fw" data-r="えいご">英語</span><span class="jp">だけでなく</span>、<span class="fw" data-r="ちゅうごくご">中国語</span>も<span class="fw" data-r="はな">話</span>します。</div>
 <div class="example-en">He speaks not only English but also Chinese.</div>
@@ -22206,7 +22238,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 <p>To use <span class="jp">てください</span>, conjugate the verb into its <span class="note" style="color:#8080f0;">て-form</span> and attach <span class="jp">ください</span> directly.</p>
 <p>In casual speech, <span class="jp">ください</span> can be dropped entirely, leaving just the <span class="note" style="color:#8080f0;">て-form</span> as a softened request. This is common with close friends and family, and works for both genders.</p>
 </div>
-<div class="section-label lv-n4" style="margin-top:40px;">About て — casual request<span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="section-label lv-n4" style="margin-top:40px;">About て — casual request<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 <div class="description lv-n4">
 <p>In casual speech <span class="jp">てください</span> is regularly shortened to the bare <span class="note" style="color:#8080f0;">て-form</span>: <span class="jp"><span class="fw" data-r="まど">窓</span>を<span class="fw" data-r="あ">開</span>けて。</span> — <em>open the window (please)</em>. The result is friendly but firmer than it looks — closer to a soft order than a request — so it is best kept for friends, family and people of lower status, never for superiors. Sentence-final position is what signals the request reading; softeners like <span class="jp">ね</span> and <span class="jp">よ</span> round it off.</p>
 <p>A sentence-final <span class="jp">て</span> does not always ask for anything. Mid-thought, a drawn-out <span class="jp">て</span> (<span class="jp"><span class="fw" data-r="えき">駅</span>まで<span class="fw" data-r="はし">走</span>っていって…</span>) simply means the speaker has not finished the sentence. <span class="jp">て</span> also closes apology phrases — <span class="jp"><span class="fw" data-r="おく">遅</span>れてすみません</span>, <em>sorry for being late</em> — where the <span class="jp">て</span>-clause is the reason being apologised for, not a request.</p>
@@ -22284,7 +22316,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 <span class="etag" style="color:#4af080; border-color:#4af080;">AFFIRMATIVE</span>
 <span class="etag" style="color:#c060c0; border-color:#c060c0;">PLAIN</span>
 </div>
-</div><div class="formula-group-label lv-n4">て — casual request<span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+</div><div class="formula-group-label lv-n4">て — casual request<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 <div class="example lv-n4">
 <div class="example-jp"><span class="fw" data-r="わる">悪</span>いけど、この<span class="fw" data-r="にもつ">荷物</span>を<span class="fw" data-r="に">二</span><span class="fw" data-r="かい">階</span>に<span class="fw" data-r="はこ">運</span>ん<span class="jp">で。</span></div>
 <div class="example-en">Sorry, but carry this luggage up to the second floor, will you?</div>
@@ -22348,7 +22380,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 <p>To use <span class="jp">ないでください</span>, take the verb's <span class="note">ない-form (negative form)</span> (negative plain form) and attach <span class="jp">でください</span> directly.</p>
 <p>In casual speech, <span class="jp">ください</span> can be dropped, leaving just <span class="jp">ないで</span> as a softened negative request. Used with close friends and family.</p>
 </div>
-<div class="section-label lv-n4" style="margin-top:40px;">About ないで — casual request<span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="section-label lv-n4" style="margin-top:40px;">About ないで — casual request<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 <div class="description lv-n4">
 <p>In casual speech <span class="jp">ないでください</span> loses its <span class="jp">ください</span> the same way <span class="jp">てください</span> does: a bare sentence-final <span class="jp">ないで。</span> means <em>don't (A)</em> — friendly in tone but firm in substance, typical of parents, teachers and close friends: <span class="jp"><span class="fw" data-r="ろうか">廊下</span>では<span class="fw" data-r="はし">走</span>らないで。</span> Softeners <span class="jp">ね</span> and <span class="jp">よ</span> take the edge off.</p>
 <p>The shape is identical to the <em>without doing</em> use of <span class="jp">ないで</span> (<span class="jp">て</span>-form Constructions chapter) — what signals the request reading is that the sentence simply ends there, with nothing following.</p>
@@ -22426,7 +22458,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 <span class="etag" style="color:#f04a4a; border-color:#f04a4a;">NEGATIVE</span>
 <span class="etag" style="color:#c060c0; border-color:#c060c0;">PLAIN</span>
 </div>
-</div><div class="formula-group-label lv-n4">ないで — casual negative request<span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+</div><div class="formula-group-label lv-n4">ないで — casual negative request<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 <div class="example lv-n4">
 <div class="example-jp"><span class="fw" data-r="ろうか">廊下</span>では<span class="fw" data-r="はし">走</span>ら<span class="jp">ないで。</span></div>
 <div class="example-en">Don't run in the hallway.</div>
@@ -24644,19 +24676,19 @@ body.gr-reading #gr-top-btn{display:flex;}
 <td>"Must not / Can't"</td>
 </tr>
 <tr class="lv-n4">
-<td><span class="recap-form">〜なくてもいい</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
+<td><span class="recap-form">〜なくてもいい</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
 <td><span class="etag" style="color:#a0a0a0; border-color:#a0a0a0;">POLITE</span></td>
 <td>Waive an obligation — the duty does not apply</td>
 <td>"You don't have to"</td>
 </tr>
 <tr class="lv-n4">
-<td><span class="recap-form">〜が必要 · 必要がある</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
+<td><span class="recap-form">〜が必要 · 必要がある</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
 <td><span class="etag" style="color:#a0a0a0; border-color:#a0a0a0;">POLITE</span></td>
 <td>State that a thing or an action is required</td>
 <td>"~ is necessary / You need to"</td>
 </tr>
 <tr class="lv-n4">
-<td><span class="recap-form">〜ないと</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
+<td><span class="recap-form">〜ないと</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
 <td><span class="etag" style="color:#c060c0; border-color:#c060c0;">PLAIN</span></td>
 <td>Same obligation, clipped for conversation</td>
 <td>"I've got to…"</td>
@@ -24668,11 +24700,11 @@ body.gr-reading #gr-top-btn{display:flex;}
 <div class="recap-rule">Asking if something is okay, or telling someone they can → <span class="jp">〜てもいい</span></div>
 <div class="recap-rule">Something is obligatory — external pressure, duty, or rule → <span class="jp">〜なければいけない</span></div>
 <div class="recap-rule">Something is forbidden — a rule or social norm prohibits it → <span class="jp">〜てはいけない</span></div>
-<div class="recap-rule lv-n4">The duty simply does not apply — permission not to bother → <span class="jp">〜なくてもいい</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
-<div class="recap-rule lv-n4">Naming the requirement itself, often on forms and notices → <span class="jp">〜が<span class="fw" data-r="ひつよう">必要</span> · <span class="fw" data-r="ひつよう">必要</span>がある</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
-<div class="recap-rule lv-n4">Saying it quickly in conversation, trailing off before いけない → <span class="jp">〜ないと</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="recap-rule lv-n4">The duty simply does not apply — permission not to bother → <span class="jp">〜なくてもいい</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="recap-rule lv-n4">Naming the requirement itself, often on forms and notices → <span class="jp">〜が<span class="fw" data-r="ひつよう">必要</span> · <span class="fw" data-r="ひつよう">必要</span>がある</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="recap-rule lv-n4">Saying it quickly in conversation, trailing off before いけない → <span class="jp">〜ないと</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 <div class="recap-rule">The classic confusion: <span class="jp">〜なければいけない</span> is "must", while <span class="jp">〜てはいけない</span> is "must not" — a prohibition, not the opposite of "must"</div>
-<div class="recap-rule lv-n4">The true opposite of "must" is <span class="jp">〜なくてもいい</span> — it lifts the duty rather than forbidding the act<span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="recap-rule lv-n4">The true opposite of "must" is <span class="jp">〜なくてもいい</span> — it lifts the duty rather than forbidding the act<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 </div>
 </div></div>
 <div class="chapter-section" id="chapter-13" style="display:none"><div class="chapter-header">
@@ -25482,13 +25514,13 @@ body.gr-reading #gr-top-btn{display:flex;}
 <div class="formula-var-group"><span class="formula-var" style="color:#5090d0;">Giver</span><span class="formula-var-type" style="color:#5090d0;">I <span style="color:#888899;">/</span> my side</span></div>
 <span class="formula-plus">+</span>
 
-<span class="formula-gram" style="font-size:20px;">は</span>
+<span class="formula-gram" style="font-size:19px;">は</span>
 <span class="formula-plus">+</span>
 
 <div class="formula-var-group"><span class="formula-var" style="color:#5090d0;">Receiver</span><span class="formula-var-type" style="color:#5090d0;">someone else</span></div>
 <span class="formula-plus">+</span>
 
-<span class="formula-gram" style="font-size:20px;">に</span>
+<span class="formula-gram" style="font-size:19px;">に</span>
 <span class="formula-plus">+</span>
 
 <div class="formula-var-group"><span class="formula-var" style="color:var(--gold);">Verb [て]</span><span class="formula-var-type" style="color:#8080f0;">て-form</span></div>
@@ -25501,13 +25533,13 @@ body.gr-reading #gr-top-btn{display:flex;}
 <div class="formula-var-group"><span class="formula-var" style="color:#5090d0;">Giver</span><span class="formula-var-type" style="color:#5090d0;">someone else</span></div>
 <span class="formula-plus">+</span>
 
-<span class="formula-gram" style="font-size:20px;">が</span>
+<span class="formula-gram" style="font-size:19px;">が</span>
 <span class="formula-plus">+</span>
 
 <div class="formula-var-group"><span class="formula-var" style="color:#5090d0;">Receiver</span><span class="formula-var-type" style="color:#5090d0;">me <span style="color:#888899;">/</span> my side</span></div>
 <span class="formula-plus">+</span>
 
-<span class="formula-gram" style="font-size:20px;">に</span>
+<span class="formula-gram" style="font-size:19px;">に</span>
 <span class="formula-plus">+</span>
 
 <div class="formula-var-group"><span class="formula-var" style="color:var(--gold);">Verb [て]</span><span class="formula-var-type" style="color:#8080f0;">て-form</span></div>
@@ -25520,13 +25552,13 @@ body.gr-reading #gr-top-btn{display:flex;}
 <div class="formula-var-group"><span class="formula-var" style="color:#5090d0;">Receiver</span><span class="formula-var-type" style="color:#5090d0;">me <span style="color:#888899;">/</span> my side</span></div>
 <span class="formula-plus">+</span>
 
-<span class="formula-gram" style="font-size:20px;">は</span>
+<span class="formula-gram" style="font-size:19px;">は</span>
 <span class="formula-plus">+</span>
 
 <div class="formula-var-group"><span class="formula-var" style="color:#5090d0;">Giver</span><span class="formula-var-type" style="color:#5090d0;">someone else</span></div>
 <span class="formula-plus">+</span>
 
-<span class="formula-gram" style="font-size:20px;">に</span>
+<span class="formula-gram" style="font-size:19px;">に</span>
 <span class="formula-plus">+</span>
 
 <div class="formula-var-group"><span class="formula-var" style="color:var(--gold);">Verb [て]</span><span class="formula-var-type" style="color:#8080f0;">て-form</span></div>
@@ -25882,19 +25914,19 @@ body.gr-reading #gr-top-btn{display:flex;}
 <td>"I get it from them"</td>
 </tr>
 <tr class="lv-n4">
-<td><span class="recap-form">〜てあげる</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
+<td><span class="recap-form">〜てあげる</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
 <td>Me · my group</td>
 <td>Somebody else</td>
 <td>"I do it for them"</td>
 </tr>
 <tr class="lv-n4">
-<td><span class="recap-form">〜てくれる</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
+<td><span class="recap-form">〜てくれる</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
 <td>Somebody else</td>
 <td>Me · my group</td>
 <td>"They do it for me"</td>
 </tr>
 <tr class="lv-n4">
-<td><span class="recap-form">〜てもらう</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
+<td><span class="recap-form">〜てもらう</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
 <td>Somebody else</td>
 <td>Me — and I am the subject</td>
 <td>"I get them to do it for me"</td>
@@ -25907,10 +25939,10 @@ body.gr-reading #gr-top-btn{display:flex;}
 <div class="recap-rule">Handing something to somebody outside your circle → <span class="jp">あげる</span></div>
 <div class="recap-rule">Anything coming toward you or your family → <span class="jp">くれる</span>, never <span class="jp">あげる</span> — direction decides this, not politeness</div>
 <div class="recap-rule">The same event told with yourself as the subject → <span class="jp">もらう</span>: <span class="jp"><span class="fw" data-r="あね">姉</span>がくれた</span> and <span class="jp"><span class="fw" data-r="あね">姉</span>にもらった</span> describe one gift from two angles</div>
-<div class="recap-rule lv-n4">Somebody did you a kindness — the everyday workhorse of the six → <span class="jp">〜てくれる</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
-<div class="recap-rule lv-n4">You arranged for it to be done, often paying or asking → <span class="jp">〜てもらう</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
-<div class="recap-rule lv-n4">Announcing your own good deed with <span class="jp">〜てあげる</span> can sound patronising — Japanese usually leaves it unsaid<span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
-<div class="recap-rule lv-n4">Thanking somebody for the favour itself → <span class="jp">〜てくれてありがとう</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="recap-rule lv-n4">Somebody did you a kindness — the everyday workhorse of the six → <span class="jp">〜てくれる</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="recap-rule lv-n4">You arranged for it to be done, often paying or asking → <span class="jp">〜てもらう</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="recap-rule lv-n4">Announcing your own good deed with <span class="jp">〜てあげる</span> can sound patronising — Japanese usually leaves it unsaid<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="recap-rule lv-n4">Thanking somebody for the favour itself → <span class="jp">〜てくれてありがとう</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 </div>
 </div></div>
 <div class="chapter-section" id="chapter-14" style="display:none"><div class="chapter-header">
@@ -26444,7 +26476,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 <span class="formula-var" style="color:#5090d0;">Noun</span>
 <span class="formula-plus">+</span>
 
-<span class="formula-gram" style="font-size:20px;">が</span>
+<span class="formula-gram" style="font-size:19px;">が</span>
 <span class="formula-plus">+</span>
 
 <span class="formula-gram">見える <span style="color:#888899;">/</span> 聞こえる</span>
@@ -27509,7 +27541,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 <p>This grammar structure is used to mark the endpoint of time, location, or quantity. It is the natural counterpart to <span class="jp">から</span>, and the two are frequently paired: <span class="jp">から</span> marks the starting point, <span class="jp">まで</span> marks the end.</p>
 <p>The noun before <span class="jp">まで</span> determines the type of endpoint: a time word gives <em>until that time</em>, a location noun gives <em>as far as that place</em>, and a number or quantity gives <em>up to that amount</em>.</p>
 </div>
-<div class="section-label lv-n4" style="margin-top:40px;">About まで — "even" &amp; "up to"<span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="section-label lv-n4" style="margin-top:40px;">About まで — "even" &amp; "up to"<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 <div class="description lv-n4">
 <p>The "until" you already know is only half of <span class="jp">まで</span>. Its core is always <span class="jp">(A) まで (B)</span> — A is a limit or extent, B the noteworthy part. When A is something surprising or extreme, <span class="jp">まで</span> reads as <em>even</em>: <span class="jp"><span class="fw" data-r="おとうと">弟</span>は<span class="fw" data-r="わたし">私</span>のケーキまで<span class="fw" data-r="た">食</span>べた</span> — <em>my brother even ate my cake</em> — the cake marks how far things went.</p>
 <p>With quantities, the same limit-idea becomes <em>up to</em>: <span class="jp"><span class="fw" data-r="ひゃく">百</span>まで<span class="fw" data-r="かぞ">数</span>える</span> — <em>count up to 100</em>, <span class="jp">2<span class="fw" data-r="じかん">時間</span>まで<span class="fw" data-r="むりょう">無料</span></span> — <em>free for up to two hours</em>. One particle, one meaning — a boundary — read three ways in English.</p>
@@ -27811,7 +27843,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 <span class="etag" style="color:#c060c0; border-color:#c060c0;">PLAIN</span>
 </div>
 </div>
-<div class="formula-group-label lv-n4">Extent — even<span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="formula-group-label lv-n4">Extent — even<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 <div class="example lv-n4">
 <div class="example-jp"><span class="fw" data-r="たなか">田中</span>さんは<span class="fw" data-r="やす">休</span>みの<span class="fw" data-r="ひ">日</span><span class="jp">まで</span><span class="fw" data-r="かいしゃ">会社</span>に<span class="fw" data-r="い">行</span>っています。</div>
 <div class="example-en">Tanaka goes to the office even on his days off.</div>
@@ -27844,7 +27876,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 <span class="etag" style="color:#e07840; border-color:#e07840;">QUESTION</span>
 </div>
 </div>
-<div class="formula-group-label lv-n4">Limit — up to<span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="formula-group-label lv-n4">Limit — up to<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 <div class="example lv-n4">
 <div class="example-jp"><span class="fw" data-r="ひゃく">百</span><span class="jp">まで</span><span class="fw" data-r="かぞ">数</span>えてください。</div>
 <div class="example-en">Please count up to one hundred.</div>
@@ -29149,7 +29181,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 </div><div class="card recap-card lv-n4" id="card-157">
 <div class="recap-header">
 <div class="recap-label">Quick Recap<span class="card-coord">CH.15 · CR.13</span></div>
-<div class="recap-title">The four conditionals<span style="display:inline-block;font-family:var(--font-mono);font-size:10px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:10px;vertical-align:4px;letter-spacing:0.08em;">N4</span></div>
+<div class="recap-title">The four conditionals<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 6px;margin-left:10px;vertical-align:4px;letter-spacing:0.08em;">N4</span></div>
 <div class="recap-subtitle">たら · ば · と · なら · 場合は</div>
 </div>
 <div class="section-label">Comparison</div>
@@ -33505,7 +33537,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 </thead>
 <tbody>
 <tr class="lv-n4">
-<td><span class="recap-form">〜かもしれない</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
+<td><span class="recap-form">〜かもしれない</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
 <td>Lowest</td>
 <td>Nothing firm — the possibility simply exists</td>
 <td>"Might · Maybe"</td>
@@ -33523,31 +33555,31 @@ body.gr-reading #gr-top-btn{display:flex;}
 <td>"Probably · I suppose"</td>
 </tr>
 <tr class="lv-n4">
-<td><span class="recap-form">〜そう</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
+<td><span class="recap-form">〜そう</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
 <td>Moderate</td>
 <td>What you can see in front of you, right now</td>
 <td>"Looks about to · Looks ~"</td>
 </tr>
 <tr class="lv-n4">
-<td><span class="recap-form">〜みたい</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
+<td><span class="recap-form">〜みたい</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
 <td>Moderate</td>
 <td>Your overall impression — casual register</td>
 <td>"Seems like"</td>
 </tr>
 <tr class="lv-n4">
-<td><span class="recap-form">〜ようだ</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
+<td><span class="recap-form">〜ようだ</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
 <td>Moderate–high</td>
 <td>The same impression — formal or written register</td>
 <td>"It appears that"</td>
 </tr>
 <tr class="lv-n4">
-<td><span class="recap-form">〜らしい</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
+<td><span class="recap-form">〜らしい</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
 <td>Moderate</td>
 <td>What you picked up from elsewhere — you keep your distance</td>
 <td>"Apparently"</td>
 </tr>
 <tr class="lv-n4">
-<td><span class="recap-form">〜はずだ</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
+<td><span class="recap-form">〜はずだ</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
 <td>Highest</td>
 <td>Reasoning from facts you trust — it ought to follow</td>
 <td>"Bound to be · Should be"</td>
@@ -33558,12 +33590,12 @@ body.gr-reading #gr-top-btn{display:flex;}
 <div class="recap-rules">
 <div class="recap-rule">Guessing out loud among friends → <span class="jp">だろう</span></div>
 <div class="recap-rule">Guessing politely, or softening a claim that would sound too blunt → <span class="jp">でしょう</span></div>
-<div class="recap-rule lv-n4">You have no evidence, only the possibility → <span class="jp">かもしれない</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
-<div class="recap-rule lv-n4">You are reading the situation in front of you — clouds, a face, a wobbling shelf → <span class="jp">そう</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
-<div class="recap-rule lv-n4">Same judgement, casual conversation → <span class="jp">みたい</span> · formal or written → <span class="jp">ようだ</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
-<div class="recap-rule lv-n4">The information came from somebody else and you would rather not own it → <span class="jp">らしい</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
-<div class="recap-rule lv-n4">You can argue it from something you know for a fact → <span class="jp">はずだ</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
-<div class="recap-rule lv-n4">Watch the attachment, not the word: <span class="jp">そう</span> on a stem is what something looks like, but <span class="jp">そうだ</span> on a plain form is what you were told — that one belongs with the reporting forms<span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="recap-rule lv-n4">You have no evidence, only the possibility → <span class="jp">かもしれない</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="recap-rule lv-n4">You are reading the situation in front of you — clouds, a face, a wobbling shelf → <span class="jp">そう</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="recap-rule lv-n4">Same judgement, casual conversation → <span class="jp">みたい</span> · formal or written → <span class="jp">ようだ</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="recap-rule lv-n4">The information came from somebody else and you would rather not own it → <span class="jp">らしい</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="recap-rule lv-n4">You can argue it from something you know for a fact → <span class="jp">はずだ</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="recap-rule lv-n4">Watch the attachment, not the word: <span class="jp">そう</span> on a stem is what something looks like, but <span class="jp">そうだ</span> on a plain form is what you were told — that one belongs with the reporting forms<span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 </div>
 </div><div class="card examples-hidden lv-n4" id="card-183">
 <div class="title-block"><span class="level-badge level-n4">N4</span><span class="card-coord">CH.18 · CR.10</span>
@@ -38032,31 +38064,31 @@ body.gr-reading #gr-top-btn{display:flex;}
 <td>Explain the background, or ask for it</td>
 </tr>
 <tr class="lv-n4">
-<td><span class="recap-form">かな</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
+<td><span class="recap-form">かな</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
 <td><span class="etag" style="color:#c060c0; border-color:#c060c0;">PLAIN</span></td>
 <td>Anyone</td>
 <td>Wonder to yourself — question turned inward</td>
 </tr>
 <tr class="lv-n4">
-<td><span class="recap-form">かしら</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
+<td><span class="recap-form">かしら</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
 <td><span class="etag" style="color:#c060c0; border-color:#c060c0;">PLAIN</span></td>
 <td>Women</td>
 <td>The same wondering, distinctly feminine</td>
 </tr>
 <tr class="lv-n4">
-<td><span class="recap-form">のだろうか</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
+<td><span class="recap-form">のだろうか</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
 <td><span class="etag" style="color:#c060c0; border-color:#c060c0;">PLAIN</span></td>
 <td>Anyone — <span class="jp">だろうか</span> leans masculine</td>
 <td>Brood over a question you cannot settle</td>
 </tr>
 <tr class="lv-n4">
-<td><span class="recap-form">じゃないか</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
+<td><span class="recap-form">じゃないか</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
 <td><span class="etag" style="color:#c060c0; border-color:#c060c0;">PLAIN</span></td>
 <td>Anyone</td>
 <td>Push for agreement — "isn't it?"</td>
 </tr>
 <tr class="lv-n4">
-<td><span class="recap-form">かい</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
+<td><span class="recap-form">かい</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></td>
 <td><span class="etag" style="color:#c060c0; border-color:#c060c0;">PLAIN</span></td>
 <td>Men, to people they know well</td>
 <td>Ask a simple yes-no question</td>
@@ -38068,10 +38100,10 @@ body.gr-reading #gr-top-btn{display:flex;}
 <div class="recap-rule">Asking anybody anything, politely → <span class="jp">か</span></div>
 <div class="recap-rule">Telling someone something they did not know → <span class="jp">よ</span> · checking they agree → <span class="jp">ね</span></div>
 <div class="recap-rule">Giving or asking for the reason behind a situation → <span class="jp">んです</span></div>
-<div class="recap-rule lv-n4">Thinking aloud rather than asking anyone — note these end in <span class="jp">。</span>, not <span class="jp">？</span> → <span class="jp">かな · かしら</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
-<div class="recap-rule lv-n4">The same wondering, but weightier — something genuinely troubling you → <span class="jp">のだろうか</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
-<div class="recap-rule lv-n4">You have made up your mind and want the other person to say yes → <span class="jp">じゃないか</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
-<div class="recap-rule lv-n4">Rough, familiar, and easily mistaken for an accusation — use with care and only with close company → <span class="jp">かい</span><span style="display:inline-block;font-family:var(--font-mono);font-size:9px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="recap-rule lv-n4">Thinking aloud rather than asking anyone — note these end in <span class="jp">。</span>, not <span class="jp">？</span> → <span class="jp">かな · かしら</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="recap-rule lv-n4">The same wondering, but weightier — something genuinely troubling you → <span class="jp">のだろうか</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="recap-rule lv-n4">You have made up your mind and want the other person to say yes → <span class="jp">じゃないか</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
+<div class="recap-rule lv-n4">Rough, familiar, and easily mistaken for an accusation — use with care and only with close company → <span class="jp">かい</span><span style="display:inline-block;font-family:var(--font-mono);font-size:11px;color:#4ecb6e;border:1px solid #4ecb6e;border-radius:2px;padding:1px 5px;margin-left:6px;vertical-align:2px;letter-spacing:0.08em;">N4</span></div>
 </div>
 </div></div>
 
@@ -38562,7 +38594,7 @@ function buildPOSPicker() {
 
     const countEl = document.createElement('div');
     countEl.id = 'pos-total-count';
-    countEl.style.cssText = 'font-size:12px;color:var(--text-dim);font-family:var(--font-ui);margin-bottom:16px;';
+    countEl.style.cssText = 'font-size:13px;color:var(--text-dim);font-family:var(--font-ui);margin-bottom:16px;';
     body.appendChild(countEl);
 
     const bottomRow = document.createElement('div');
@@ -38724,7 +38756,7 @@ function buildStudyPOS() {
       header.style.cssText = `display:inline-flex;align-items:center;gap:8px;padding:4px 10px;`
         + `background:${col}22;border:1px solid ${col}55;border-radius:4px;margin-bottom:12px;`;
       header.innerHTML = `<span style="width:8px;height:8px;border-radius:2px;background:${col};display:inline-block;"></span>`
-        + `<span style="font-family:var(--font-ui);font-size:12px;font-weight:700;color:${col};letter-spacing:0.08em;">${posLabelMap[p]||p}</span>`
+        + `<span style="font-family:var(--font-ui);font-size:13px;font-weight:700;color:${col};letter-spacing:0.08em;">${posLabelMap[p]||p}</span>`
         + `<span style="font-family:var(--font-num);font-size:11px;color:var(--text-dim);">${group.length}</span>`;
       section.appendChild(header);
       const grid = document.createElement('div');
@@ -39297,7 +39329,7 @@ function checkReading(val) {
     rPass++;
     updateScoreDisplay();
     if (currentItem.smNote) {
-      reveal.innerHTML = '<div style="text-align:left;color:#7888b8;font-size:12px;line-height:1.55;">' + currentItem.smNote.replace(/\n/g, '<br>') + '</div>';
+      reveal.innerHTML = '<div style="text-align:left;color:#7888b8;font-size:13px;line-height:1.55;">' + currentItem.smNote.replace(/\n/g, '<br>') + '</div>';
       reveal.className = 'answer-reveal show';
     }
     armNext(nextItem);
@@ -39686,7 +39718,7 @@ function kataNoteHTML(note, block) {
   if (idx > -1) {
     const label = note.slice(0, idx).trim().toUpperCase();
     if (colors[label]) {
-      chip = `<span style="font-family:var(--font-mono);font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;padding:2px 7px;border-radius:3px;border:1px solid ${colors[label]};color:${colors[label]};margin-right:6px;display:inline-block;">${label}</span>`;
+      chip = `<span style="font-family:var(--font-mono);font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;padding:2px 7px;border-radius:3px;border:1px solid ${colors[label]};color:${colors[label]};margin-right:6px;display:inline-block;">${label}</span>`;
       body = note.slice(idx + 1).trim();
     }
   }
@@ -40770,6 +40802,14 @@ function renderVerbTables() {
     }
   }
   container.innerHTML = verbs.map(makeVerbTableHTML).join('');
+  // same permanent scroll bar as the grammar tables, on every table that scrolls sideways
+  requestAnimationFrame(function() {
+    container.querySelectorAll('.vc-block').forEach(function(b) {
+      if (b.dataset.xhint || b.scrollWidth <= b.clientWidth + 2) return;
+      b.dataset.xhint = '1';
+      attachTrack(b, null);
+    });
+  });
 }
 
 function renderSKGGrid() {
@@ -41327,7 +41367,7 @@ function addScrollHints(sec) {
 }
 
 function grammarToTop() {
-  document.getElementById('grammar').scrollTo({top:0, behavior:'smooth'});
+  document.getElementById('grammar').scrollTo({top:0, behavior:'instant'}); // smooth took ~1.5s on long chapters
 }
 function grReading(on) { document.body.classList.toggle('gr-reading', !!on); }
 
@@ -41503,6 +41543,37 @@ document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close
   var MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   el.innerHTML = 'Updated <span class="n">' + (+m[3]) + ' ' + MON[+m[2] - 1] + ' ' + m[1] +
                  ' · ' + m[4] + (m[5] ? ' · v' + m[5] : '') + '</span>';
+})();
+
+/* ---- grammar card titles + subtitles: keep words whole on narrow screens (display only) ----
+   · and — are glued to the word before them (a line never starts with a separator); in the
+   English subtitles, hyphenated words (non-exhaustive, near-constant) are wrapped so they
+   never split. The card markup itself is unchanged. */
+(function keepTitleWordsWhole() {
+  document.querySelectorAll('#grammar .title, #grammar .subtitle-meaning').forEach(function(el) {
+    var isSub = el.classList.contains('subtitle-meaning');
+    var tw = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), nodes = [], n;
+    while ((n = tw.nextNode())) nodes.push(n);
+    nodes.forEach(function(t) {
+      var s = t.data.replace(/ ([·—])/g, ' $1');
+      var re = isSub ? /[A-Za-z]+(?:-[A-Za-z]+)+/g : /(?!)/g, m, last = 0, frag = null;
+      while ((m = re.exec(s))) {
+        frag = frag || document.createDocumentFragment();
+        frag.appendChild(document.createTextNode(s.slice(last, m.index)));
+        var sp = document.createElement('span');
+        sp.className = 'keep-word';
+        sp.textContent = m[0];
+        frag.appendChild(sp);
+        last = m.index + m[0].length;
+      }
+      if (frag) {
+        frag.appendChild(document.createTextNode(s.slice(last)));
+        t.parentNode.replaceChild(frag, t);
+      } else if (s !== t.data) {
+        t.data = s;
+      }
+    });
+  });
 })();
 
 /* ---- text size: whole-app CSS zoom on <body>, saved per device (localStorage 'jpnapp-zoom').
