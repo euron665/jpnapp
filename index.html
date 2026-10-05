@@ -240,6 +240,19 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
   padding:11px 15px;font-size:13px;color:var(--fail-text);text-align:center;font-family:var(--font-ui);display:none;}
 .answer-reveal.show{display:block;}
 .answer-reveal.hint{display:block;color:var(--gold);border-color:rgba(201,168,76,0.35);}
+/* kanji-readings multiple choice */
+#kr-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+@media (max-width:360px){#kr-tiles{grid-template-columns:repeat(2,1fr);}}
+.kr-tile{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:13px 6px;text-align:center;cursor:pointer;user-select:none;
+  font-family:'Noto Sans JP',sans-serif;font-size:17px;font-weight:300;color:var(--text);
+  transition:border-color .12s,background .12s,color .12s;}
+.kr-tile:active{opacity:0.75;}
+.kr-tile.sel{border-color:var(--accent);color:var(--accent);background:rgba(232,25,60,0.07);}
+.kr-tile.right{border-color:var(--pass-text);color:var(--pass-text);background:rgba(74,240,128,0.08);}
+.kr-tile.wrong{border-color:var(--fail-text);color:var(--fail-text);background:rgba(240,74,74,0.08);}
+.kr-tile.missed{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,0.08);}
+.kr-tile.locked{pointer-events:none;}
 .answer-reveal strong{color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:17px;font-weight:300;}
 
 .feedback-row{display:none;gap:8px;}
@@ -281,10 +294,56 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
   padding:10px 16px 8px;z-index:100;display:flex;flex-direction:column;gap:7px;
   transition:transform 0.22s ease;
 }
-body.search-collapsed #global-search-bar{transform:translateY(-100%);}
-body.search-collapsed .screen{top:0 !important;}
-body.search-collapsed .screen-header{top:0 !important;}
-body.search-collapsed #search-results{top:0;}
+/* Search bar is hidden by default and overlays on demand — screens keep the full height. */
+#global-search-bar{transform:translateY(-100%);}
+body.search-open #global-search-bar{transform:translateY(0);}
+#search-results{top:88px;}
+/* floating magnifier toggle */
+/* ── floating nav: no header bar, two icons at top-left ── */
+.screen-header{
+  position:fixed;top:0;left:0;right:auto;width:auto;
+  background:none;border:none;border-bottom:none;padding:0;
+  z-index:101;pointer-events:none;display:block;
+}
+.screen-title{display:none;}
+.screen-header .back-btn{
+  pointer-events:auto;
+  position:fixed;top:9px;left:12px;
+  width:34px;height:34px;padding:0;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg);border:1px solid var(--border);border-radius:var(--r);
+  color:var(--text-dim);font-size:0;letter-spacing:0;
+  transition:color .15s,border-color .15s,top .22s ease;
+}
+.screen-header .back-btn::before{content:'←';font-size:16px;line-height:1;}
+.screen-header .back-btn:hover{color:var(--accent);border-color:var(--accent);}
+/* content no longer has to clear a 56px bar */
+.screen:not(#grammar) .scrollable{padding-top:16px !important;}
+@media (max-width:480px){
+  .screen:not(#grammar) .scrollable{padding-top:50px !important;}
+  #search-fab{top:9px !important;left:54px !important;}
+}
+#search-fab{
+  position:fixed;top:50px;left:12px;right:auto;z-index:101;
+  width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+  background:var(--bg);border:1px solid var(--border);border-radius:var(--r);
+  color:var(--text-dim);cursor:pointer;padding:0;
+  transition:color 0.15s,border-color 0.15s,opacity 0.15s,top .22s ease;
+}
+#search-fab:hover,#search-fab.on{color:var(--accent);border-color:var(--accent);}
+#search-fab svg{width:17px;height:17px;display:block;}
+body.search-open #search-fab{color:var(--accent);border-color:var(--accent);}
+body.grammar-active #search-fab,body.review-active #search-fab{display:none;}
+/* Home has no back button, so the glass sits in the top slot */
+body.home-active #search-fab{top:9px;left:12px;}
+/* when the search bar drops in (88px tall), both icons move below it */
+body.search-open .screen-header .back-btn{top:97px;}
+body.search-open #search-fab{top:138px;}
+body.search-open.home-active #search-fab{top:97px;}
+@media (max-width:480px){
+  body.search-open #search-fab{top:97px !important;}
+  body.search-open.home-active #search-fab{top:97px !important;}
+}
 #search-row{display:flex;gap:10px;align-items:center;}
 #global-search-bar input{
   flex:1;background:var(--surface);border:1px solid var(--border);
@@ -337,8 +396,8 @@ body.search-collapsed #search-results{top:0;}
 .search-empty{color:var(--text-muted);font-size:13px;text-align:center;padding:40px 0;}
 
 /* Push all screen content down to account for search bar */
-.screen{top:88px !important;}
-.screen-header{top:88px !important;}
+.screen{top:0 !important;}
+.screen-header{top:0 !important;}
 
 /* ── KANA TABLE ── */
 .kana-script-toggle{display:flex;gap:8px;width:100%;max-width:600px;padding:8px 0 4px;}
@@ -1413,12 +1472,21 @@ html.furi-click #grammar .formula-gram, html.furi-on #grammar .formula-gram{ lin
 #grammar .settings-row.is-on .settings-name{ color: var(--text); }#grammar.screen{justify-content:flex-start;align-items:stretch;padding:0;overflow-x:hidden;overflow-y:auto;}
 #grammar{min-height:0;}
 #grammar .grammar-home-btn{position:absolute;top:20px;left:24px;z-index:5;}
+@media (max-width:480px){
+  #grammar .settings-cog{top:16px;right:16px;}
+  #grammar .grammar-home-btn{top:14px;left:16px;}
+}
 </style>
 </head>
 <body>
 
 <!-- HOME -->
 <!-- GLOBAL SEARCH BAR -->
+<button id="search-fab" onclick="toggleSearch(event)" title="Search" aria-label="Search">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <circle cx="11" cy="11" r="7"></circle><line x1="16.5" y1="16.5" x2="21" y2="21"></line>
+  </svg>
+</button>
 <div id="global-search-bar">
   <div id="search-row">
     <input type="text" id="search-input" placeholder="Search kanji, vocab…"
@@ -1459,7 +1527,7 @@ html.furi-click #grammar .formula-gram, html.furi-on #grammar .formula-gram{ lin
   <div style="text-align:center">
     <div class="home-kanji">刻</div>
     <div class="home-sub">Kanji Drill — Level 24</div>
-    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.08em;">updated 2026-10-05 10:25</div>
+    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.08em;">updated 2026-10-05 11:09</div>
   </div>
   <div class="home-buttons">
     <div class="home-divider">Study</div>
@@ -1512,6 +1580,7 @@ html.furi-click #grammar .formula-gram, html.furi-on #grammar .formula-gram{ lin
       <div class="picker-label">Special Drills</div>
       <button id="single-vocab-btn" class="btn-primary" style="width:100%;margin-bottom:10px;display:none;" onclick="openSingleVocabLimit()">1 Kanji &#8211; 1 Vocab&#9;·&#9;<span id="single-vocab-count">0</span> items</button>
       <button id="same-meaning-btn" class="btn-primary" style="width:100%;margin-bottom:10px;display:none;" onclick="openSameMeaningLimit()">Same-Meaning Words&#9;·&#9;<span id="same-meaning-count">0</span> items</button>
+      <button id="kanji-reading-btn" class="btn-primary" style="width:100%;margin-bottom:10px;display:none;" onclick="openKanjiReadingLimit()">Kanji Readings&#9;·&#9;<span id="kanji-reading-count">0</span> kanji</button>
       <button id="study-single-btn" class="btn-primary" style="width:100%;margin-bottom:10px;display:none;" onclick="openStudySingleVocab()">1 Kanji &#8211; 1 Vocab&#9;·&#9;<span id="study-single-count">0</span> cards</button>
       <button id="study-sm-btn" class="btn-primary" style="width:100%;margin-bottom:10px;display:none;" onclick="openStudySameMeaning()">Same-Meaning Words&#9;·&#9;<span id="study-sm-count">0</span> groups</button>
       <div class="picker-divider"></div>
@@ -1661,6 +1730,29 @@ html.furi-click #grammar .formula-gram, html.furi-on #grammar .formula-gram{ lin
   </div>
 </div>
 
+<!-- KANJI READINGS LIMIT PROMPT -->
+<div id="kr-limit-overlay" class="sm-modal-overlay" onclick="closeKanjiReadingLimit()">
+  <div class="sm-modal" onclick="event.stopPropagation()" style="text-align:center;max-width:320px;">
+    <span class="sm-modal-close" onclick="closeKanjiReadingLimit()">✕</span>
+    <div class="sm-meaning" style="margin-bottom:4px;">Kanji Readings</div>
+    <div style="font-size:13px;color:var(--text-dim);margin:8px 0 16px;font-family:'DM Sans',sans-serif;">How many kanji?<br><span style="font-size:11px;">(blank = all <span id="kr-limit-total">0</span>)</span></div>
+    <input type="number" id="kr-limit" min="1" placeholder="all" onkeydown="if(event.key==='Enter')beginKanjiReadingReview();" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-size:15px;padding:10px 12px;text-align:center;font-family:'DM Mono',monospace;">
+    <button class="btn-primary" style="width:100%;margin-top:14px;" onclick="beginKanjiReadingReview()">Begin</button>
+  </div>
+</div>
+
+<!-- 1 KANJI – 1 VOCAB → jump-to-set confirm -->
+<div id="svj-overlay" class="sm-modal-overlay" onclick="closeSingleVocabJump()">
+  <div class="sm-modal" onclick="event.stopPropagation()">
+    <span class="sm-modal-close" onclick="closeSingleVocabJump()">✕</span>
+    <div id="svj-body"></div>
+    <div style="display:flex;gap:10px;margin-top:18px;">
+      <button class="btn-secondary" style="flex:1;" onclick="closeSingleVocabJump()">Stay</button>
+      <button class="btn-primary" id="svj-go" style="flex:1;">Go to set →</button>
+    </div>
+  </div>
+</div>
+
 <!-- 1 KANJI 1 VOCAB LIMIT PROMPT -->
 <div id="sv-limit-overlay" class="sm-modal-overlay" onclick="closeSingleVocabLimit()">
   <div class="sm-modal" onclick="event.stopPropagation()" style="text-align:center;max-width:320px;">
@@ -1704,6 +1796,12 @@ html.furi-click #grammar .formula-gram, html.furi-on #grammar .formula-gram{ lin
                placeholder="type meaning…" autocomplete="off"
                autocorrect="off" spellcheck="false" autocapitalize="off">
         <button class="submit-btn" id="submit-btn" onmousedown="event.preventDefault()" ontouchend="event.preventDefault(); handleSubmit();" onclick="handleSubmit()">Enter</button>
+      </div>
+      <div id="kr-area" style="display:none;">
+        <div id="kr-tiles"></div>
+        <button class="btn-primary" id="kr-confirm" style="width:100%;margin-top:12px;"
+                onmousedown="event.preventDefault()" ontouchend="event.preventDefault(); krSubmit();"
+                onclick="krSubmit()">Confirm</button>
       </div>
       <div class="answer-reveal" id="answer-reveal"></div>
       <div class="feedback-row" id="feedback-row">
@@ -38078,10 +38176,12 @@ function showScreen(id) {
     const cur = document.querySelector('.screen.active');
     if (cur && cur.id !== 'review') reviewReturn = cur.id;
   }
-  // Reset search bar visibility on screen change
+  // Close the search overlay whenever the screen changes
   _srCollapsed = false;
   document.body.classList.remove('search-collapsed');
+  document.body.classList.remove('search-open');
   document.body.classList.toggle('grammar-active', id === 'grammar');
+  document.body.classList.toggle('home-active', id === 'home');
   document.body.classList.toggle('review-active', id === 'review');
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -38121,6 +38221,12 @@ function buildSKGGrid() {
   const isStudy = (currentMode === 'study-kanji' || currentMode === 'study-vocab');
   const _svb = document.getElementById('single-vocab-btn');
   if (_svb) { _svb.style.display = isRev ? '' : 'none'; if (isRev) document.getElementById('single-vocab-count').textContent = getSingleVocabItems().length; }
+  const _krb = document.getElementById('kanji-reading-btn');
+  if (_krb) {
+    const show = (currentMode === 'review-kanji');
+    _krb.style.display = show ? '' : 'none';
+    if (show) document.getElementById('kanji-reading-count').textContent = getKanjiReadingItems().length;
+  }
   const _smN = (currentMode === 'review-vocab') ? getSameMeaningItems().length : 0;
   const _smb = document.getElementById('same-meaning-btn');
   if (_smb) { _smb.style.display = _smN ? '' : 'none'; if (_smN) document.getElementById('same-meaning-count').textContent = _smN; }
@@ -38662,6 +38768,116 @@ function getSingleVocabItems() {
   return items;
 }
 
+// ── KANJI READINGS (multiple choice) ───────────────────────────────────
+// Correct answers = the reading-group readings of that kanji.
+let KR_POOL = null;
+function ensureKRPool() {
+  if (KR_POOL) return;
+  const s = new Set();
+  Object.keys(VOCAB).forEach(k => (VOCAB[k].rgs || []).forEach(rg => {
+    const r = (rg.rg_reading || '').trim();
+    if (r) s.add(r);
+  }));
+  KR_POOL = [...s];
+}
+function getKanjiReadingItems() {
+  ensureKRPool();
+  const items = [];
+  Object.keys(VOCAB).forEach(k => {
+    const rs = [...new Set((VOCAB[k].rgs || []).map(rg => (rg.rg_reading || '').trim()).filter(Boolean))];
+    if (!rs.length) return;
+    const km = KANJI_MAP[k] || { meaning:'', reading:'' };
+    items.push({ type:'kreading', kanji:k, readings:rs, meaning:km.meaning || '' });
+  });
+  return items;
+}
+// Distractors biased toward similar shape: same length first, then ±1 mora.
+function krDistractors(correct, want) {
+  ensureKRPool();
+  const bad = new Set(correct);
+  const lens = correct.map(r => r.length);
+  const score = r => {
+    const d = Math.min(...lens.map(L => Math.abs(r.length - L)));
+    let s = d * 10;
+    if (correct.some(c => c[0] === r[0])) s -= 4;            // shares first kana
+    if (correct.some(c => c[c.length-1] === r[r.length-1])) s -= 2;
+    return s;
+  };
+  const cand = KR_POOL.filter(r => !bad.has(r)).map(r => ({ r, s: score(r) + Math.random() * 3 }));
+  cand.sort((a,b) => a.s - b.s);
+  return cand.slice(0, want).map(x => x.r);
+}
+// Tiles ≈ 2× correct, floor 6, cap 12.
+function krTileCount(nCorrect) {
+  return Math.max(6, Math.min(12, nCorrect * 2));
+}
+
+function krRender(item) {
+  const correct = item.readings;
+  const total   = krTileCount(correct.length);
+  const opts    = correct.concat(krDistractors(correct, Math.max(0, total - correct.length)));
+  shuffle(opts);
+  const box = document.getElementById('kr-tiles');
+  box.innerHTML = '';
+  opts.forEach(r => {
+    const t = document.createElement('div');
+    t.className = 'kr-tile'; t.textContent = r; t.dataset.r = r;
+    t.onclick = () => { if (!awaitingNext) t.classList.toggle('sel'); };
+    box.appendChild(t);
+  });
+  const btn = document.getElementById('kr-confirm');
+  btn.textContent = 'Confirm'; btn.disabled = false;
+}
+function krSubmit() {
+  if (awaitingNext) { awaitingNext = false; const a = pendingNext; pendingNext = null; if (a) a(); return; }
+  const tiles = [...document.querySelectorAll('#kr-tiles .kr-tile')];
+  const picked = tiles.filter(t => t.classList.contains('sel')).map(t => t.dataset.r);
+  if (!picked.length) { showTryAgain('Pick at least one reading'); return; }
+  const correct = new Set(currentItem.readings);
+  const ok = picked.length === correct.size && picked.every(r => correct.has(r));
+  tiles.forEach(t => {
+    const isC = correct.has(t.dataset.r), sel = t.classList.contains('sel');
+    t.classList.remove('sel'); t.classList.add('locked');
+    if (isC && sel) t.classList.add('right');
+    else if (!isC && sel) t.classList.add('wrong');
+    else if (isC && !sel) t.classList.add('missed');
+  });
+  const reveal = document.getElementById('answer-reveal');
+  if (ok) {
+    rPass++; updateScoreDisplay();
+    reveal.innerHTML = 'Correct — <strong>' + currentItem.readings.join(' · ') + '</strong>';
+    reveal.className = 'answer-reveal hint';
+  } else {
+    if (!itemFailed[itemKey]) itemFailed[itemKey] = {};
+    if (!itemFailed[itemKey].kr) { rFail++; itemFailed[itemKey].kr = true; updateScoreDisplay(); }
+    reveal.innerHTML = 'All readings: <strong>' + currentItem.readings.join(' · ') + '</strong>';
+    reveal.className = 'answer-reveal show';
+  }
+  document.getElementById('kr-confirm').textContent = 'Next →';
+  armNext(nextItem);
+}
+
+function openKanjiReadingLimit() {
+  const n = getKanjiReadingItems().length;
+  if (!n) return;
+  document.getElementById('kr-limit-total').textContent = n;
+  document.getElementById('kr-limit').value = '';
+  document.getElementById('kr-limit-overlay').classList.add('open');
+}
+function closeKanjiReadingLimit() { document.getElementById('kr-limit-overlay').classList.remove('open'); }
+function beginKanjiReadingReview() {
+  const lim = parseInt(document.getElementById('kr-limit').value);
+  closeKanjiReadingLimit();
+  startKanjiReadingReview(lim > 0 ? lim : 0);
+}
+function startKanjiReadingReview(limit) {
+  const items = getKanjiReadingItems();
+  if (!items.length) return;
+  shuffle(items);
+  queue = (limit > 0) ? items.slice(0, limit) : items;
+  startReview();
+}
+
 function openSingleVocabLimit() {
   const n = getSingleVocabItems().length;
   if (!n) return;
@@ -38735,6 +38951,23 @@ function loadItem() {
 
   const conjTopLabel = document.getElementById('conj-step-label');
   const botLabel = document.getElementById('step-label');
+  // reset the multiple-choice area (used only by the kanji-readings mode)
+  const _kr = document.getElementById('kr-area');
+  _kr.style.display = 'none';
+  document.querySelector('.input-row').style.display = '';
+  if (currentItem.type === 'kreading') {
+    reviewStep = 'kreading';
+    conjTopLabel.style.display = 'none';
+    botLabel.style.display = '';
+    botLabel.textContent = 'Select every reading of this kanji';
+    document.getElementById('review-display').textContent = currentItem.kanji;
+    document.getElementById('known-meaning').textContent = currentItem.meaning;
+    document.querySelector('.input-row').style.display = 'none';
+    _kr.style.display = '';
+    krRender(currentItem);
+    updateProgress();
+    return;
+  }
   if (currentItem.type === 'conj') {
     reviewStep = 'conj';
     const pill = (bg,col,txt) => `<span style="font-family:var(--font-mono);font-size:13px;font-weight:500;text-transform:uppercase;letter-spacing:0.1em;padding:3px 9px;border-radius:3px;border:1px solid ${col};color:${col};background:transparent;margin-right:6px;display:inline-block;">${txt}</span>`;
@@ -39532,6 +39765,27 @@ function getStudySameMeaningGroups() {
   return SAME_MEANING.filter(g => g.words.some(wd => VOCAB_WORD_INDEX[wd.w]));
 }
 
+// Confirm step before leaving the 1 Kanji – 1 Vocab list for a kanji's set.
+function openSingleVocabJump(kanji, word) {
+  const skg = SKGS.find(s => s.kanji.includes(kanji));
+  const km  = KANJI_MAP[kanji] || { reading:'', meaning:'' };
+  const set = skg ? String(skg.id).replace(/SKG\s*/i,'') : null;
+  document.getElementById('svj-body').innerHTML =
+    '<div class="sm-meaning" style="margin-top:0;">' + word + '</div>'
+    + '<div class="sm-words"><div class="sm-word"><span class="sm-w">' + kanji + '</span>'
+    + '<span class="sm-r">' + km.reading + '</span></div></div>'
+    + '<div class="sm-note">' + km.meaning
+    + (set ? ' — in set <strong style="color:var(--text);">' + set + '</strong>' : ' — not in any set')
+    + '</div>';
+  const go = document.getElementById('svj-go');
+  go.style.display = set ? '' : 'none';
+  go.onclick = () => { closeSingleVocabJump(); goToKanjiVocab(kanji); };
+  document.getElementById('svj-overlay').classList.add('open');
+}
+function closeSingleVocabJump() {
+  document.getElementById('svj-overlay').classList.remove('open');
+}
+
 function openStudySingleVocab() {
   const list = document.getElementById('study-single-list');
   list.innerHTML = '';
@@ -39570,6 +39824,8 @@ function openStudySingleVocab() {
       mk.onclick = (ev) => { ev.stopPropagation(); openSameMeaning(e.word); };
       pill.appendChild(mk);
     }
+    // Tap the vocab → offer to jump to this kanji's set (never jumps directly).
+    pill.onclick = () => openSingleVocabJump(k, e.word);
     grid.appendChild(pill);
     block.appendChild(grid);
     body.appendChild(block);
@@ -39607,6 +39863,32 @@ function openStudySameMeaning() {
 
 // ── GLOBAL SEARCH ────────────────────────────────────────────────────
 let searchKBMode = 'en';
+
+// Collapsible search: hidden by default, magnifier toggles it, outside tap closes it.
+function openSearch() {
+  document.body.classList.add('search-open');
+  const inp = document.getElementById('search-input');
+  if (inp) setTimeout(() => inp.focus(), 60);
+}
+function closeSearch() {
+  document.body.classList.remove('search-open');
+  const inp = document.getElementById('search-input');
+  if (inp) inp.blur();
+}
+function toggleSearch(ev) {
+  if (ev) ev.stopPropagation();
+  document.body.classList.contains('search-open') ? closeSearch() : openSearch();
+}
+// tap anywhere outside the bar (or press Escape) closes it
+document.addEventListener('click', function(e) {
+  if (!document.body.classList.contains('search-open')) return;
+  if (e.target.closest('#global-search-bar') || e.target.closest('#search-fab')) return;
+  if (e.target.closest('#search-results')) return;
+  closeSearch();
+}, true);
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && document.body.classList.contains('search-open')) closeSearch();
+});
 
 // Auto-hide search bar on scroll
 let _srCollapsed = false;
@@ -39668,6 +39950,7 @@ function clearSearch() {
   document.getElementById('search-input').value = '';
   document.getElementById('search-clear').classList.remove('show');
   document.getElementById('search-results').classList.remove('show');
+  document.body.classList.remove('search-open');
 }
 
 function runSearch(q) {
