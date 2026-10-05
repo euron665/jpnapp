@@ -5,10 +5,10 @@
 <link rel="manifest" href="manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="KOKU">
+<meta name="apple-mobile-web-app-title" content="JpnApp">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>刻 KOKU — Kanji Drill</title>
+<title>JpnApp</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -34,13 +34,28 @@ button,input,select,textarea{font-family:inherit;line-height:inherit;}
 .screen.active{opacity:1;pointer-events:all;}
 
 /* HOME */
-#home{gap:40px;}
-.home-kanji{font-family:var(--font-jp);font-size:clamp(70px,16vw,120px);font-weight:300;
-  letter-spacing:-4px;background:linear-gradient(135deg,#e8e8f0 30%,var(--accent) 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  filter:drop-shadow(0 0 30px var(--accent-glow));}
-.home-sub{font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);
-  margin-top:8px;text-align:center;font-family:var(--font-ui);font-weight:300;}
+/* Centred when it fits, scrollable from the top when it doesn't: plain justify-content:center
+   pushed the top out of reach on 390x844 phones. Auto margins centre without that overflow. */
+#home{gap:32px;justify-content:flex-start;}
+#home > :first-child{margin-top:auto;}
+#home > :last-child{margin-bottom:auto;}
+.home-title{font-family:var(--font-ui);font-size:30px;font-weight:600;letter-spacing:0.02em;
+  color:var(--text);text-align:center;padding-top:20px;}
+.home-stamp{font-size:11px;color:var(--text-dim);text-align:center;letter-spacing:0.04em;
+  font-weight:400;padding-bottom:8px;}
+.home-stamp .n{font-family:var(--font-num);font-variant-numeric:tabular-nums;}
+
+/* ── desktop text size (A− / A+), fixed bottom-right on every screen ──
+   Scales the whole app with CSS zoom on <body>; the control counter-zooms itself so it never
+   moves or grows. Mouse + wide screens only — phones never see it and are never zoomed. */
+#zoom-ctl{display:none;position:fixed;right:16px;bottom:16px;z-index:400;gap:6px;user-select:none;}
+@media (hover:hover) and (pointer:fine) and (min-width:700px){ #zoom-ctl{display:flex;} }
+#zoom-ctl button{width:34px;height:34px;padding:0;display:flex;align-items:center;justify-content:center;
+  background:var(--bg);border:1px solid var(--border);border-radius:var(--r);color:var(--text-dim);
+  font-size:13px;font-weight:500;cursor:pointer;transition:color .15s,border-color .15s;}
+#zoom-ctl button:hover:not(:disabled){color:var(--accent);border-color:var(--accent);}
+#zoom-ctl button:disabled{opacity:.35;cursor:default;}
+#zoom-ctl .zl{font-size:10px;margin-left:1px;}
 .home-buttons{display:flex;flex-direction:column;gap:10px;width:100%;max-width:360px;}
 .home-divider{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--text-dim);
   text-align:center;padding:4px 0;font-family:var(--font-ui);}
@@ -90,6 +105,7 @@ button,input,select,textarea{font-family:inherit;line-height:inherit;}
   text-transform:uppercase;margin-bottom:8px;text-align:center;}
 .mode-skg-kanji{font-family:var(--font-jp);font-weight:300;font-size:clamp(28px,7vw,50px);
   letter-spacing:4px;text-align:center;line-height:1.3;}
+.mode-skg-kanji.many{font-size:clamp(22px,5.6vw,36px);letter-spacing:2px;max-width:560px;margin:0 auto;}
 .mode-buttons,.order-buttons{width:100%;max-width:340px;display:flex;flex-direction:column;gap:10px;}
 
 /* VOCAB KANJI PICKER */
@@ -1528,7 +1544,8 @@ html.furi-click #grammar .formula-gram, html.furi-on #grammar .formula-gram{ lin
 body.gr-reading #gr-top-btn{display:flex;}
 #gr-top-btn:hover{color:var(--accent);border-color:var(--accent);}
 #gr-top-btn svg{width:17px;height:17px;display:block;}
-@media (max-width:480px){#gr-top-btn{top:56px;left:16px;}}
+/* phones: ↑ sits in one row beside ← (same slots as ← and 🔍 on the rest of the app) */
+@media (max-width:480px){#gr-top-btn{top:9px;left:54px;}}
 #grammar .chapter-header .back-btn:hover{border-color:var(--accent);color:var(--accent);}
 </style>
 </head>
@@ -1582,12 +1599,13 @@ body.gr-reading #gr-top-btn{display:flex;}
   <div id="sr-empty" class="search-empty" style="display:none">No results</div>
 </div>
 
+<div id="zoom-ctl" role="group" aria-label="Text size">
+  <button type="button" id="zoom-out" onmousedown="event.preventDefault()" onclick="stepZoom(-1)" aria-label="Smaller text" title="Smaller text">A<span class="zl">−</span></button>
+  <button type="button" id="zoom-in" onmousedown="event.preventDefault()" onclick="stepZoom(1)" aria-label="Larger text" title="Larger text">A<span class="zl">+</span></button>
+</div>
+
 <div id="home" class="screen active">
-  <div style="text-align:center">
-    <div class="home-kanji">刻</div>
-    <div class="home-sub">Kanji Drill — Level 24</div>
-    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-num);margin-top:6px;letter-spacing:0.08em;">updated 2026-10-05 11:30</div>
-  </div>
+  <h1 class="home-title">JpnApp</h1>
   <div class="home-buttons">
     <div class="home-divider">Study</div>
     <button class="btn-secondary" onclick="goTo('study-kana')">Study Kana</button>
@@ -1604,6 +1622,9 @@ body.gr-reading #gr-top-btn{display:flex;}
     <button class="btn-primary" onclick="goTo('pos-picker','review-pos')">Review by Part of Speech</button>
     <button class="btn-primary" onclick="goTo('conj-picker')">Review Conjugation</button>
   </div>
+  <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM" text below by regex — keep that
+       exact format in the markup; formatHomeStamp() turns it into "Updated 5 Oct 2026 · 11:30". -->
+  <div class="home-stamp" id="home-stamp">updated 2026-10-05 11:30</div>
 </div>
 
 <!-- POS PICKER -->
@@ -38311,7 +38332,9 @@ function selectSKG(skg) {
     showScreen('study-vocab');
   } else if (currentMode === 'review-kanji') {
     document.getElementById('os-id').textContent = String(skg.id).replace(/SKG\s*/i,'');
-    document.getElementById('os-kanji').textContent = skg.kanji.slice(0,8).join(' ');
+    const osK = document.getElementById('os-kanji');
+    osK.textContent = skg.kanji.join(' ');              // every kanji in the set (max 16), wraps
+    osK.classList.toggle('many', skg.kanji.length > 8); // smaller glyphs so 16 fit in 2 rows
     setKanjiSteps('both');
     showScreen('order-select');
   } else {
@@ -41418,6 +41441,52 @@ document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close
   try { m = localStorage.getItem(FURI_KEY) || 'click'; } catch (e) {}
   setFuri(m);
 })();
+
+/* ---- home build stamp: raw "updated YYYY-MM-DD HH:MM" → "Updated 5 Oct 2026 · 11:30" ---- */
+(function formatHomeStamp() {
+  var el = document.getElementById('home-stamp');
+  if (!el) return;
+  var m = el.textContent.match(/(\d{4})-(\d{2})-(\d{2}) (\d{2}:\d{2})/);
+  if (!m) return;
+  var MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  el.innerHTML = 'Updated <span class="n">' + (+m[3]) + ' ' + MON[+m[2] - 1] + ' ' + m[1] +
+                 ' · ' + m[4] + '</span>';
+})();
+
+/* ---- desktop text size: A− / A+ (bottom-right). Saved per device in localStorage. ---- */
+var ZOOM_KEY = 'jpnapp-zoom';
+var ZOOM_STEPS = [0.9, 1, 1.1, 1.25, 1.4, 1.6];
+var zoomMQ = window.matchMedia('(hover:hover) and (pointer:fine) and (min-width:700px)');
+
+var zoomNow = (function() {           // in memory too, so A−/A+ work even if storage is blocked
+  var z = 1;
+  try { z = parseFloat(localStorage.getItem(ZOOM_KEY)) || 1; } catch (e) {}
+  return ZOOM_STEPS.indexOf(z) < 0 ? 1 : z;
+})();
+
+function applyZoom() {
+  var z = zoomMQ.matches ? zoomNow : 1;   // phones / touch: never zoomed
+  document.body.style.zoom = z === 1 ? '' : String(z);
+  var ctl = document.getElementById('zoom-ctl');
+  if (!ctl) return;
+  ctl.style.zoom = z === 1 ? '' : String(1 / z); // keep the control itself at 100%
+  var pct = Math.round(z * 100) + '%';
+  document.getElementById('zoom-out').disabled = z <= ZOOM_STEPS[0];
+  document.getElementById('zoom-in').disabled = z >= ZOOM_STEPS[ZOOM_STEPS.length - 1];
+  document.getElementById('zoom-out').title = 'Smaller text (now ' + pct + ')';
+  document.getElementById('zoom-in').title = 'Larger text (now ' + pct + ')';
+}
+
+function stepZoom(dir) {
+  var i = ZOOM_STEPS.indexOf(zoomNow) + dir;
+  if (i < 0 || i >= ZOOM_STEPS.length) return;
+  zoomNow = ZOOM_STEPS[i];
+  try { localStorage.setItem(ZOOM_KEY, String(zoomNow)); } catch (e) {}
+  applyZoom();
+}
+
+if (zoomMQ.addEventListener) zoomMQ.addEventListener('change', applyZoom);
+applyZoom();
 
 applyLevels();
 </script>

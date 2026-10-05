@@ -1,7 +1,7 @@
 {
-  "name": "刻 KOKU",
-  "short_name": "KOKU",
-  "description": "Japanese kanji & vocab drill",
+  "name": "JpnApp",
+  "short_name": "JpnApp",
+  "description": "Japanese kanji, vocab & grammar study",
   "start_url": "/jpnapp/",
   "scope": "/jpnapp/",
   "display": "standalone",
