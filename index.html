@@ -526,6 +526,9 @@ body.search-open.home-active #search-fab{top:97px;}
 .verb-subtype-btn.active{background:var(--surface2);border-color:var(--gold);color:var(--gold);}
 #adj-type-toggle .verb-subtype-btn.active{border-color:var(--accent);color:var(--accent);}
 .vc-block{width:100%;max-width:680px;margin-bottom:28px;overflow-x:auto;}
+/* pinch-zoom lives on the conjugation tables only (conjPinchZoom); the browser's own pinch is
+   switched off here so the two never fight */
+#verb-conj-container{touch-action:pan-x pan-y;}
 .vc-title{font-family:var(--font-jp);font-size:17px;font-weight:400;color:var(--text);margin-bottom:2px;}
 .vc-title-sub{font-size:13px;font-weight:300;color:var(--text-dim);}
 .vc-desc{font-size:11px;color:var(--text-dim);letter-spacing:0.04em;margin-bottom:10px;}
@@ -1700,7 +1703,7 @@ body.gr-reading #gr-top-btn{display:flex;}
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-10-05 21:03 · v119</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-10-05 21:18 · v121</div>
 </div>
 
 <!-- POS PICKER -->
@@ -40802,15 +40805,71 @@ function renderVerbTables() {
     }
   }
   container.innerHTML = verbs.map(makeVerbTableHTML).join('');
-  // same permanent scroll bar as the grammar tables, on every table that scrolls sideways
-  requestAnimationFrame(function() {
-    container.querySelectorAll('.vc-block').forEach(function(b) {
-      if (b.dataset.xhint || b.scrollWidth <= b.clientWidth + 2) return;
-      b.dataset.xhint = '1';
-      attachTrack(b, null);
-    });
+  requestAnimationFrame(function() { refreshVcTracks(container); });
+}
+
+/* Same permanent scroll bar as the grammar tables, on every conjugation table that scrolls
+   sideways. Re-run after a pinch: zooming changes which tables overflow. */
+function refreshVcTracks(root) {
+  root.querySelectorAll('.vc-block').forEach(function(b) {
+    var over = b.scrollWidth > b.clientWidth + 2;
+    var next = b.nextElementSibling;
+    var tr = next && next.classList.contains('xscroll-track') ? next : null;
+    if (over) b.dataset.xhint = '1'; else delete b.dataset.xhint;
+    if (over && !tr) attachTrack(b, null);
+    else if (tr) {
+      tr.style.display = over ? '' : 'none';
+      b.dispatchEvent(new Event('scroll'));   // attachTrack's listener re-sizes the thumb
+    }
   });
 }
+
+/* ---- Study Conjugation: pinch to zoom the tables (nothing else in the app zooms) ----
+   Two fingers on the tables scale them 45%–160% with CSS zoom, so zooming out really fits
+   more on screen. The point between the fingers stays put. Kept in memory only: it survives
+   switching verb types, and resets to 100% when the app is reopened. Phones only — desktop
+   is deliberately left as it is (no ctrl+wheel / trackpad zoom). */
+(function conjPinchZoom() {
+  var box = document.getElementById('verb-conj-container');
+  if (!box) return;
+  var MIN = 0.45, MAX = 1.6, z = 1, pinch = null;  // 45%: a whole table fits a 375px phone
+
+  function gap(t) { return Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY); }
+  function scroller() {
+    for (var p = box.parentElement; p && p !== document.body; p = p.parentElement) {
+      var o = getComputedStyle(p).overflowY;
+      if ((o === 'auto' || o === 'scroll') && p.scrollHeight > p.clientHeight + 1) return p;
+    }
+    return null;
+  }
+  function setZoom(nz, clientY) {
+    nz = Math.round(Math.max(MIN, Math.min(MAX, nz)) * 100) / 100;
+    if (nz === z) return;
+    var sc = scroller();
+    var outer = typeof effectiveZoom === 'function' ? effectiveZoom() : 1;  // app text size
+    var y = (clientY - box.getBoundingClientRect().top) / (outer * z);   // point, in table px
+    box.style.zoom = nz === 1 ? '' : String(nz);
+    if (sc) sc.scrollTop += y * (nz - z);                                 // keep it under the fingers
+    z = nz;
+  }
+  function settle() { refreshVcTracks(box); }
+
+  box.addEventListener('touchstart', function(e) {
+    if (e.touches.length === 2) pinch = { d: gap(e.touches), z: z };
+  }, { passive: true });
+  box.addEventListener('touchmove', function(e) {
+    if (!pinch || e.touches.length !== 2) return;
+    e.preventDefault();
+    setZoom(pinch.z * gap(e.touches) / pinch.d, (e.touches[0].clientY + e.touches[1].clientY) / 2);
+  }, { passive: false });
+  function end(e) { if (pinch && e.touches.length < 2) { pinch = null; settle(); } }
+  box.addEventListener('touchend', end, { passive: true });
+  box.addEventListener('touchcancel', end, { passive: true });
+  // iOS Safari's own pinch gesture: never let it zoom the page from here
+  ['gesturestart', 'gesturechange'].forEach(function(ev) {
+    box.addEventListener(ev, function(e) { e.preventDefault(); }, { passive: false });
+  });
+})();
 
 function renderSKGGrid() {
   const isKanjiMode = currentMode === 'study-kanji' || currentMode === 'review-kanji';
