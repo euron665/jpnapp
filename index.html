@@ -227,6 +227,16 @@ thead th{text-align:center !important;}
 #nrev .nr-empty{font-size:13px;color:var(--text-dim);margin:0;}
 #nrev .nr-warn{font-size:13px;line-height:1.5;color:#e8a33a;margin:4px 0 0;}
 #nrev .nr-tnote{text-align:center;}
+/* "Progress & mistakes": a compact grouped list (name · count · ›) — deliberately not like the mode boxes */
+#nrev .nr-plist{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+#nrev .nr-prow{display:flex;align-items:center;gap:12px;width:100%;padding:13px 14px;background:transparent;border:0;
+  border-top:1px solid var(--border);color:var(--text);font-family:var(--font-ui);font-size:15px;text-align:left;cursor:pointer;}
+#nrev .nr-prow:first-child{border-top:0;}
+#nrev .nr-prow-name{flex:1;min-width:0;}
+#nrev .nr-prow-tag{font-family:var(--font-num);font-size:13px;color:var(--text-dim);white-space:nowrap;}
+#nrev .nr-prow-go{color:var(--text-dim);font-size:19px;line-height:1;}
+@media (hover:hover){#nrev .nr-prow:hover .nr-prow-name,#nrev .nr-prow:hover .nr-prow-go{color:var(--accent);}}
+#nrev .nr-prow.tap-flash .nr-prow-name,#nrev .nr-prow.tap-flash .nr-prow-go{color:var(--accent);}
 /* pop-ups over a hub (One SKG Select, tough lists, How the SRS works): tap the background, ✕ or
    Escape → back to the hub. The list inside scrolls in its own box (§3b), with the phone scroll bar */
 #nrev .nr-pop{position:fixed;inset:0;z-index:420;background:rgba(0,0,0,0.72);display:flex;align-items:center;
@@ -348,6 +358,8 @@ thead th{text-align:center !important;}
 
 /* ── STUDY SCREENS ── */
 #study-kanji,#study-vocab{justify-content:flex-start;padding-top:56px;}
+/* "Set 001" above the kanji tiles / vocab cards (same size as the review hub titles) */
+.study-set-head{width:100%;font-size:26px;font-weight:500;margin:4px 0 14px;}
 
 .study-kanji-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
   gap:10px;width:100%;max-width:600px;padding-bottom:24px;}
@@ -1802,7 +1814,7 @@ body.gr-reading #gr-top-btn{display:flex;}
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-10-08 22:54 · v135</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-10-08 23:26 · v138</div>
 </div>
 
 <!-- NEW REVIEWS (REVIEW_DESIGN.md): hub, setup screens, questions and end screen all render into #nrev-app -->
@@ -1864,6 +1876,7 @@ body.gr-reading #gr-top-btn{display:flex;}
     <div class="screen-title" id="study-kanji-title">Study — Kanji</div>
   </div>
   <div class="scrollable" style="padding-top:56px;width:100%;">
+    <h1 class="study-set-head" id="study-kanji-set" style="max-width:600px;"></h1>
     <div class="study-kanji-list" id="study-kanji-list"></div>
   </div>
 </div>
@@ -1875,6 +1888,7 @@ body.gr-reading #gr-top-btn{display:flex;}
     <div class="screen-title" id="study-vocab-title">Study — Vocab</div>
   </div>
   <div class="scrollable" style="padding-top:56px;width:100%;">
+    <h1 class="study-set-head" id="study-vocab-set" style="max-width:540px;"></h1>
     <div class="study-vocab-kanji-list" id="study-vocab-list"></div>
   </div>
 </div>
@@ -38423,6 +38437,7 @@ function buildStudyPOS() {
 function buildStudyKanji() {
   if (!currentSKG) return;
   document.getElementById('study-kanji-title').textContent = String(currentSKG.id).replace(/SKG\s*/i,'') + ' — Kanji';
+  document.getElementById('study-kanji-set').textContent = 'Set ' + String(currentSKG.id).replace(/SKG\s*/i,'');
   const list = document.getElementById('study-kanji-list');
   list.innerHTML = '';
   currentSKG.kanji.forEach(k => {
@@ -38445,6 +38460,7 @@ function buildStudyKanji() {
 function buildStudyVocab() {
   if (!currentSKG) return;
   document.getElementById('study-vocab-title').textContent = String(currentSKG.id).replace(/SKG\s*/i,'') + ' — Vocab';
+  document.getElementById('study-vocab-set').textContent = 'Set ' + String(currentSKG.id).replace(/SKG\s*/i,'');
   const list = document.getElementById('study-vocab-list');
   list.innerHTML = '';
   currentSKG.kanji.forEach(k => {
@@ -40401,7 +40417,7 @@ renderThemeRow();
    never leaves a red frame; a real tap (click — never fired by a scroll) gives a short flash instead ---- */
 (function() {
   var touch = window.matchMedia('(hover:none)');
-  var SEL = '.nr-card,.nr-chip,.nr-pop-x,.skg-card,.study-drill,.pos-check-row,.kata-cat-card > .svk-header,.th-btn,'
+  var SEL = '.nr-card,.nr-prow,.nr-chip,.nr-pop-x,.skg-card,.study-drill,.pos-check-row,.kata-cat-card > .svk-header,.th-btn,'
     + '.home-cog,.as-done,.ts-btn,.screen-header .back-btn,#search-fab,#grammar .chapter-btn,#grammar .guide-btn,'
     + '#grammar .guide-ref,#grammar .settings-cog,#grammar .settings-close,#grammar .grammar-home-btn,'
     + '#grammar .chapter-header .back-btn,#gr-top-btn';
@@ -41086,11 +41102,14 @@ const NR = (function() {
   // ───────── SRS (§5.1): the default — keeps every word alive ─────────
   // 10 "harsh" stages; right = up one, wrong = down two (never below 1); a first answer right → stage 2,
   // wrong → stage 1; Choose can lift a word only up to stage 6, further needs a correct typed answer.
-  // Due days are calendar days: "1 day" = tomorrow, any time. Each answer counts the moment it's given.
+  // Exact times (v138): a word answered at 16:00 with "1 day" to go is due tomorrow at 16:00 — `d` is a
+  // timestamp in ms. (Up to v137 `d` was a calendar-day number, due from local midnight; such items are
+  // read as that midnight, so nothing is lost.) Each answer counts the moment it's given.
   const SRS_DAYS = [0, 1, 2, 4, 7, 10, 14, 30, 60, 90, 90];          // stage → days until it comes back
-  const CHOOSE_LIMIT = 6;
-  let dayShift = 0;                                                     // tests only
-  const today = () => Math.floor((Date.now() - new Date().getTimezoneOffset() * 60000) / 86400000) + dayShift;
+  const CHOOSE_LIMIT = 6, DAY_MS = 86400000;
+  let dayShift = 0;                                                     // tests only (days)
+  const now = () => Date.now() + dayShift * DAY_MS;
+  const dueAt = it => it.d > 1e11 ? it.d : it.d * DAY_MS + new Date().getTimezoneOffset() * 60000;   // old day number → its local midnight
   const srsGet = w => JPStore.get('srs:' + w, null);
   function srsAnswer(w, ok, typed) {
     const cur = srsGet(w), s0 = cur ? cur.s : 0;
@@ -41099,7 +41118,7 @@ const NR = (function() {
     else if (!ok) st = Math.max(1, s0 - 2);                             // a wrong Choose answer counts too
     else if (!typed && s0 >= CHOOSE_LIMIT) st = s0;                     // Choose can't lift past stage 6
     else st = Math.min(10, s0 + 1);
-    sset('srs:' + w, { s: st, d: today() + SRS_DAYS[st] });
+    sset('srs:' + w, { s: st, d: now() + SRS_DAYS[st] * DAY_MS });
   }
   // new words come from the pool set by set, in a random set order; a set is finished before the next
   // one starts (if it runs out mid-session the rest comes from the next set, which is then finished first)
@@ -41121,9 +41140,9 @@ const NR = (function() {
   }
   // a session: most overdue first → other due words → new words from the pool, 25 in all
   function srsPlan() {
-    const { W } = data(), t = today(), items = {}, due = [];
-    Object.keys(W).forEach(w => { const it = srsGet(w); if (it) { items[w] = it; if (it.d <= t) due.push(w); } });
-    shuffle(due).sort((a, b) => items[a].d - items[b].d);              // stable sort: ties stay random
+    const { W } = data(), t = now(), items = {}, due = [], at = {};
+    Object.keys(W).forEach(w => { const it = srsGet(w); if (it) { items[w] = it; at[w] = dueAt(it); if (at[w] <= t) due.push(w); } });
+    shuffle(due).sort((a, b) => at[a] - at[b]);                        // stable sort: ties stay random
     const words = due.slice(0, SESSION);
     const limit = words.filter(w => items[w].s >= CHOOSE_LIMIT).length;
     return { due: due.length, learned: Object.keys(items).length, total: Object.keys(W).length, limit,
@@ -41168,14 +41187,22 @@ const NR = (function() {
     return `<button class="nr-card" data-mode="${key}"${off ? ' disabled' : ''}><b>${m.name}</b><span class="nr-d">${esc(m.desc)}</span>
       <span class="nr-t">${n} ${m.noun || 'words'} · ${m.all ? 'all' : (m.size || SESSION)} per session · ${m.how || 'Choose or Type'}${m.chooseOnly ? ' · Choose only' : ''}</span></button>`;
   }
-  // "Progress & mistakes" — the last section of every hub: boxes like the mode cards, each opens a pop-up
+  // "Progress & mistakes" — the last section of the vocab, kanji and conj hubs: a compact list (name ·
+  // count · ›), deliberately NOT like the mode boxes; each row opens a pop-up that starts with its description
   const plural = (n, one, many) => n + ' ' + (n === 1 ? one : many);
-  function progressCard(attr, name, desc, tag) {
-    return `<button class="nr-card" ${attr}><b>${esc(name)}</b><span class="nr-d">${esc(desc)}</span><span class="nr-t">${esc(tag)}</span></button>`;
+  const PROGRESS_DESC = {
+    srs: 'Words you answered wrong in the SRS, worst at the top. A word leaves the list after 2 right answers in a row.',
+    tricky: 'Words you answered wrong in Tricky readings, worst at the top. A word leaves the list after 2 right answers in a row.',
+    kmean: 'Kanji you answered wrong in Kanji meaning, worst at the top. A kanji leaves the list after 2 right answers in a row.',
+    kread: 'Kanji you answered wrong in Kanji readings, worst at the top. A kanji leaves the list after 2 right answers in a row.',
+    conj: 'Combinations below 80% right over their last 20 answers, worst first or by word type.',
+    guide: 'The 10 stages, when a word comes back, and what moves it up or down.',
+  };
+  function progressRow(attr, name, tag) {
+    return `<button class="nr-prow" ${attr}><span class="nr-prow-name">${esc(name)}</span>${tag ? `<span class="nr-prow-tag">${esc(tag)}</span>` : ''}<span class="nr-prow-go" aria-hidden="true">›</span></button>`;
   }
-  const progressSection = cards => `<div class="nr-section">Progress &amp; mistakes</div><div class="nr-modes">${cards.join('')}</div>`;
-  const toughCard = (list, name, what, unitOne, unitMany) => progressCard(`data-tough="${list}"`, name,
-    `${what} A${unitOne === 'kanji' ? ' kanji' : ' word'} leaves the list after 2 right answers in a row.`, plural(toughCount(list), unitOne, unitMany));
+  const progressSection = rows => `<div class="nr-section">Progress &amp; mistakes</div><div class="nr-plist">${rows.join('')}</div>`;
+  const toughRow = (list, name, unitOne, unitMany) => progressRow(`data-tough="${list}"`, name, plural(toughCount(list), unitOne, unitMany));
   function fmtSwitch(f, hint) {
     return `<div class="nr-label">How you answer</div>
       <div class="nr-seg" role="group" aria-label="How you answer">
@@ -41216,9 +41243,9 @@ const NR = (function() {
         <button class="nr-card" id="nr-pos-card"${f === 'choose' ? ' disabled' : ''}><b>Part of speech</b><span class="nr-d">Pick word types with tiles — nouns, verbs by group, adjectives…</span><span class="nr-t">30+ per session · Type only</span></button>
       </div>
       ${progressSection([
-        toughCard('srs', 'Tough words · SRS', 'Words you answered wrong in the SRS, worst at the top.', 'word', 'words'),
-        toughCard('tricky', 'Tough words · Tricky readings', 'Words you answered wrong in Tricky readings, worst at the top.', 'word', 'words'),
-        progressCard('data-guide="srs"', 'How the SRS works', 'The 10 stages, when a word comes back, and what moves it up or down.', 'Guide'),
+        toughRow('srs', 'Tough words · SRS', 'word', 'words'),
+        toughRow('tricky', 'Tough words · Tricky readings', 'word', 'words'),
+        progressRow('data-guide="srs"', 'How the SRS works', ''),
       ])}
     </div>`;
     bindHub(vocabHub);
@@ -41236,8 +41263,8 @@ const NR = (function() {
       <div class="nr-section">Kanji modes</div>
       <div class="nr-modes">${['kmean', 'kread'].map(k => modeCard(k, 'choose')).join('')}</div>
       ${progressSection([
-        toughCard('kmean', 'Tough kanji · Kanji meaning', 'Kanji you answered wrong in Kanji meaning, worst at the top.', 'kanji', 'kanji'),
-        toughCard('kread', 'Tough kanji · Kanji readings', 'Kanji you answered wrong in Kanji readings, worst at the top.', 'kanji', 'kanji'),
+        toughRow('kmean', 'Tough kanji · Kanji meaning', 'kanji', 'kanji'),
+        toughRow('kread', 'Tough kanji · Kanji readings', 'kanji', 'kanji'),
       ])}
     </div>`;
     $$('[data-mode]').forEach(b => b.onclick = () => startMode(b.dataset.mode));
@@ -41288,22 +41315,22 @@ const NR = (function() {
     const title = { srs: 'Tough words · SRS', tricky: 'Tough words · Tricky readings', kmean: 'Tough kanji · Kanji meaning', kread: 'Tough kanji · Kanji readings' }[list];
     const sub = id => (list === 'tricky' || list === 'srs') ? (W[id] ? W[id].r[0] + ' · ' + showMeaning(W[id].m) : '')
       : list === 'kread' ? (K[id] || []).map(x => x[0]).join(' · ') : (KJ_BY[id] ? KJ_BY[id].m : '');
-    popup('tough', title, 'Joins the list the moment it\'s answered wrong, leaves after 2 right answers in a row. Worst at the top.',
+    popup('tough', title, esc(PROGRESS_DESC[list]),
       `<div class="nr-tough">${ids.length ? ids.map(id => `<div class="nr-tough-row"><span class="nr-tough-w" lang="ja">${esc(id)}</span><span class="nr-tough-m" lang="ja">${esc(sub(id))}</span><span class="nr-tough-x">✗${t[id].x}</span></div>`).join('') : '<p class="nr-empty">Nothing here yet.</p>'}</div>`);
   }
 
   // How the SRS works (§5.1) — the stage table is built from SRS_DAYS, so it can't drift from the real numbers
   function srsGuide() {
-    const DAY = { 1: '1 day (tomorrow)', 2: '2 days', 4: '4 days', 7: '1 week', 10: '10 days', 14: '2 weeks', 30: '1 month', 60: '2 months', 90: '3 months' };
+    const DAY = { 1: '1 day', 2: '2 days', 4: '4 days', 7: '1 week', 10: '10 days', 14: '2 weeks', 30: '1 month', 60: '2 months', 90: '3 months' };
     const rows = SRS_DAYS.slice(1).map((d, i) => { const st = i + 1;
       return `<tr class="${st === CHOOSE_LIMIT ? 'nr-limit' : ''}"><td>${st}</td><td>${st === 10 ? 'every 3 months, forever' : DAY[d] || d + ' days'}${st === CHOOSE_LIMIT ? ' · Choose limit' : ''}</td></tr>`; }).join('');
-    popup('guide', 'How the SRS works', '', `<div class="nr-guide">
+    popup('guide', 'How the SRS works', esc(PROGRESS_DESC.guide), `<div class="nr-guide">
       <p>Every word climbs a ladder of 10 stages. The higher the stage, the longer until the word comes back. Nothing is ever retired — stage 10 still comes back every 3 months.</p>
       <table class="nr-stages"><thead><tr><th>Stage</th><th>Comes back after</th></tr></thead><tbody>${rows}</tbody></table>
       <p><b>Right</b> → up one stage. <b>Wrong</b> → down two stages (never below 1). A new word's first answer puts it on stage 2 if right, stage 1 if wrong.</p>
       <p><b>Choose</b> can lift a word only up to stage ${CHOOSE_LIMIT}. To go higher, answer with <b>Type</b> — reading and meaning both right. A wrong Choose answer still counts.</p>
       <p>Every session is ${SESSION} words: the most overdue first, then the other due words, then new words, one look-alike set at a time. A word you get wrong comes back at the end of the session until you get it right — those repeats don't move it again.</p>
-      <p>Days are calendar days: "1 day" means tomorrow, any time of day.</p>
+      <p>Times are exact: a word you answer at 16:00 with 1 day to go comes back tomorrow at 16:00.</p>
     </div>`);
   }
 
@@ -41789,8 +41816,7 @@ const NR = (function() {
       <div class="nr-label">Questions</div>
       <div class="nr-sizer"><button class="nr-btn" id="nr-minus"${conjMulti(sel) && sel.size > 30 ? '' : ' disabled'} aria-label="5 fewer">−</button><span class="nr-size">${sel.size}</span><button class="nr-btn" id="nr-plus"${conjMulti(sel) ? '' : ' disabled'} aria-label="5 more">+</button></div>
       <button class="nr-btn nr-btn-primary" id="nr-start"${ok ? '' : ' disabled'}>Start</button>
-      ${progressSection([progressCard('id="nr-tough-conj"', 'Toughest conjugations',
-        'Combinations below 80% right over their last 20 answers, worst first or by word type.', plural(conjToughList().length, 'combination', 'combinations'))])}
+      ${progressSection([progressRow('id="nr-tough-conj"', 'Toughest conjugations', plural(conjToughList().length, 'combination', 'combinations'))])}
     </div>`;
     $('#nr-fmt-choose').onclick = () => { setFmt('choose'); conjSetup(); };
     $('#nr-fmt-type').onclick = () => { setFmt('type'); conjSetup(); };
@@ -41972,7 +41998,7 @@ const NR = (function() {
     const body = !list.length ? '<p class="nr-empty">Nothing here yet — a combination shows up after 5 answers if it is below 80% right.</p>'
       : mode === 'type' ? [['Verbs', list.filter(e => !isAdj(e))], ['Adjectives', list.filter(isAdj)]].filter(g => g[1].length).map(g => `<div class="nr-section">${g[0]}</div>` + g[1].map(row).join('')).join('')
       : list.map(row).join('');
-    popup('tough', 'Toughest conjugations', 'Each combination keeps its last 20 answers. It shows up once it has 5+ answers and is below 80% right, and leaves when it climbs back to 80%.',
+    popup('tough', 'Toughest conjugations', esc(PROGRESS_DESC.conj),
       `<div class="nr-tough">${body}</div>`,
       `<div class="nr-seg" role="group" aria-label="Order"><button id="nr-tv-worst" aria-pressed="${mode !== 'type'}">Worst first</button><button id="nr-tv-type" aria-pressed="${mode === 'type'}">By word type</button></div>`);
     $('#nr-tv-worst').onclick = () => { sset('conj:toughView', 'worst'); conjToughView(); };
@@ -42085,18 +42111,18 @@ const NR = (function() {
   }
 
   const kataSel = () => { const s = sget('kata:sel', null) || {}; return { cats: (s.cats || []).filter(c => KATA_CAT_ORDER.includes(c)), ff: !!s.ff }; };
+  // "False Friends" is one more category tile: a word is asked if its category is picked or it is a
+  // false friend and False Friends is picked — each word once (a false friend sits in its own category too)
   const kataWords = sel => KATAKANA.filter(w => sel.cats.includes(w.category) || (sel.ff && kataIsFF(w)));
   function kataSetup() {
     closePop(true); S = null; view = 'hub'; setReviewing(false);
     const sel = kataSel(), cats = KATA_CAT_ORDER.filter(c => KATAKANA.some(w => w.category === c)), n = kataWords(sel).length;
-    const all = cats.length && cats.every(c => sel.cats.includes(c));
+    const all = cats.length && cats.every(c => sel.cats.includes(c)) && sel.ff;
     root.innerHTML = `<div class="nr-wrap">
       <h1 class="nr-h1">Review Katakana Words</h1>
       <p class="nr-sub">See a katakana word, type its meaning. The romaji shows after you answer.</p>
       <div class="nr-label">Categories</div>
-      <div class="nr-tiles"><button class="nr-tile" data-all="1" aria-pressed="${!!all}">All categories<small>${KATAKANA.length}</small></button>${cats.map(c => `<button class="nr-tile" data-c="${esc(c)}" aria-pressed="${sel.cats.includes(c)}">${esc(c)}<small>${KATAKANA.filter(w => w.category === c).length}</small></button>`).join('')}</div>
-      <div class="nr-label">Extra</div>
-      <div class="nr-tiles"><button class="nr-tile" data-ff="1" aria-pressed="${sel.ff}">False Friends only<small>${KATAKANA.filter(kataIsFF).length}</small></button></div>
+      <div class="nr-tiles"><button class="nr-tile" data-all="1" aria-pressed="${!!all}">All categories<small>${KATAKANA.length}</small></button>${cats.map(c => `<button class="nr-tile" data-c="${esc(c)}" aria-pressed="${sel.cats.includes(c)}">${esc(c)}<small>${KATAKANA.filter(w => w.category === c).length}</small></button>`).join('')}<button class="nr-tile" data-ff="1" aria-pressed="${sel.ff}">False Friends<small>${KATAKANA.filter(kataIsFF).length}</small></button></div>
       <p class="nr-hint">Choose at least 1.</p>
       <div class="nr-label">Questions</div>
       <div class="nr-sizer"><span class="nr-size">${n}</span></div>
@@ -42104,7 +42130,7 @@ const NR = (function() {
     </div>`;
     const save = () => { sset('kata:sel', sel); kataSetup(); };
     $$('[data-c]').forEach(b => b.onclick = () => { const i = sel.cats.indexOf(b.dataset.c); if (i >= 0) sel.cats.splice(i, 1); else sel.cats.push(b.dataset.c); save(); });
-    $('[data-all]').onclick = () => { sel.cats = all ? [] : cats.slice(); save(); };
+    $('[data-all]').onclick = () => { sel.cats = all ? [] : cats.slice(); sel.ff = !all; save(); };
     $('[data-ff]').onclick = () => { sel.ff = !sel.ff; save(); };
     $('#nr-start').onclick = startKata;
     scrollTop();
@@ -42188,7 +42214,7 @@ const NR = (function() {
     go(sec) { open(sec); showScreen('nrev'); },          // the home buttons: 'vocab' · 'kanji' · 'conj' · 'kana' · 'kata'
     back() { if (pop) closePop(); else if (view === 'hub') goHome(); else hub(); },
     _test: { data, buildOptions, manyOptions, trickyOptions, gradeMeaning, kana, cleanNote, dealDeck, dealKanjiMeaning, ensureRound, pieceList, posWords,
-      lookAlikes, conjOptions, conjAccepted, conjShown, conjSession, conjToughList, toughMark, srsPlan, srsAnswer, today,
+      lookAlikes, conjOptions, conjAccepted, conjShown, conjSession, conjToughList, toughMark, srsPlan, srsAnswer, now, dueAt,
       setDayShift: n => { dayShift = n; }, state: () => ({ S, view, section }) },
   };
 })();
