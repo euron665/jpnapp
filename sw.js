@@ -1,4 +1,4 @@
-const CACHE = 'koku-v124';
+const CACHE = 'koku-v126';
 const ASSETS = [
   '/jpnapp/',
   '/jpnapp/index.html',
@@ -24,6 +24,7 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
+  if (req.url.startsWith('https://api.github.com/')) return;   // progress sync: never cached
   e.respondWith(
     fetch(req).then(res => {
       if (res && (res.ok || res.type === 'opaque')) {

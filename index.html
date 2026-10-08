@@ -52,6 +52,19 @@ thead th{text-align:center !important;}
 #app-settings{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:450;
   padding:24px;overflow-y:auto;}
 #app-settings.open{display:flex;align-items:flex-start;justify-content:center;}
+/* progress section of the ⚙ sheet (REVIEW_DESIGN §7) */
+#app-settings .as-sec{margin-top:22px;padding-top:16px;border-top:1px solid var(--border);}
+#app-settings .as-status{font-size:13px;color:var(--text-dim);line-height:1.5;margin-bottom:12px;}
+#app-settings .as-status.ok{color:var(--pass-text);}
+#app-settings .as-status.bad{color:var(--fail-text);}
+#app-settings .as-key{display:flex;gap:8px;margin-bottom:6px;}
+#app-settings .as-key input{flex:1;min-width:0;background:var(--bg);border:1px solid var(--border);
+  border-radius:var(--r);color:var(--text);font-size:15px;padding:8px 10px;outline:none;}
+#app-settings .as-btn{display:block;width:100%;margin-top:8px;padding:10px;background:var(--bg);
+  border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-size:13px;cursor:pointer;}
+#app-settings .as-btn-sm{width:auto;margin-top:0;padding:8px 14px;}
+#app-settings .as-btn:hover{border-color:var(--text-dim);}
+.home-stamp .test-copy{display:block;color:var(--gold);}
 #app-settings .as-panel{width:100%;max-width:380px;margin-top:12vh;background:var(--surface);
   border:1px solid var(--border);border-radius:var(--r);padding:24px;}
 .as-title{font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--text);
@@ -1677,6 +1690,16 @@ body.gr-reading #gr-top-btn{display:flex;}
       <span class="ts-val zoom-val">100%</span>
       <button type="button" class="ts-btn zoom-plus" onclick="stepZoom(1)" aria-label="Larger text">A<span class="zl">+</span></button>
     </div>
+    <div class="as-title as-sec">Progress</div>
+    <div class="as-status" id="sync-status">Saved on this device</div>
+    <div class="as-key">
+      <input type="password" id="gh-key" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Paste your GitHub key">
+      <button type="button" class="as-btn as-btn-sm" onclick="saveGhKey()">Save</button>
+    </div>
+    <div class="as-note">The key stays on this device only — it is never in the app files or in the download.</div>
+    <button type="button" class="as-btn" onclick="JPStore.download()">Download my progress</button>
+    <button type="button" class="as-btn" onclick="document.getElementById('progress-file').click()">Load progress from file</button>
+    <input type="file" id="progress-file" accept=".json,application/json" hidden onchange="JPStore.loadFile(this)">
     <button type="button" class="as-done" onclick="closeAppSettings()">Done</button>
   </div>
 </div>
@@ -1703,7 +1726,7 @@ body.gr-reading #gr-top-btn{display:flex;}
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-10-08 14:11 · v124</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-10-08 19:52 · v126</div>
 </div>
 
 <!-- POS PICKER -->
@@ -41690,6 +41713,7 @@ applyZoom();
 /* ---- app settings sheet (home ⚙) ---- */
 function openAppSettings() {
   applyZoom();
+  JPStore.render();
   document.getElementById('app-settings').classList.add('open');
 }
 function closeAppSettings() {
@@ -41699,6 +41723,183 @@ function appSettingsBackdrop(e) {
   if (e.target && e.target.id === 'app-settings') closeAppSettings();
 }
 document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeAppSettings(); });
+
+/* ---- progress storage (REVIEW_DESIGN §7) ----
+   The ONE swappable piece behind everything the reviews remember (SRS, decks, scoreboard, tough
+   lists, settings). Progress never lives in the app files. It is one object of items, each
+   stamped with the time it was written:  { v:1, items: { key: { t, by, d } } }.
+   - always kept on the device (localStorage 'jpnapp-progress');
+   - with a GitHub key (pasted once per device, localStorage 'jpnapp-gh-token') it is also saved
+     to progress.json in the private repo below; both copies are merged item by item, newest wins;
+   - opened as a local file (file://) = TEST MODE: own device copy 'jpnapp-progress-test', never syncs.
+   Use from the modes:  JPStore.get(key, fallback)  ·  JPStore.set(key, value)  (saves + syncs). */
+const JPStore = (function() {
+  const TEST = location.protocol === 'file:';
+  const LOCAL_KEY = TEST ? 'jpnapp-progress-test' : 'jpnapp-progress';
+  const TOKEN_KEY = 'jpnapp-gh-token';
+  const API = 'https://api.github.com/repos/euron665/jpnapp-progress/contents/progress.json';
+  const DEVICE = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? 'phone' : 'desktop';
+  let data = { v: 1, items: {} };
+  let sha = null, timer = null, busy = false, again = false;
+  let st = { state: TEST ? 'test' : 'local', msg: '' };
+
+  function ls(fn) { try { return fn(); } catch (e) { return null; } }
+  function readLocal() {
+    const o = ls(() => JSON.parse(localStorage.getItem(LOCAL_KEY) || 'null'));
+    if (o && o.items) data = o;
+  }
+  function writeLocal() { ls(() => localStorage.setItem(LOCAL_KEY, JSON.stringify(data))); }
+  function token() { return TEST ? '' : (ls(() => localStorage.getItem(TOKEN_KEY)) || ''); }
+
+  function get(key, fallback) { const it = data.items[key]; return it ? it.d : fallback; }
+  function set(key, value) {
+    data.items[key] = { t: Date.now(), by: DEVICE, d: value };
+    data.updated = Date.now();
+    writeLocal();
+    schedule();
+  }
+  function merge(a, b) {
+    const items = Object.assign({}, a.items);
+    for (const k in b.items) if (!items[k] || (b.items[k].t || 0) > (items[k].t || 0)) items[k] = b.items[k];
+    return { v: 1, items: items, updated: Math.max(a.updated || 0, b.updated || 0) };
+  }
+
+  // UTF-8 safe base64 for the GitHub contents API
+  function b64enc(s) {
+    const b = new TextEncoder().encode(s); let bin = '';
+    for (let i = 0; i < b.length; i += 0x8000) bin += String.fromCharCode.apply(null, b.subarray(i, i + 0x8000));
+    return btoa(bin);
+  }
+  function b64dec(s) {
+    const bin = atob(s.replace(/\s/g, '')), b = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) b[i] = bin.charCodeAt(i);
+    return new TextDecoder().decode(b);
+  }
+  function headers() {
+    return { 'Authorization': 'Bearer ' + token(), 'Accept': 'application/vnd.github+json' };
+  }
+  async function pull() {
+    const r = await fetch(API, { headers: headers(), cache: 'no-store' });
+    if (r.status === 404) { sha = null; return { v: 1, items: {} }; }
+    if (!r.ok) throw r;
+    const j = await r.json();
+    sha = j.sha;
+    const o = JSON.parse(b64dec(j.content || '') || '{}');
+    return o && o.items ? o : { v: 1, items: {} };
+  }
+  async function push() {
+    const r = await fetch(API, { method: 'PUT', headers: headers(), body: JSON.stringify({
+      message: 'progress (' + DEVICE + ')', content: b64enc(JSON.stringify(data)), sha: sha || undefined }) });
+    if (!r.ok) throw r;
+    sha = (await r.json()).content.sha;
+  }
+
+  async function sync() {
+    if (TEST || !token()) { st = { state: TEST ? 'test' : 'local', msg: '' }; return render(); }
+    if (!navigator.onLine) { st = { state: 'offline', msg: '' }; return render(); }
+    if (busy) { again = true; return; }
+    busy = true; st = { state: 'syncing', msg: '' }; render();
+    try {
+      for (let tries = 0; ; tries++) {
+        const remote = await pull();
+        data = merge(data, remote);
+        writeLocal();
+        let newer = false;                                           // anything here the file doesn't have yet?
+        for (const k in data.items) if (!remote.items[k] || data.items[k].t > (remote.items[k].t || 0)) { newer = true; break; }
+        if (!newer) break;
+        try { await push(); break; }
+        catch (e) { if (tries < 2 && e && (e.status === 409 || e.status === 422)) continue; throw e; }  // the other device saved meanwhile
+      }
+      st = { state: 'synced', msg: '', at: Date.now() };
+    } catch (e) {
+      const code = e && e.status;
+      st = { state: 'error', msg: code === 401 || code === 403 ? 'The key was refused — check it, or make a new one.'
+        : code === 404 ? 'The repo jpnapp-progress was not found for this key.'
+        : !navigator.onLine ? '' : 'Could not reach GitHub — will try again.' };
+      if (!navigator.onLine) st = { state: 'offline', msg: '' };
+    }
+    busy = false;
+    render();
+    if (again) { again = false; sync(); }
+  }
+  function schedule() { clearTimeout(timer); timer = setTimeout(sync, 1500); }
+
+  function render() {
+    const el = document.getElementById('sync-status');
+    if (el) {
+      const time = t => new Date(t).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const last = data.updated ? ' · last saved ' + time(data.updated) + ' (' + (lastBy() || DEVICE) + ')' : '';
+      const txt = {
+        test: 'Test copy: progress not synced',
+        local: 'Saved on this device only — paste your GitHub key to sync phone and desktop.',
+        offline: 'Offline — saved on this device, will sync when back online.',
+        syncing: 'Syncing…',
+        synced: '✓ Synced' + last,
+        error: 'Sync problem: ' + st.msg,
+      }[st.state];
+      el.textContent = txt;
+      el.className = 'as-status' + (st.state === 'synced' ? ' ok' : st.state === 'error' ? ' bad' : '');
+    }
+    const key = document.getElementById('gh-key');
+    if (key) { key.disabled = TEST; key.placeholder = TEST ? 'Not used in the test copy' : (token() ? 'Key saved — paste a new one to replace it' : 'Paste your GitHub key'); }
+  }
+  function lastBy() {
+    let best = null;
+    for (const k in data.items) if (!best || data.items[k].t > best.t) best = data.items[k];
+    return best && best.by;
+  }
+
+  function setToken(t) {
+    ls(() => t ? localStorage.setItem(TOKEN_KEY, t) : localStorage.removeItem(TOKEN_KEY));
+    sha = null;
+    sync();
+  }
+  // "Download my progress": one small file — never the key
+  function download() {
+    const blob = new Blob([JSON.stringify(data, null, 1)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'jpnapp-progress-' + new Date().toISOString().slice(0, 10) + '.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  }
+  // "Load progress from file": restores the file's progress (it replaces what is here now)
+  function loadFile(input) {
+    const f = input.files && input.files[0];
+    input.value = '';
+    if (!f) return;
+    const rd = new FileReader();
+    rd.onload = () => {
+      const o = ls(() => JSON.parse(rd.result));
+      if (!o || !o.items) { alert('That file is not a JpnApp progress file.'); return; }
+      if (!confirm('Replace the progress on this device with the one in "' + f.name + '"?')) return;
+      const now = Date.now();
+      for (const k in o.items) o.items[k] = Object.assign({}, o.items[k], { t: now, by: DEVICE });  // restored items win the next sync
+      data = { v: 1, items: o.items, updated: now };
+      writeLocal(); render(); schedule();
+    };
+    rd.readAsText(f);
+  }
+
+  readLocal();
+  if (TEST) {                                   // label the working copy on the home screen
+    const s = document.getElementById('home-stamp');
+    if (s) s.insertAdjacentHTML('beforeend', '<span class="test-copy">Test copy: progress not synced</span>');
+  }
+  window.addEventListener('online', sync);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') sync(); });
+  sync();
+
+  return { get, set, sync, render, setToken, download, loadFile, isTest: () => TEST };
+})();
+
+function saveGhKey() {
+  const el = document.getElementById('gh-key');
+  const v = (el.value || '').trim();
+  if (!v) return;
+  JPStore.setToken(v);
+  el.value = '';
+}
 
 applyLevels();
 </script>
