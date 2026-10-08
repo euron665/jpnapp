@@ -214,6 +214,7 @@ thead th{text-align:center !important;}
 #nrev .nr-tough-m{font-size:13px;color:var(--text-dim);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 #nrev .nr-tough-x{font-family:var(--font-num);font-size:13px;color:var(--fail-text);}
 #nrev .nr-empty{font-size:13px;color:var(--text-dim);margin:0;}
+#nrev .nr-warn{font-size:13px;line-height:1.5;color:#e8a33a;margin:4px 0 0;}
 #app-settings .as-panel{width:100%;max-width:380px;margin-top:12vh;background:var(--surface);
   border:1px solid var(--border);border-radius:var(--r);padding:24px;}
 .as-title{font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--text);
@@ -1874,7 +1875,7 @@ body.gr-reading #gr-top-btn{display:flex;}
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-10-08 20:41 · v131</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-10-08 21:09 · v133</div>
 </div>
 
 <!-- NEW REVIEWS (REVIEW_DESIGN.md): hub, setup screens, questions and end screen all render into #nrev-app -->
@@ -41943,7 +41944,13 @@ const JPStore = (function() {
     if (!r.ok) throw r;
     const j = await r.json();
     sha = j.sha;
-    const o = JSON.parse(b64dec(j.content || '') || '{}');
+    let text = j.content ? b64dec(j.content) : '';
+    if (!text && j.size > 0) {                   // GitHub sends files over 1 MB without content: fetch them raw
+      const raw = await fetch(API, { headers: Object.assign(headers(), { 'Accept': 'application/vnd.github.raw' }), cache: 'no-store' });
+      if (!raw.ok) throw raw;
+      text = await raw.text();
+    }
+    const o = JSON.parse(text || '{}');
     return o && o.items ? o : { v: 1, items: {} };
   }
   async function push() {
@@ -42070,7 +42077,9 @@ function saveGhKey() {
    runtime from VOCAB / SKGS / POS_TAGS / SAME_MEANING, so a .bat run updates the reviews too.
    Progress (JPStore): 'set:format' · 'deck:<mode>' {order,pos,round,pending} · 'deck:kmean'
    {left,known,round,pending} · 'skg:round' {n,sets,done} · 'pos:sel' · 'conj:sel' · 'tough:<list>'
-   ({id:{x,s}} for tricky/kmean/kread, {combo:"1101…"} for conj) · 'conj:toughView'.
+   ({id:{x,s}} for srs/tricky/kmean/kread, {combo:"1101…"} for conj) · 'conj:toughView' ·
+   'srs:<word>' {s: stage 1–10, d: due day} — one item per word, so phone + desktop merge per word ·
+   'srs:pool' {order: set ids, i: current set}.
    A deck / One SKG item only moves on when a session is fully answered; an interrupted session
    comes back unchanged (the dealt session is stored as 'pending'). */
 const NR = (function() {
@@ -42526,6 +42535,59 @@ const NR = (function() {
     return r;
   }
 
+  // ───────── SRS (§5.1): the default — keeps every word alive ─────────
+  // 10 "harsh" stages; right = up one, wrong = down two (never below 1); a first answer right → stage 2,
+  // wrong → stage 1; Choose can lift a word only up to stage 6, further needs a correct typed answer.
+  // Due days are calendar days: "1 day" = tomorrow, any time. Each answer counts the moment it's given.
+  const SRS_DAYS = [0, 1, 2, 4, 7, 10, 14, 30, 60, 90, 90];          // stage → days until it comes back
+  const CHOOSE_LIMIT = 6;
+  let dayShift = 0;                                                     // tests only
+  const today = () => Math.floor((Date.now() - new Date().getTimezoneOffset() * 60000) / 86400000) + dayShift;
+  const srsGet = w => JPStore.get('srs:' + w, null);
+  function srsAnswer(w, ok, typed) {
+    const cur = srsGet(w), s0 = cur ? cur.s : 0;
+    let st;
+    if (!cur) st = ok ? 2 : 1;                                          // first answer
+    else if (!ok) st = Math.max(1, s0 - 2);                             // a wrong Choose answer counts too
+    else if (!typed && s0 >= CHOOSE_LIMIT) st = s0;                     // Choose can't lift past stage 6
+    else st = Math.min(10, s0 + 1);
+    sset('srs:' + w, { s: st, d: today() + SRS_DAYS[st] });
+  }
+  // new words come from the pool set by set, in a random set order; a set is finished before the next
+  // one starts (if it runs out mid-session the rest comes from the next set, which is then finished first)
+  function srsNewWords(k, items) {
+    const { SETS } = data(), ids = SETS.map(x => x.id), byId = {};
+    SETS.forEach(x => { byId[x.id] = x.words; });
+    let p = sget('srs:pool', null), changed = false;
+    if (!p || !Array.isArray(p.order)) { p = { order: shuffle(ids.slice()), i: 0 }; changed = true; }
+    const before = p.order.slice(0, p.i).filter(id => byId[id]).length;
+    let order = p.order.filter(id => byId[id]), i = before;
+    ids.forEach(id => { if (!order.includes(id)) { order.splice(i + rnd(order.length - i + 1), 0, id); changed = true; } });   // new sets join the rest
+    if (order.length !== p.order.length) changed = true;
+    while (i < order.length && !byId[order[i]].some(w => !items[w])) { i++; changed = true; }   // finished sets
+    if (changed) sset('srs:pool', { order, i });
+    const out = [];
+    for (let j = i; j < order.length && out.length < k; j++) shuffle(byId[order[j]].filter(w => !items[w] && !out.includes(w))).forEach(w => { if (out.length < k) out.push(w); });
+    if (out.length < k) Object.keys(data().W).forEach(w => { if (out.length < k && !items[w] && !out.includes(w)) out.push(w); });   // anything left over
+    return out;
+  }
+  // a session: most overdue first → other due words → new words from the pool, 25 in all
+  function srsPlan() {
+    const { W } = data(), t = today(), items = {}, due = [];
+    Object.keys(W).forEach(w => { const it = srsGet(w); if (it) { items[w] = it; if (it.d <= t) due.push(w); } });
+    shuffle(due).sort((a, b) => items[a].d - items[b].d);              // stable sort: ties stay random
+    const words = due.slice(0, SESSION);
+    const limit = words.filter(w => items[w].s >= CHOOSE_LIMIT).length;
+    return { due: due.length, learned: Object.keys(items).length, total: Object.keys(W).length, limit,
+      words: words.concat(srsNewWords(SESSION - words.length, items)) };
+  }
+  function startSrs() {
+    const plan = srsPlan(), f = fmt();
+    if (!plan.words.length) return;
+    begin({ mode: 'srs', label: 'SRS', format: f, how: f.toUpperCase(), queue: plan.words.slice(), base: plan.words.length,
+      asked: new Set(), opts: w => buildOptions(w), tough: 'srs' });
+  }
+
   // ───────── state & screens ─────────
   let S = null, view = 'hub';
   const fmt = () => JPStore.get('set:format', 'choose');
@@ -42569,10 +42631,17 @@ const NR = (function() {
   function vocabHub() {
     S = null; view = 'hub'; setReviewing(false);
     const f = fmt(), r = ensureRound(), pieces = pieceList(r), done = pieces.filter(p => r.done[p.id]).length;
-    const next = pieces.find(p => !r.done[p.id]);
+    const next = pieces.find(p => !r.done[p.id]), plan = srsPlan();
     root.innerHTML = `<div class="nr-wrap">
       <h1 class="nr-h1">Review Vocab</h1>
       ${fmtSwitch(f, (f === 'choose' ? 'Pick the reading from 4 options. The meaning is shown after.' : 'Type the reading (romaji turns into kana), then the meaning.') + ' Applies to every mode that offers both.')}
+      <div class="nr-section">SRS</div>
+      <div class="nr-skg">
+        <div class="nr-skg-top"><b>SRS</b><span class="nr-round">${plan.learned} / ${plan.total} words in</span></div>
+        <span class="nr-d">Keeps every word alive: due words first (most overdue first), then new words, set by set. ${SESSION} per session, as often as you like.</span>
+        ${f === 'choose' && plan.limit ? `<p class="nr-warn">${plan.limit} of these ${plan.words.length} words won't progress with Choose. To progress them, pick Type.</p>` : ''}
+        <button class="nr-btn nr-btn-primary" id="nr-srs"${plan.words.length ? '' : ' disabled'}>Review · ${plan.due} due</button>
+      </div>
       <div class="nr-section">One SKG</div>
       <div class="nr-skg">
         <div class="nr-skg-top"><b>One SKG</b><span class="nr-round">Round ${r.n} · ${done} / ${pieces.length}</span></div>
@@ -42584,9 +42653,13 @@ const NR = (function() {
       <div class="nr-modes">${['many', 'tricky', 'long', 'same', 'single'].map(k => modeCard(k, f)).join('')}
         <button class="nr-card" id="nr-pos-card"${f === 'choose' ? ' disabled' : ''}><b>Part of speech</b><span class="nr-d">Pick word types with tiles — nouns, verbs by group, adjectives…</span><span class="nr-t">30+ per session · Type only</span></button>
       </div>
-      <div class="nr-links"><button class="nr-link" data-tough="tricky">Tough words · Tricky readings (${toughCount('tricky')})</button></div>
+      <div class="nr-links">
+        <button class="nr-link" data-tough="srs">Tough words · SRS (${toughCount('srs')})</button>
+        <button class="nr-link" data-tough="tricky">Tough words · Tricky readings (${toughCount('tricky')})</button>
+      </div>
     </div>`;
     bindHub(vocabHub);
+    $('#nr-srs').onclick = startSrs;
     $('#nr-continue').onclick = () => { if (next) startPiece(next, true); };
     $('#nr-select').onclick = selectView;
     $('#nr-random').onclick = () => startPiece(pieces[rnd(pieces.length)], false);
@@ -42621,8 +42694,8 @@ const NR = (function() {
   function toughView(list) {
     S = null; view = 'tough'; setReviewing(false);
     const t = sget('tough:' + list, {}), ids = Object.keys(t).sort((a, b) => t[b].x - t[a].x), { W, K, KJ_BY } = data();
-    const title = { tricky: 'Tough words · Tricky readings', kmean: 'Tough kanji · Kanji meaning', kread: 'Tough kanji · Kanji readings' }[list];
-    const sub = id => list === 'tricky' ? (W[id] ? W[id].r[0] + ' · ' + showMeaning(W[id].m) : '')
+    const title = { srs: 'Tough words · SRS', tricky: 'Tough words · Tricky readings', kmean: 'Tough kanji · Kanji meaning', kread: 'Tough kanji · Kanji readings' }[list];
+    const sub = id => (list === 'tricky' || list === 'srs') ? (W[id] ? W[id].r[0] + ' · ' + showMeaning(W[id].m) : '')
       : list === 'kread' ? (K[id] || []).map(x => x[0]).join(' · ') : (KJ_BY[id] ? KJ_BY[id].m : '');
     root.innerHTML = `<div class="nr-wrap">
       <h1 class="nr-h1">${esc(title)}</h1>
@@ -42713,6 +42786,17 @@ const NR = (function() {
     askReading(item);
   }
   function next() {
+    if (S.mode === 'srs') {
+      const w = S.word;
+      if (!S.asked.has(w)) {
+        S.asked.add(w);
+        srsAnswer(w, S.wordOk, S.format === 'type');
+        toughMark('srs', w, S.wordOk);
+        if (S.wordOk) S.right++;
+      }
+      if (!S.wordOk) S.queue.push(w);
+      S.i++; return question();
+    }
     if (S.tough) toughMark(S.tough, S.mode === 'kmean' ? S.word.k : S.word, S.wordOk);
     if (S.mode === 'conj') conjRecord(S.word, S.wordOk);
     if (S.wordOk) S.right++;
@@ -43359,7 +43443,7 @@ const NR = (function() {
     if (s.mode === 'skg' && s.counts) { const r = ensureRound(), ps = pieceList(r); extra = `<p>One SKG · Round ${r.n} · ${ps.filter(p => r.done[p.id]).length} / ${ps.length}</p>`; }
     root.innerHTML = `<div class="nr-wrap nr-end">
       <div class="nr-label">${esc(s.label)} · done</div>
-      <div class="nr-score">${s.right}<small> / ${s.queue.length}</small></div>
+      <div class="nr-score">${s.right}<small> / ${s.base || s.queue.length}</small></div>
       <p>${esc(s.unit)}</p>${extra}
       <div class="nr-btns">
         <button class="nr-btn nr-btn-primary" id="nr-again">${again}</button>
@@ -43369,6 +43453,7 @@ const NR = (function() {
       if (s.mode === 'skg') startPiece(s.piece, s.counts);
       else if (s.mode === 'pos') { posSetup(); $('#nr-start').click(); }
       else if (s.mode === 'conj') startConj();
+      else if (s.mode === 'srs') startSrs();
       else startMode(s.mode);
     };
     $('#nr-back').onclick = hub;
@@ -43390,7 +43475,8 @@ const NR = (function() {
     go(sec) { open(sec); showScreen('nrev'); },          // the home buttons: 'vocab' · 'kanji' · 'conj'
     back() { if (view === 'hub') goHome(); else hub(); },
     _test: { data, buildOptions, manyOptions, trickyOptions, gradeMeaning, kana, cleanNote, dealDeck, dealKanjiMeaning, ensureRound, pieceList, posWords,
-      lookAlikes, conjOptions, conjAccepted, conjShown, conjSession, conjToughList, toughMark, state: () => ({ S, view, section }) },
+      lookAlikes, conjOptions, conjAccepted, conjShown, conjSession, conjToughList, toughMark, srsPlan, srsAnswer, today,
+      setDayShift: n => { dayShift = n; }, state: () => ({ S, view, section }) },
   };
 })();
 
