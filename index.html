@@ -292,29 +292,6 @@ thead th{text-align:center !important;}
 .picker-head .picker-label{padding:0;}
 .sort-cycle{background:transparent;border:1px solid var(--border);border-radius:var(--r);color:var(--text-dim);font-family:var(--font-mono);font-size:11px;letter-spacing:0.05em;padding:5px 11px;cursor:pointer;white-space:nowrap;}
 .sort-cycle:hover{border-color:var(--text-dim);} .sort-cycle:active{transform:scale(0.96);}
-
-/* MODE / ORDER SELECT */
-#mode-select,#order-select{gap:28px;}
-.mode-skg-id{font-size:11px;letter-spacing:0.25em;color:var(--accent);
-  text-transform:uppercase;margin-bottom:8px;text-align:center;}
-.mode-skg-kanji{font-family:var(--font-jp);font-weight:300;font-size:clamp(28px,7vw,50px);
-  letter-spacing:4px;text-align:center;line-height:1.3;}
-.mode-skg-kanji.many{font-size:clamp(22px,5.6vw,36px);letter-spacing:2px;max-width:560px;margin:0 auto;}
-.mode-buttons,.order-buttons{width:100%;max-width:340px;display:flex;flex-direction:column;gap:10px;}
-
-/* VOCAB KANJI PICKER */
-#vocab-kanji-picker{justify-content:flex-start;padding-top:56px;}
-.vocab-kanji-list{display:flex;flex-direction:column;gap:6px;width:100%;
-  max-width:480px;padding-bottom:24px;}
-.vocab-kanji-item{background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--r);padding:12px 16px;display:flex;align-items:center;
-  gap:14px;cursor:pointer;transition:all 0.15s;}
-.vocab-kanji-item:hover{border-color:var(--accent);background:var(--surface2);}
-.vocab-kanji-item:active{transform:scale(0.99);}
-.vki-k{font-family:var(--font-jp);font-weight:300;font-size:27px;line-height:1;min-width:38px;}
-.vki-info{flex:1;}
-.vki-reading{font-size:11px;color:var(--text-dim);font-family:var(--font-jp);}
-.vki-meaning{font-size:13px;color:var(--text);font-family:var(--font-ui);}
 .vki-count{font-size:11px;color:var(--text);white-space:nowrap;}
 
 /* ── STUDY SCREENS ── */
@@ -387,7 +364,6 @@ thead th{text-align:center !important;}
   background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
   cursor:pointer;transition:border-color 0.15s;}
 .pos-check-row:hover{border-color:var(--text-dim);}
-.pos-checkbox{width:16px;height:16px;accent-color:var(--accent);cursor:pointer;flex-shrink:0;}
 .pos-check-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
 .pos-check-label{flex:1;font-family:var(--font-ui);font-size:13px;font-weight:500;letter-spacing:0.05em;}
 .pos-check-count{font-family:var(--font-num);font-size:11px;color:var(--text-dim);}
@@ -423,11 +399,6 @@ thead th{text-align:center !important;}
   line-height:1;color:var(--text);margin-bottom:10px;
   text-shadow:0 0 60px rgba(232,25,60,0.15);}
 .review-known-meaning{font-size:15px;color:var(--gold);min-height:20px;font-weight:400;font-family:var(--font-ui);}
-.conj-stem-hint{display:none;justify-content:center;align-items:center;gap:9px;margin:10px 0 2px;cursor:pointer;user-select:none;}
-.conj-stem-hint.on{display:flex;}
-.conj-stem-hint .csh-label{font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-dim);font-family:var(--font-mono);}
-.conj-stem-hint .csh-value{font-size:19px;font-family:var(--font-jp);color:var(--text);letter-spacing:0.06em;filter:blur(6px);transition:filter .18s;}
-.conj-stem-hint.revealed .csh-value{filter:none;}
 
 .review-input-area{width:100%;max-width:480px;display:flex;flex-direction:column;gap:8px;}
 .step-label{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);font-family:var(--font-ui);font-weight:300;}
@@ -457,19 +428,6 @@ thead th{text-align:center !important;}
   padding:11px 15px;font-size:13px;color:var(--fail-text);text-align:center;font-family:var(--font-ui);display:none;}
 .answer-reveal.show{display:block;}
 .answer-reveal.hint{display:block;color:var(--gold);border-color:rgba(201,168,76,0.35);}
-/* kanji-readings multiple choice */
-#kr-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
-@media (max-width:360px){#kr-tiles{grid-template-columns:repeat(2,1fr);}}
-.kr-tile{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
-  padding:13px 6px;text-align:center;cursor:pointer;user-select:none;
-  font-family:var(--font-jp);font-size:17px;font-weight:300;color:var(--text);
-  transition:border-color .12s,background .12s,color .12s;}
-.kr-tile:active{opacity:0.75;}
-.kr-tile.sel{border-color:var(--accent);color:var(--accent);background:rgba(232,25,60,0.07);}
-.kr-tile.right{border-color:var(--pass-text);color:var(--pass-text);background:rgba(74,240,128,0.08);}
-.kr-tile.wrong{border-color:var(--fail-text);color:var(--fail-text);background:rgba(240,74,74,0.08);}
-.kr-tile.missed{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,0.08);}
-.kr-tile.locked{pointer-events:none;}
 .answer-reveal strong{color:var(--text);font-family:var(--font-jp);font-size:17px;font-weight:300;}
 
 .feedback-row{display:none;gap:8px;}
@@ -723,27 +681,6 @@ body.search-open.home-active #search-fab{top:97px;}
 .vc-tec{display:flex;align-items:center;justify-content:center;gap:7px;}
 .vc-et-adj-q{min-width:140px;font-size:11px;}
 .vc-or{font-size:11px;color:var(--text-muted);letter-spacing:0.08em;padding:3px 4px;}
-
-/* ── CONJUGATION PICKER ─── */
-#conj-picker .scrollable{align-items:flex-start;padding-left:20px;padding-right:20px;display:block;}
-.cp-heading{font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);
-  font-family:var(--font-mono);padding-bottom:8px;margin-bottom:10px;
-  border-bottom:1px solid var(--border);}
-.cp-section{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);
-  font-family:var(--font-mono);margin:12px 0 5px;border-top:1px solid var(--border);padding-top:8px;}
-.cp-row{display:flex;align-items:center;gap:9px;padding:6px 2px;cursor:pointer;
-  font-size:15px;color:var(--text);font-family:var(--font-jp);}
-.cp-row input[type=checkbox]{accent-color:var(--accent);width:15px;height:15px;cursor:pointer;flex-shrink:0;}
-.cp-indent{padding-left:16px;}
-.cp-form-btn{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
-  padding:8px 16px;font-size:13px;color:var(--text-dim);cursor:pointer;transition:all 0.15s;
-  font-family:var(--font-mono);letter-spacing:0.05em;}
-.cp-form-btn:hover{border-color:var(--text-dim);}
-.cp-form-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(232,25,60,0.08);}
-#conj-go-btn:disabled{background:var(--surface2);border:1px solid var(--border);color:var(--text-muted);cursor:not-allowed;}
-.cp-reset-btn{background:none;border:none;color:var(--text-dim);font-size:11px;letter-spacing:0.1em;
-  text-transform:uppercase;cursor:pointer;font-family:var(--font-mono);padding:0;}
-.cp-reset-btn:hover{color:var(--accent);}
 
 #grammar *, #grammar *::before, #grammar *::after{ box-sizing: border-box; margin: 0; padding: 0; }
 #grammar{
@@ -1875,7 +1812,7 @@ body.gr-reading #gr-top-btn{display:flex;}
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-10-08 21:09 · v133</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-10-08 21:30 · v134</div>
 </div>
 
 <!-- NEW REVIEWS (REVIEW_DESIGN.md): hub, setup screens, questions and end screen all render into #nrev-app -->
@@ -1918,9 +1855,6 @@ body.gr-reading #gr-top-btn{display:flex;}
   <div class="scrollable" style="padding-top:56px;width:100%;">
     <div id="quick-drills" style="display:none;width:100%;max-width:600px;">
       <div class="picker-label">Special Drills</div>
-      <button id="single-vocab-btn" class="btn-primary" style="width:100%;margin-bottom:10px;display:none;" onclick="openSingleVocabLimit()">1 Kanji &#8211; 1 Vocab&#9;·&#9;<span id="single-vocab-count">0</span> items</button>
-      <button id="same-meaning-btn" class="btn-primary" style="width:100%;margin-bottom:10px;display:none;" onclick="openSameMeaningLimit()">Same-Meaning Words&#9;·&#9;<span id="same-meaning-count">0</span> items</button>
-      <button id="kanji-reading-btn" class="btn-primary" style="width:100%;margin-bottom:10px;display:none;" onclick="openKanjiReadingLimit()">Kanji Readings&#9;·&#9;<span id="kanji-reading-count">0</span> kanji</button>
       <button id="study-single-btn" class="btn-primary" style="width:100%;margin-bottom:10px;display:none;" onclick="openStudySingleVocab()">1 Kanji &#8211; 1 Vocab&#9;·&#9;<span id="study-single-count">0</span> cards</button>
       <button id="study-sm-btn" class="btn-primary" style="width:100%;margin-bottom:10px;display:none;" onclick="openStudySameMeaning()">Same-Meaning Words&#9;·&#9;<span id="study-sm-count">0</span> groups</button>
       <div class="picker-divider"></div>
@@ -1977,56 +1911,6 @@ body.gr-reading #gr-top-btn{display:flex;}
   </div>
 </div>
 
-<!-- VOCAB SCOPE SELECT (review vocab) -->
-<div id="mode-select" class="screen">
-  <div class="screen-header">
-    <button class="back-btn" onclick="goTo('skg-picker','review-vocab')">← Back</button>
-    <div class="screen-title" id="ms-title">Choose Scope</div>
-  </div>
-  <div>
-    <div class="mode-skg-id" id="ms-id"></div>
-    <div class="mode-skg-kanji" id="ms-kanji"></div>
-  </div>
-  <div class="mode-buttons">
-    <button class="btn-primary" onclick="startVocabAll()">All vocab in set</button>
-    <button class="btn-secondary" onclick="goTo('vocab-kanji-picker')">Pick specific kanji</button>
-  </div>
-</div>
-
-<!-- VOCAB KANJI PICKER -->
-<div id="vocab-kanji-picker" class="screen">
-  <div class="screen-header">
-    <button class="back-btn" onclick="goTo('mode-select')">← Back</button>
-    <div class="screen-title" id="vkp-title">Pick Kanji</div>
-  </div>
-  <div class="scrollable" style="padding-top:56px;width:100%;">
-    <div class="vocab-kanji-list" id="vocab-kanji-list"></div>
-  </div>
-</div>
-
-<!-- ORDER SELECT (review kanji) -->
-<div id="order-select" class="screen">
-  <div class="screen-header">
-    <button class="back-btn" onclick="goTo('skg-picker','review-kanji')">← Back</button>
-    <div class="screen-title">Review Options</div>
-  </div>
-  <div>
-    <div class="mode-skg-id" id="os-id"></div>
-    <div class="mode-skg-kanji" id="os-kanji"></div>
-  </div>
-  <div class="order-buttons">
-    <div style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-dim);font-family:var(--font-mono);margin-bottom:4px;">Test</div>
-    <div style="display:flex;gap:8px;margin-bottom:16px;">
-      <button class="sort-btn" id="os-steps-both"    onclick="setKanjiSteps('both')"   style="flex:1;padding:10px 8px;">Meaning + Reading</button>
-      <button class="sort-btn" id="os-steps-meaning" onclick="setKanjiSteps('meaning')" style="flex:1;padding:10px 8px;">Meaning only</button>
-      <button class="sort-btn" id="os-steps-reading" onclick="setKanjiSteps('reading')" style="flex:1;padding:10px 8px;">Reading only</button>
-    </div>
-    <div style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-dim);font-family:var(--font-mono);margin-bottom:4px;">Order</div>
-    <button class="btn-primary" onclick="startKanjiReview(false)">Sequential</button>
-    <button class="btn-secondary" onclick="startKanjiReview(true)">Randomised</button>
-  </div>
-</div>
-
 <!-- STUDY KATAKANA -->
 <div id="study-katakana" class="screen">
   <div class="screen-header">
@@ -2070,17 +1954,6 @@ body.gr-reading #gr-top-btn{display:flex;}
   </div>
 </div>
 
-<!-- KANJI READINGS LIMIT PROMPT -->
-<div id="kr-limit-overlay" class="sm-modal-overlay" onclick="closeKanjiReadingLimit()">
-  <div class="sm-modal" onclick="event.stopPropagation()" style="text-align:center;max-width:320px;">
-    <span class="sm-modal-close" onclick="closeKanjiReadingLimit()">✕</span>
-    <div class="sm-meaning" style="margin-bottom:4px;">Kanji Readings</div>
-    <div style="font-size:13px;color:var(--text-dim);margin:8px 0 16px;font-family:var(--font-ui);">How many kanji?<br><span style="font-size:11px;">(blank = all <span id="kr-limit-total">0</span>)</span></div>
-    <input type="number" id="kr-limit" min="1" placeholder="all" onkeydown="if(event.key==='Enter')beginKanjiReadingReview();" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-size:15px;padding:10px 12px;text-align:center;font-family:var(--font-num);">
-    <button class="btn-primary" style="width:100%;margin-top:14px;" onclick="beginKanjiReadingReview()">Begin</button>
-  </div>
-</div>
-
 <!-- 1 KANJI – 1 VOCAB → jump-to-set confirm -->
 <div id="svj-overlay" class="sm-modal-overlay" onclick="closeSingleVocabJump()">
   <div class="sm-modal" onclick="event.stopPropagation()">
@@ -2093,28 +1966,6 @@ body.gr-reading #gr-top-btn{display:flex;}
   </div>
 </div>
 
-<!-- 1 KANJI 1 VOCAB LIMIT PROMPT -->
-<div id="sv-limit-overlay" class="sm-modal-overlay" onclick="closeSingleVocabLimit()">
-  <div class="sm-modal" onclick="event.stopPropagation()" style="text-align:center;max-width:320px;">
-    <span class="sm-modal-close" onclick="closeSingleVocabLimit()">✕</span>
-    <div class="sm-meaning" style="margin-bottom:4px;">1 Kanji &#8211; 1 Vocab</div>
-    <div style="font-size:13px;color:var(--text-dim);margin:8px 0 16px;font-family:var(--font-ui);">How many words?<br><span style="font-size:11px;">(blank = all <span id="sv-limit-total">0</span>)</span></div>
-    <input type="number" id="sv-limit" min="1" placeholder="all" onkeydown="if(event.key==='Enter')beginSingleVocabReview()" style="width:96px;padding:9px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-family:var(--font-mono);font-size:17px;text-align:center;margin-bottom:18px;">
-    <button class="btn-primary" style="width:100%;" onclick="beginSingleVocabReview()">Begin Review</button>
-  </div>
-</div>
-
-<!-- SAME-MEANING LIMIT PROMPT -->
-<div id="sm-limit-overlay" class="sm-modal-overlay" onclick="closeSameMeaningLimit()">
-  <div class="sm-modal" onclick="event.stopPropagation()" style="text-align:center;max-width:320px;">
-    <span class="sm-modal-close" onclick="closeSameMeaningLimit()">✕</span>
-    <div class="sm-meaning" style="margin-bottom:4px;">Same-Meaning Review</div>
-    <div style="font-size:13px;color:var(--text-dim);margin:8px 0 16px;font-family:var(--font-ui);">How many words?<br><span style="font-size:11px;">(blank = all <span id="sm-limit-total">0</span>)</span></div>
-    <input type="number" id="sm-limit" min="1" placeholder="all" onkeydown="if(event.key==='Enter')beginSameMeaningReview()" style="width:96px;padding:9px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-family:var(--font-mono);font-size:17px;text-align:center;margin-bottom:18px;">
-    <button class="btn-primary" style="width:100%;" onclick="beginSameMeaningReview()">Begin Review</button>
-  </div>
-</div>
-
 <!-- REVIEW -->
 <div id="review" class="screen">
   <div class="review-header">
@@ -2124,9 +1975,7 @@ body.gr-reading #gr-top-btn{display:flex;}
   </div>
   <div class="review-body">
     <div class="review-card">
-      <div class="conj-step-label" id="conj-step-label" style="display:none;margin-bottom:12px;"></div>
       <div class="review-kanji-display" id="review-display"></div>
-      <div class="conj-stem-hint" id="conj-stem-hint" onclick="revealStemHint()"><span class="csh-label">stem</span><span class="csh-value" id="conj-stem-value"></span></div>
       <div class="review-known-meaning" id="known-meaning"></div>
     </div>
     <div class="review-input-area">
@@ -2136,12 +1985,6 @@ body.gr-reading #gr-top-btn{display:flex;}
                placeholder="type meaning…" autocomplete="off"
                autocorrect="off" spellcheck="false" autocapitalize="off">
         <button class="submit-btn" id="submit-btn" onmousedown="event.preventDefault()" ontouchend="event.preventDefault(); handleSubmit();" onclick="handleSubmit()">Enter</button>
-      </div>
-      <div id="kr-area" style="display:none;">
-        <div id="kr-tiles"></div>
-        <button class="btn-primary" id="kr-confirm" style="width:100%;margin-top:12px;"
-                onmousedown="event.preventDefault()" ontouchend="event.preventDefault(); krSubmit();"
-                onclick="krSubmit()">Confirm</button>
       </div>
       <div class="answer-reveal" id="answer-reveal"></div>
       <div class="feedback-row" id="feedback-row">
@@ -2288,65 +2131,6 @@ body.gr-reading #gr-top-btn{display:flex;}
   </div>
   <div class="done-buttons">
     <button class="btn-primary" onclick="goHome()">Back to Menu</button>
-  </div>
-</div>
-
-<!-- CONJUGATION PICKER -->
-<div id="conj-picker" class="screen">
-  <div class="screen-header">
-    <button class="back-btn" onclick="goHome()">← Back</button>
-    <div class="screen-title">Review Conjugation</div>
-  </div>
-  <div class="scrollable" style="padding-top:64px;width:100%;max-width:540px;padding-bottom:40px;">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
-
-      <!-- LEFT: Types -->
-      <div>
-        <div class="cp-heading">TYPE</div>
-        <div class="cp-section" style="margin-top:0;border-top:none;padding-top:0;">Verbs</div>
-        <label class="cp-row"><input type="checkbox" class="cp-type-cb" value="ru" onchange="updateConjGoBtn()"> る-verbs</label>
-        <label class="cp-row"><input type="checkbox" class="cp-type-cb cp-u-all" value="u-all" onchange="onUAllChange(this)"> う-verbs (all)</label>
-        <label class="cp-row cp-indent"><input type="checkbox" class="cp-type-cb cp-u-sub" value="u_tsu_ru" onchange="updateConjGoBtn()"> う / つ / る</label>
-        <label class="cp-row cp-indent"><input type="checkbox" class="cp-type-cb cp-u-sub" value="mu_bu_nu" onchange="updateConjGoBtn()"> む / ぶ / ぬ</label>
-        <label class="cp-row cp-indent"><input type="checkbox" class="cp-type-cb cp-u-sub" value="ku" onchange="updateConjGoBtn()"> く</label>
-        <label class="cp-row cp-indent"><input type="checkbox" class="cp-type-cb cp-u-sub" value="gu" onchange="updateConjGoBtn()"> ぐ</label>
-        <label class="cp-row cp-indent"><input type="checkbox" class="cp-type-cb cp-u-sub" value="su" onchange="updateConjGoBtn()"> す</label>
-        <label class="cp-row"><input type="checkbox" class="cp-type-cb" value="suru" onchange="updateConjGoBtn()"> する-verbs</label>
-        <label class="cp-row"><input type="checkbox" class="cp-type-cb" value="irregular" onchange="updateConjGoBtn()"> Irregular</label>
-        <div class="cp-section">Adjectives</div>
-        <label class="cp-row"><input type="checkbox" class="cp-type-cb" value="i-adj" onchange="updateConjGoBtn()"> い-adjectives</label>
-        <label class="cp-row"><input type="checkbox" class="cp-type-cb" value="na-adj" onchange="updateConjGoBtn()"> な-adjectives</label>
-      </div>
-
-      <!-- RIGHT: Forms + Register -->
-      <div>
-        <div class="cp-heading">FORM</div>
-        <label class="cp-row"><input type="checkbox" class="cp-form-cb" value="present-aff" onchange="updateConjGoBtn()"> Present Affirmative</label>
-        <label class="cp-row"><input type="checkbox" class="cp-form-cb" value="present-neg" onchange="updateConjGoBtn()"> Present Negative</label>
-        <label class="cp-row"><input type="checkbox" class="cp-form-cb" value="past-aff" onchange="updateConjGoBtn()"> Past Affirmative</label>
-        <label class="cp-row"><input type="checkbox" class="cp-form-cb" value="past-neg" onchange="updateConjGoBtn()"> Past Negative</label>
-        <label class="cp-row"><input type="checkbox" class="cp-form-cb" value="te" onchange="updateConjGoBtn()"> て-form</label>
-        <div class="cp-heading" style="margin-top:20px;">REGISTER</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="cp-form-btn active" id="cp-plain"  onclick="setConjFormality('plain')">Plain Register</button>
-          <button class="cp-form-btn"        id="cp-polite" onclick="setConjFormality('polite')">Polite Register</button>
-          <button class="cp-form-btn"        id="cp-both"   onclick="setConjFormality('both')">Both</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Bottom controls -->
-    <div style="margin-top:20px;border-top:1px solid var(--border);padding-top:16px;display:flex;flex-direction:column;align-items:center;gap:12px;">
-      <div style="display:flex;align-items:center;gap:10px;">
-        <label style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-dim);font-family:var(--font-mono);">Limit</label>
-        <input type="number" id="conj-limit" min="1" placeholder="all" style="width:70px;padding:6px 8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-family:var(--font-mono);font-size:13px;text-align:center;">
-        <label style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-dim);font-family:var(--font-mono);">items</label>
-      </div>
-      <div style="display:flex;gap:12px;align-items:center;">
-        <button id="conj-go-btn" class="btn-primary" style="min-width:180px;" onclick="startConjReview()" disabled>Select types &amp; forms to begin</button>
-        <button class="cp-reset-btn" onclick="resetConjPicker()">↺ Reset all</button>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -38481,7 +38265,7 @@ const POS_TAGS = {"青い":["i-adj"],"赤い":["i-adj"],"明るい":["i-adj"],"�
 KANJI.forEach(k => KANJI_MAP[k.kanji] = k);
 
 // ── STATE ──────────────────────────────────────────────────────────────
-let currentMode = 'review-kanji'; // 'study-kanji'|'study-vocab'|'review-kanji'|'review-vocab'|'study-pos'|'review-pos'
+let currentMode = 'study-kanji'; // 'study-kanji'|'study-vocab'|'study-pos'|'review-kana'|'review-katakana'
 let selectedPOS = [];
 let currentSKG  = null;
 let queue       = [];
@@ -38503,7 +38287,6 @@ function goHome() { skgSortMode = 'num'; showScreen('home'); }
 function goTo(id, mode) {
   if (mode) currentMode = mode;
   if (id === 'skg-picker')         buildSKGGrid();
-  if (id === 'vocab-kanji-picker') buildVocabKanjiList();
   if (id === 'study-kanji')        buildStudyKanji();
   if (id === 'study-vocab')        buildStudyVocab();
   if (id === 'pos-picker')         buildPOSPicker();
@@ -38513,7 +38296,6 @@ function goTo(id, mode) {
   if (id === 'katakana-picker')    buildKatakanaPicker();
   if (id === 'kana-picker')        buildKanaPicker();
   if (id === 'study-verbs')        buildVerbStudy();
-  if (id === 'conj-picker')        updateConjGoBtn();
   if (id === 'nrev')               NR.open();
   showScreen(id);
 }
@@ -38543,7 +38325,7 @@ function showScreen(id) {
 // ── SET (SKG) PICKER ───────────────────────────────────────────────────
 const SORT_LABELS = {'num':'Set #','kanji-asc':'Kanji ↑','kanji-desc':'Kanji ↓','vocab-desc':'Vocab ↓','vocab-asc':'Vocab ↑'};
 function sortOrderForMode() {
-  const kanjiOnly = currentMode === 'study-kanji' || currentMode === 'review-kanji';
+  const kanjiOnly = currentMode === 'study-kanji';
   return kanjiOnly ? ['num','kanji-asc','kanji-desc'] : ['num','kanji-asc','kanji-desc','vocab-desc','vocab-asc'];
 }
 function updateSortLabel() {
@@ -38562,32 +38344,18 @@ function buildSKGGrid() {
   updateSortLabel();
   const labels = {
     'study-kanji':'Study Kanji — Choose a Set',
-    'study-vocab':'Study Vocab — Choose a Set',
-    'review-kanji':'Review Kanji — Choose a Set',
-    'review-vocab':'Review Vocab — Choose a Set'
+    'study-vocab':'Study Vocab — Choose a Set'
   };
   document.getElementById('skg-picker-title').textContent = labels[currentMode] || 'Choose a Set';
-  const isRev = (currentMode === 'review-kanji' || currentMode === 'review-vocab');
   const isStudy = (currentMode === 'study-kanji' || currentMode === 'study-vocab');
-  const _svb = document.getElementById('single-vocab-btn');
-  if (_svb) { _svb.style.display = isRev ? '' : 'none'; if (isRev) document.getElementById('single-vocab-count').textContent = getSingleVocabItems().length; }
-  const _krb = document.getElementById('kanji-reading-btn');
-  if (_krb) {
-    const show = (currentMode === 'review-kanji');
-    _krb.style.display = show ? '' : 'none';
-    if (show) document.getElementById('kanji-reading-count').textContent = getKanjiReadingItems().length;
-  }
-  const _smN = (currentMode === 'review-vocab') ? getSameMeaningItems().length : 0;
-  const _smb = document.getElementById('same-meaning-btn');
-  if (_smb) { _smb.style.display = _smN ? '' : 'none'; if (_smN) document.getElementById('same-meaning-count').textContent = _smN; }
-  // Study drills (browse the same two subsets)
+  // Study drills: browse the 1 kanji – 1 vocab and same-meaning subsets
   const _ssb = document.getElementById('study-single-btn');
   if (_ssb) { _ssb.style.display = isStudy ? '' : 'none'; if (isStudy) document.getElementById('study-single-count').textContent = getSingleVocabItems().length; }
   const _ssmN = isStudy ? getStudySameMeaningGroups().length : 0;
   const _ssmb = document.getElementById('study-sm-btn');
   if (_ssmb) { _ssmb.style.display = _ssmN ? '' : 'none'; if (_ssmN) document.getElementById('study-sm-count').textContent = _ssmN; }
   const qd = document.getElementById('quick-drills');
-  if (qd) qd.style.display = (isRev || isStudy) ? '' : 'none';
+  if (qd) qd.style.display = isStudy ? '' : 'none';
   renderSKGGrid();
 }
 
@@ -38599,18 +38367,6 @@ function selectSKG(skg) {
   } else if (currentMode === 'study-vocab') {
     buildStudyVocab();
     showScreen('study-vocab');
-  } else if (currentMode === 'review-kanji') {
-    document.getElementById('os-id').textContent = String(skg.id).replace(/SKG\s*/i,'');
-    const osK = document.getElementById('os-kanji');
-    osK.textContent = skg.kanji.join(' ');              // every kanji in the set (max 16), wraps
-    osK.classList.toggle('many', skg.kanji.length > 8); // smaller glyphs so 16 fit in 2 rows
-    setKanjiSteps('both');
-    showScreen('order-select');
-  } else {
-    document.getElementById('ms-title').textContent = String(skg.id).replace(/SKG\s*/i,'');
-    document.getElementById('ms-id').textContent = String(skg.id).replace(/SKG\s*/i,'');
-    document.getElementById('ms-kanji').textContent = skg.kanji.slice(0,6).join(' ');
-    showScreen('mode-select');
   }
 }
 
@@ -38725,127 +38481,7 @@ function buildPOSPicker() {
     });
     body.appendChild(wrap);
 
-  } else {
-    if (title) title.textContent = 'Review by Part of Speech';
-    // Render checkboxes for review mode
-    const hint = document.createElement('div');
-    hint.style.cssText = 'padding:16px 0 8px;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);font-family:var(--font-ui);';
-    hint.textContent = 'Select one or more';
-    body.appendChild(hint);
-
-    const wrap = document.createElement('div');
-    wrap.style.cssText = 'display:flex;flex-direction:column;gap:8px;margin-bottom:24px;';
-    POS_META.forEach(({p, label, color, subs}) => {
-      const count = getPOSWords([p]).length;
-      const lbl = document.createElement('label');
-      lbl.className = 'pos-check-row';
-      lbl.innerHTML = `<input type="checkbox" class="pos-checkbox" value="${p}">`
-        + `<span class="pos-check-dot" style="background:${color}"></span>`
-        + `<span class="pos-check-label">${label}</span>`
-        + `<span class="pos-check-count">${count} words</span>`;
-      lbl.querySelector('input').addEventListener('change', updatePOSCount);
-      wrap.appendChild(lbl);
-
-      if (subs) {
-        const subWrap = document.createElement('div');
-        subWrap.style.cssText = 'display:none;flex-direction:column;gap:4px;padding:4px 0 4px 28px;';
-        subWrap.dataset.parent = p;
-        subs.forEach(sub => {
-          const sc = getPOSWords([sub.p]).length;
-          const slbl = document.createElement('label');
-          slbl.className = 'pos-check-row';
-          slbl.style.cssText = 'font-size:13px;padding:7px 12px;';
-          slbl.innerHTML = `<input type="checkbox" class="pos-checkbox pos-sub-checkbox" value="${sub.p}">`
-            + `<span class="pos-check-label">${sub.label}</span>`
-            + `<span class="pos-check-count">${sc} words</span>`;
-          slbl.querySelector('input').addEventListener('change', function() {
-            // if any sub checked, uncheck parent; update count
-            const parentCb = wrap.querySelector('input[value="' + p + '"]');
-            if (parentCb) parentCb.checked = false;
-            updatePOSCount();
-          });
-          subWrap.appendChild(slbl);
-        });
-        // toggle sub-row visibility when parent changes
-        lbl.querySelector('input').addEventListener('change', function() {
-          subWrap.style.display = this.checked ? 'flex' : 'none';
-          if (!this.checked) subWrap.querySelectorAll('input').forEach(c => c.checked = false);
-          updatePOSCount();
-        });
-        wrap.appendChild(subWrap);
-      }
-    });
-    body.appendChild(wrap);
-
-    const countEl = document.createElement('div');
-    countEl.id = 'pos-total-count';
-    countEl.style.cssText = 'font-size:13px;color:var(--text-dim);font-family:var(--font-ui);margin-bottom:16px;';
-    body.appendChild(countEl);
-
-    const bottomRow = document.createElement('div');
-    bottomRow.style.cssText = 'margin-top:8px;border-top:1px solid var(--border);padding-top:16px;display:flex;flex-direction:column;align-items:center;gap:12px;';
-
-    const limitRow = document.createElement('div');
-    limitRow.style.cssText = 'display:flex;align-items:center;gap:10px;';
-    limitRow.innerHTML = '<label style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-dim);font-family:var(--font-mono);">Limit</label>'
-      + '<input type="number" id="pos-limit" min="1" placeholder="all" style="width:70px;padding:6px 8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-family:var(--font-mono);font-size:13px;text-align:center;">'
-      + '<label style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-dim);font-family:var(--font-mono);">items</label>';
-    bottomRow.appendChild(limitRow);
-
-    const btnRow = document.createElement('div');
-    btnRow.style.cssText = 'display:flex;gap:12px;align-items:center;';
-
-    const goBtn = document.createElement('button');
-    goBtn.id = 'pos-go-btn';
-    goBtn.className = 'btn-primary';
-    goBtn.style.minWidth = '160px';
-    goBtn.disabled = true;
-    goBtn.textContent = 'Begin Review';
-    goBtn.addEventListener('click', startPOSMode);
-    btnRow.appendChild(goBtn);
-
-    const resetBtn = document.createElement('button');
-    resetBtn.className = 'cp-reset-btn';
-    resetBtn.textContent = '↺ Reset all';
-    resetBtn.addEventListener('click', resetPOSPicker);
-    btnRow.appendChild(resetBtn);
-
-    bottomRow.appendChild(btnRow);
-    body.appendChild(bottomRow);
   }
-}
-
-function updatePOSCount() {
-  const checked = [...document.querySelectorAll('.pos-checkbox:checked')].map(c => c.value);
-  selectedPOS = checked;
-  const total = checked.length > 0 ? getPOSWords(checked).length : 0;
-  const countEl = document.getElementById('pos-total-count');
-  const btn = document.getElementById('pos-go-btn');
-  if (countEl) countEl.textContent = checked.length === 0 ? '' : total + ' words total';
-  if (btn) btn.disabled = checked.length === 0;
-}
-
-function startPOSMode() {
-  const checked = [...document.querySelectorAll('.pos-checkbox:checked')].map(c => c.value);
-  if (checked.length === 0) return;
-  selectedPOS = checked;
-  let items = getPOSWords(checked);
-  shuffle(items);
-  const limitVal = parseInt(document.getElementById('pos-limit')?.value);
-  if (limitVal > 0) items = items.slice(0, limitVal);
-  queue = items;
-  startReview();
-}
-
-function resetPOSPicker() {
-  document.querySelectorAll('.pos-checkbox').forEach(cb => { cb.checked = false; });
-  // hide sub-rows
-  document.querySelectorAll('[data-parent]').forEach(el => {
-    el.style.display = 'none';
-    el.querySelectorAll('input').forEach(c => c.checked = false);
-  });
-  const lim = document.getElementById('pos-limit'); if (lim) lim.value = '';
-  updatePOSCount();
 }
 
 const U_SUBS = [
@@ -39042,62 +38678,6 @@ function buildStudyVocab() {
   });
 }
 
-// ── VOCAB KANJI PICKER ─────────────────────────────────────────────────
-function buildVocabKanjiList() {
-  document.getElementById('vkp-title').textContent = String(currentSKG?.id || '').replace(/SKG\s*/i,'');
-  const list = document.getElementById('vocab-kanji-list');
-  list.innerHTML = '';
-  if (!currentSKG) return;
-  currentSKG.kanji.forEach(k => {
-    const km = KANJI_MAP[k]; if (!km) return;
-    const v = VOCAB[k];
-    const count = v ? v.rgs.reduce((a,rg)=>a+rg.vocab.length,0) : 0;
-    const item = document.createElement('div');
-    item.className = 'vocab-kanji-item';
-    item.innerHTML = `<div class="vki-k">${k}</div>
-      <div class="vki-info">
-        <div class="vki-reading">${km.reading}</div>
-        <div class="vki-meaning">${km.meaning}</div>
-      </div>
-      <div class="vki-count">${count} vocab</div>`;
-    item.onclick = () => startVocabSingle(k);
-    list.appendChild(item);
-  });
-}
-
-// ── KANJI REVIEW ───────────────────────────────────────────────────────
-let kanjiReviewSteps = 'both'; // 'both' | 'meaning' | 'reading'
-
-function setKanjiSteps(val) {
-  kanjiReviewSteps = val;
-  ['both','meaning','reading'].forEach(v => {
-    document.getElementById('os-steps-'+v).classList.toggle('active', v === val);
-  });
-}
-
-function startKanjiReview(randomise) {
-  queue = currentSKG.kanji.map(k => ({
-    type:'kanji', kanji:k,
-    reading: KANJI_MAP[k]?.reading || '',
-    meaning: KANJI_MAP[k]?.meaning || ''
-  }));
-  if (randomise) shuffle(queue);
-  startReview();
-}
-
-// ── VOCAB REVIEW ───────────────────────────────────────────────────────
-function startVocabAll() {
-  const items = [];
-  currentSKG.kanji.forEach(k => {
-    const v = VOCAB[k]; if (!v) return;
-    v.rgs.forEach(rg => rg.vocab.forEach(e => items.push({
-      type:'vocab', kanji:e.word, reading:e.reading, meaning:e.meaning
-    })));
-  });
-  queue = items;
-  startReview();
-}
-
 function highlightRare(word, rare) {
   if (!rare) return word;
   const i = word.indexOf(rare);
@@ -39120,162 +38700,7 @@ function getSingleVocabItems() {
   return items;
 }
 
-// ── KANJI READINGS (multiple choice) ───────────────────────────────────
-// Correct answers = the reading-group readings of that kanji.
-let KR_POOL = null;
-function ensureKRPool() {
-  if (KR_POOL) return;
-  const s = new Set();
-  Object.keys(VOCAB).forEach(k => (VOCAB[k].rgs || []).forEach(rg => {
-    const r = (rg.rg_reading || '').trim();
-    if (r) s.add(r);
-  }));
-  KR_POOL = [...s];
-}
-function getKanjiReadingItems() {
-  ensureKRPool();
-  const items = [];
-  Object.keys(VOCAB).forEach(k => {
-    const rs = [...new Set((VOCAB[k].rgs || []).map(rg => (rg.rg_reading || '').trim()).filter(Boolean))];
-    if (!rs.length) return;
-    const km = KANJI_MAP[k] || { meaning:'', reading:'' };
-    items.push({ type:'kreading', kanji:k, readings:rs, meaning:km.meaning || '' });
-  });
-  return items;
-}
-// Distractors biased toward similar shape: same length first, then ±1 mora.
-function krDistractors(correct, want) {
-  ensureKRPool();
-  const bad = new Set(correct);
-  const lens = correct.map(r => r.length);
-  const score = r => {
-    const d = Math.min(...lens.map(L => Math.abs(r.length - L)));
-    let s = d * 10;
-    if (correct.some(c => c[0] === r[0])) s -= 4;            // shares first kana
-    if (correct.some(c => c[c.length-1] === r[r.length-1])) s -= 2;
-    return s;
-  };
-  const cand = KR_POOL.filter(r => !bad.has(r)).map(r => ({ r, s: score(r) + Math.random() * 3 }));
-  cand.sort((a,b) => a.s - b.s);
-  return cand.slice(0, want).map(x => x.r);
-}
-// Tiles ≈ 2× correct, floor 6, cap 12.
-function krTileCount(nCorrect) {
-  return Math.max(6, Math.min(12, nCorrect * 2));
-}
-
-function krRender(item) {
-  const correct = item.readings;
-  const total   = krTileCount(correct.length);
-  const opts    = correct.concat(krDistractors(correct, Math.max(0, total - correct.length)));
-  shuffle(opts);
-  const box = document.getElementById('kr-tiles');
-  box.innerHTML = '';
-  opts.forEach(r => {
-    const t = document.createElement('div');
-    t.className = 'kr-tile'; t.textContent = r; t.dataset.r = r;
-    t.onclick = () => { if (!awaitingNext) t.classList.toggle('sel'); };
-    box.appendChild(t);
-  });
-  const btn = document.getElementById('kr-confirm');
-  btn.textContent = 'Confirm'; btn.disabled = false;
-}
-function krSubmit() {
-  if (awaitingNext) { awaitingNext = false; const a = pendingNext; pendingNext = null; if (a) a(); return; }
-  const tiles = [...document.querySelectorAll('#kr-tiles .kr-tile')];
-  const picked = tiles.filter(t => t.classList.contains('sel')).map(t => t.dataset.r);
-  if (!picked.length) { showTryAgain('Pick at least one reading'); return; }
-  const correct = new Set(currentItem.readings);
-  const ok = picked.length === correct.size && picked.every(r => correct.has(r));
-  tiles.forEach(t => {
-    const isC = correct.has(t.dataset.r), sel = t.classList.contains('sel');
-    t.classList.remove('sel'); t.classList.add('locked');
-    if (isC && sel) t.classList.add('right');
-    else if (!isC && sel) t.classList.add('wrong');
-    else if (isC && !sel) t.classList.add('missed');
-  });
-  const reveal = document.getElementById('answer-reveal');
-  if (ok) {
-    rPass++; updateScoreDisplay();
-    reveal.innerHTML = 'Correct — <strong>' + currentItem.readings.join(' · ') + '</strong>';
-    reveal.className = 'answer-reveal hint';
-  } else {
-    if (!itemFailed[itemKey]) itemFailed[itemKey] = {};
-    if (!itemFailed[itemKey].kr) { rFail++; itemFailed[itemKey].kr = true; updateScoreDisplay(); }
-    reveal.innerHTML = 'All readings: <strong>' + currentItem.readings.join(' · ') + '</strong>';
-    reveal.className = 'answer-reveal show';
-  }
-  document.getElementById('kr-confirm').textContent = 'Next →';
-  armNext(nextItem);
-}
-
-function openKanjiReadingLimit() {
-  const n = getKanjiReadingItems().length;
-  if (!n) return;
-  document.getElementById('kr-limit-total').textContent = n;
-  document.getElementById('kr-limit').value = '';
-  document.getElementById('kr-limit-overlay').classList.add('open');
-}
-function closeKanjiReadingLimit() { document.getElementById('kr-limit-overlay').classList.remove('open'); }
-function beginKanjiReadingReview() {
-  const lim = parseInt(document.getElementById('kr-limit').value);
-  closeKanjiReadingLimit();
-  startKanjiReadingReview(lim > 0 ? lim : 0);
-}
-function startKanjiReadingReview(limit) {
-  const items = getKanjiReadingItems();
-  if (!items.length) return;
-  shuffle(items);
-  queue = (limit > 0) ? items.slice(0, limit) : items;
-  startReview();
-}
-
-function openSingleVocabLimit() {
-  const n = getSingleVocabItems().length;
-  if (!n) return;
-  document.getElementById('sv-limit-total').textContent = n;
-  document.getElementById('sv-limit').value = '';
-  document.getElementById('sv-limit-overlay').classList.add('open');
-}
-function closeSingleVocabLimit() { document.getElementById('sv-limit-overlay').classList.remove('open'); }
-function beginSingleVocabReview() {
-  const lim = parseInt(document.getElementById('sv-limit').value);
-  closeSingleVocabLimit();
-  startSingleVocabReview(lim > 0 ? lim : 0);
-}
-function startSingleVocabReview(limit) {
-  const items = getSingleVocabItems();
-  if (!items.length) return;
-  shuffle(items);
-  queue = (limit > 0) ? items.slice(0, limit) : items;
-  startReview();
-}
-
-function startVocabSingle(k) {
-  const v = VOCAB[k]; if (!v) return;
-  const items = [];
-  v.rgs.forEach(rg => rg.vocab.forEach(e => items.push({
-    type:'vocab', kanji:e.word, reading:e.reading, meaning:e.meaning
-  })));
-  queue = items;
-  startReview();
-}
-
 // ── REVIEW ENGINE ──────────────────────────────────────────────────────
-function startReview() {
-  document.getElementById('score-m-pass').style.display = '';
-  document.getElementById('score-m-fail').style.display = '';
-  document.getElementById('score-r-pass').style.display = '';
-  document.getElementById('score-r-fail').style.display = '';
-  document.querySelector('.score-sep').style.display = '';
-  queueIndex = 0;
-  mPass=0; mFail=0; rPass=0; rFail=0;
-  itemFailed = {};
-  updateScoreDisplay();
-  showScreen('review');
-  loadItem();
-}
-
 function makeItemKey(item, index) {
   return `${index}_${item.kanji}`;
 }
@@ -39297,55 +38722,7 @@ function loadItem() {
   inp.value = ''; inp.className = 'review-input'; inp.disabled = false;
   document.getElementById('review-display').style.fontSize = '';
 
-  // Reset the conjugation stem hint (hidden + re-blurred for every item)
-  const _sh = document.getElementById('conj-stem-hint');
-  _sh.classList.remove('on','revealed');
-
-  const conjTopLabel = document.getElementById('conj-step-label');
-  const botLabel = document.getElementById('step-label');
-  // reset the multiple-choice area (used only by the kanji-readings mode)
-  const _kr = document.getElementById('kr-area');
-  _kr.style.display = 'none';
-  document.querySelector('.input-row').style.display = '';
-  if (currentItem.type === 'kreading') {
-    reviewStep = 'kreading';
-    conjTopLabel.style.display = 'none';
-    botLabel.style.display = '';
-    botLabel.textContent = 'Select every reading of this kanji';
-    document.getElementById('review-display').textContent = currentItem.kanji;
-    document.getElementById('known-meaning').textContent = currentItem.meaning;
-    document.querySelector('.input-row').style.display = 'none';
-    _kr.style.display = '';
-    krRender(currentItem);
-    updateProgress();
-    return;
-  }
-  if (currentItem.type === 'conj') {
-    reviewStep = 'conj';
-    const pill = (bg,col,txt) => `<span style="font-family:var(--font-mono);font-size:13px;font-weight:500;text-transform:uppercase;letter-spacing:0.1em;padding:3px 9px;border-radius:3px;border:1px solid ${col};color:${col};background:transparent;margin-right:6px;display:inline-block;">${txt}</span>`;
-    let labelHTML = '';
-    if (currentItem.form === 'te') {
-      labelHTML = pill('#12122a','#8080f0','て-FORM');
-    } else {
-      const isTensePres = currentItem.form.startsWith('present');
-      const isAff = currentItem.form.endsWith('aff');
-      const isPlain = currentItem.formality === 'plain';
-      labelHTML += isTensePres ? pill('#0e1535','#4060e0','PRESENT') : pill('#1e0e18','#e09080','PAST');
-      labelHTML += isAff ? pill('#1a3a2a','#4af080','AFFIRMATIVE') : pill('#3a1a1a','#f04a4a','NEGATIVE');
-      labelHTML += isPlain ? pill('#2a1230','#c060c0','PLAIN') : pill('#1e1e1e','#a0a0a0','POLITE');
-    }
-    conjTopLabel.innerHTML = labelHTML;
-    conjTopLabel.style.display = 'block';
-    botLabel.style.display = 'none';
-    document.getElementById('review-display').textContent = currentItem.word;
-    document.getElementById('known-meaning').textContent = currentItem.meaning;
-    const _stem = conjStem(currentItem);
-    if (_stem) { document.getElementById('conj-stem-value').textContent = _stem; _sh.classList.add('on'); }
-    inp.placeholder = 'type in hiragana…';
-    inp.dataset.mode = 'kana';
-  } else if (currentItem.type === 'katakana') {
-    conjTopLabel.style.display = 'none';
-    botLabel.style.display = '';
+  if (currentItem.type === 'katakana') {
     reviewStep = 'katakana';
     const _kd = document.getElementById('review-display');
     _kd.textContent = currentItem.word;
@@ -39355,36 +38732,12 @@ function loadItem() {
     document.getElementById('step-label').textContent = 'Meaning';
     document.getElementById('known-meaning').textContent = '';
     inp.placeholder = 'type meaning…';
-    inp.dataset.mode = 'text';
-  } else if (currentItem._type === 'kana') {
-    conjTopLabel.style.display = 'none';
-    botLabel.style.display = '';
+  } else {                                     // kana (_type 'kana')
     reviewStep = 'kana';
     document.getElementById('review-display').textContent = currentItem.kana;
     document.getElementById('step-label').textContent = 'Romaji';
     document.getElementById('known-meaning').textContent = '';
     inp.placeholder = 'type romaji…';
-    inp.dataset.mode = 'text';
-  } else if (currentItem.type === 'kanji' && kanjiReviewSteps === 'reading') {
-    conjTopLabel.style.display = 'none';
-    botLabel.style.display = '';
-    // skip meaning, go straight to reading
-    reviewStep = 'reading';
-    document.getElementById('review-display').textContent = currentItem.kanji;
-    document.getElementById('step-label').textContent = 'Reading (kana)';
-    document.getElementById('known-meaning').textContent = currentItem.meaning;
-    inp.placeholder = 'type reading in romaji…';
-    inp.dataset.mode = 'kana';
-  } else {
-    conjTopLabel.style.display = 'none';
-    botLabel.style.display = '';
-    reviewStep = 'meaning';
-    if (currentItem.rare) document.getElementById('review-display').innerHTML = highlightRare(currentItem.kanji, currentItem.rare);
-    else document.getElementById('review-display').textContent = currentItem.kanji;
-    document.getElementById('step-label').textContent = (currentItem.type === 'kanji' && kanjiReviewSteps === 'meaning') ? 'Meaning' : 'Step 1 — Meaning';
-    document.getElementById('known-meaning').textContent = '';
-    inp.placeholder = 'type meaning…';
-    inp.dataset.mode = 'text';
   }
 
   updateProgress();
@@ -39394,23 +38747,13 @@ function loadItem() {
 function handleSubmit() {
   if (awaitingNext) { awaitingNext = false; const a = pendingNext; pendingNext = null; if (a) a(); return; }
   const inp = document.getElementById('review-input');
-  let val = inp.value.trim();
+  const val = inp.value.trim();
   if (!val) return;
-  if (inp.dataset.mode === 'kana') {
-    val = toHiragana(val, false);
-    inp.value = val;
-  }
-  // Guard: mis-typed / wrong-script input nudges "try again" instead of failing + advancing.
-  if (inp.dataset.mode === 'kana') {
-    if (/[a-z]/i.test(val)) { showTryAgain('Type your answer in Japanese'); return; }
-  } else if (/[぀-ヿ々㐀-鿿]/.test(val)) {
-    showTryAgain('Type your answer'); return;
-  }
-  if (reviewStep === 'conj')    checkConj(val);
-  else if (reviewStep === 'kana')    checkKana(val);
-  else if (reviewStep === 'katakana') checkKatakana(val);
-  else if (reviewStep === 'meaning') checkMeaning(val);
-  else checkReading(val);
+  // Guard: a stray Japanese character nudges "try again" instead of failing + advancing
+  // (both answers here — romaji, English meaning — are typed in Latin letters).
+  if (/[぀-ヿ々㐀-鿿]/.test(val)) { showTryAgain('Type your answer'); return; }
+  if (reviewStep === 'kana') checkKana(val);
+  else checkKatakana(val);
 }
 
 // Non-penalising nudge: shows a hint, keeps the input, does NOT count a fail or advance.
@@ -39436,87 +38779,6 @@ function checkKana(val) {
     inp.className = 'review-input correct';
     rPass++;
     updateScoreDisplay();
-    armNext(nextItem);
-  } else {
-    inp.className = 'review-input wrong';
-    reveal.innerHTML = `Correct: <strong>${correct}</strong>`;
-    reveal.className = 'answer-reveal show';
-    if (!itemFailed[itemKey]) itemFailed[itemKey] = {};
-    if (!itemFailed[itemKey].reading) {
-      rFail++;
-      itemFailed[itemKey].reading = true;
-      updateScoreDisplay();
-    }
-    setTimeout(() => {
-      inp.value = ''; inp.className = 'review-input';
-      inp.placeholder = 'try again…';
-    }, 400);
-  }
-}
-
-function checkMeaning(val) {
-  const inp    = document.getElementById('review-input');
-  const reveal = document.getElementById('answer-reveal');
-  const correct = currentItem.meaning;
-  const ok = meaningMatches(val, correct);
-
-  if (ok) {
-    inp.className = 'review-input correct';
-    mPass++;
-    updateScoreDisplay();
-    if (currentItem.type === 'kanji' && kanjiReviewSteps === 'meaning') {
-      armNext(nextItem);
-    } else {
-      setTimeout(moveToReadingStep, 450);
-    }
-  } else {
-    inp.className = 'review-input wrong';
-    reveal.innerHTML = `Correct: <strong>${correct}</strong>`;
-    reveal.className = 'answer-reveal show';
-    // Only count one fail per item per step
-    if (!itemFailed[itemKey]) itemFailed[itemKey] = {};
-    if (!itemFailed[itemKey].meaning) {
-      mFail++;
-      itemFailed[itemKey].meaning = true;
-      updateScoreDisplay();
-    }
-    setTimeout(() => {
-      inp.value = ''; inp.className = 'review-input';
-      inp.placeholder = 'retype the correct meaning…';
-    }, 400);
-  }
-}
-
-function moveToReadingStep() {
-  const inp = document.getElementById('review-input');
-  reviewStep = 'reading';
-  document.getElementById('step-label').textContent = 'Step 2 — Reading (kana)';
-  document.getElementById('known-meaning').textContent = currentItem.meaning;
-  document.getElementById('answer-reveal').className = 'answer-reveal';
-  inp.value = ''; inp.className = 'review-input'; inp.disabled = false;
-  inp.placeholder = 'type reading in romaji…';
-  inp.dataset.mode = 'kana';
-  document.getElementById('submit-btn').disabled = false;
-  document.getElementById('submit-btn').textContent = 'Enter';
-  document.getElementById('submit-btn').classList.remove('next-ready');
-  setTimeout(() => inp.focus(), 50);
-}
-
-function checkReading(val) {
-  const inp    = document.getElementById('review-input');
-  const reveal = document.getElementById('answer-reveal');
-  const correct = currentItem.reading.split('|')[0].trim();
-  const normalise = s => s.trim().replace(/-/g, 'ー');
-  const ok = normalise(val) === normalise(correct);
-
-  if (ok) {
-    inp.className = 'review-input correct';
-    rPass++;
-    updateScoreDisplay();
-    if (currentItem.smNote) {
-      reveal.innerHTML = '<div style="text-align:left;color:#7888b8;font-size:13px;line-height:1.55;">' + currentItem.smNote.replace(/\n/g, '<br>') + '</div>';
-      reveal.className = 'answer-reveal show';
-    }
     armNext(nextItem);
   } else {
     inp.className = 'review-input wrong';
@@ -39594,15 +38856,6 @@ function shuffle(arr) {
     [arr[i],arr[j]]=[arr[j],arr[i]];
   }
 }
-
-// Live romaji→kana
-document.addEventListener('DOMContentLoaded', () => {
-  const inp = document.getElementById('review-input');
-  inp.addEventListener('input', () => {
-    if (inp.dataset.mode !== 'kana') return;
-    inp.value = toHiragana(inp.value, true);
-  });
-});
 
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && document.getElementById('review').classList.contains('active')) {
@@ -40077,38 +39330,6 @@ function openSameMeaning(word) {
   document.getElementById('sm-modal-overlay').classList.add('open');
 }
 function closeSameMeaning() { document.getElementById('sm-modal-overlay').classList.remove('open'); }
-
-function getSameMeaningItems() {
-  ensureVocabWordIndex();
-  const seen = new Set(); const items = [];
-  SAME_MEANING.forEach(g => g.words.forEach(wd => {
-    if (seen.has(wd.w)) return; seen.add(wd.w);
-    const v = VOCAB_WORD_INDEX[wd.w];
-    if (!v) return;   // only drill words actually present in your vocab
-    items.push({ type: 'vocab', kanji: wd.w, reading: v.reading, meaning: v.meaning, smNote: g.note });
-  }));
-  return items;
-}
-function openSameMeaningLimit() {
-  const n = getSameMeaningItems().length;
-  if (!n) return;
-  document.getElementById('sm-limit-total').textContent = n;
-  document.getElementById('sm-limit').value = '';
-  document.getElementById('sm-limit-overlay').classList.add('open');
-}
-function closeSameMeaningLimit() { document.getElementById('sm-limit-overlay').classList.remove('open'); }
-function beginSameMeaningReview() {
-  const lim = parseInt(document.getElementById('sm-limit').value);
-  closeSameMeaningLimit();
-  startSameMeaningReview(lim > 0 ? lim : 0);
-}
-function startSameMeaningReview(limit) {
-  const items = getSameMeaningItems();
-  if (!items.length) return;
-  shuffle(items);
-  queue = (limit > 0) ? items.slice(0, limit) : items;
-  startReview();
-}
 
 // ── STUDY DRILLS (browse, not test) ────────────────────────────────────
 function getStudySameMeaningGroups() {
@@ -41054,7 +40275,7 @@ function refreshVcTracks(root) {
 })();
 
 function renderSKGGrid() {
-  const isKanjiMode = currentMode === 'study-kanji' || currentMode === 'review-kanji';
+  const isKanjiMode = currentMode === 'study-kanji';
   const grid = document.getElementById('skg-grid');
   grid.innerHTML = '';
   getSortedSKGs().forEach(skg => {
@@ -41070,242 +40291,6 @@ function renderSKGGrid() {
     card.addEventListener('click', () => selectSKG(skg));
     grid.appendChild(card);
   });
-}
-
-// ── CONJUGATION REVIEW ────────────────────────────────────────────────
-let conjFormality = 'plain';
-
-function setConjFormality(f) {
-  conjFormality = f;
-  ['plain','polite','both'].forEach(x => document.getElementById('cp-'+x).classList.toggle('active', x===f));
-  updateConjGoBtn();
-}
-
-function onUAllChange(cb) {
-  document.querySelectorAll('.cp-u-sub').forEach(s => s.checked = cb.checked);
-  updateConjGoBtn();
-}
-
-function updateConjGoBtn() {
-  const types = [...document.querySelectorAll('.cp-type-cb:checked')].map(c=>c.value);
-  const forms = [...document.querySelectorAll('.cp-form-cb:checked')].map(c=>c.value);
-  const count = buildConjWordList(new Set(types)).length * forms.length * (conjFormality==='both'?2:1);
-  const btn = document.getElementById('conj-go-btn');
-  const ok = types.length>0 && forms.length>0 && count>0;
-  btn.disabled = !ok;
-  btn.textContent = ok ? 'Begin Review — '+count+' items' : 'Select types & forms to begin';
-}
-
-function buildConjWordList(selectedTypes) {
-  const IRRS = [
-    {word:'する',reading:'する',meaning:'to do',pos:'irregular'},
-    {word:'くる',reading:'くる',meaning:'to come',pos:'irregular'},
-    {word:'いく',reading:'いく',meaning:'to go',pos:'irregular'},
-    {word:'ある',reading:'ある',meaning:'to exist (inanimate)',pos:'irregular'},
-    {word:'いる',reading:'いる',meaning:'to exist (animate)',pos:'irregular'},
-  ];
-  const GODAN_END = {
-    'u_tsu_ru':new Set(['う','つ']),
-    'mu_bu_nu':new Set(['む','ぶ','ぬ']),
-    'ku':new Set(['く']),'gu':new Set(['ぐ']),'su':new Set(['す'])
-  };
-  const words = [];
-  const seen = new Set();
-  if (selectedTypes.has('irregular')) IRRS.forEach(w=>{ words.push(w); seen.add(w.word); });
-  Object.values(VOCAB).forEach(data => {
-    data.rgs.forEach(rg => {
-      rg.vocab.forEach(v => {
-        if (seen.has(v.word)) return;
-        const tags = POS_TAGS[v.word]; if (!tags) return;
-        const pos = tags[0];
-        let usedPos = null;
-        if (pos==='ru-verb' && selectedTypes.has('ru')) usedPos='ru-verb';
-        else if (pos==='suru-verb' && selectedTypes.has('suru')) usedPos='suru-verb';
-        else if (pos==='i-adj' && selectedTypes.has('i-adj')) usedPos='i-adj';
-        else if (pos==='na-adj' && selectedTypes.has('na-adj')) usedPos='na-adj';
-        else if (pos==='u-verb'||pos==='u-verb-ru') {
-          const end = v.reading.slice(-1);
-          const isRuGodan = pos==='u-verb-ru';
-          if (selectedTypes.has('u-all')) usedPos=pos;
-          else if (isRuGodan && selectedTypes.has('u_tsu_ru')) usedPos=pos;
-          else if (!isRuGodan) {
-            for (const [sub,ends] of Object.entries(GODAN_END))
-              if (selectedTypes.has(sub) && ends.has(end)) { usedPos=pos; break; }
-          }
-        }
-        if (!usedPos) return;
-        seen.add(v.word);
-        words.push({word:v.word, reading:v.reading, meaning:v.meaning, pos:usedPos, rgReading:rg.rg_reading});
-      });
-    });
-  });
-  return words;
-}
-
-function conjugate(reading, pos, form, formality) {
-  const IRR = {
-    'する': {plain:{pa:'する',pn:'しない',ta:'した',tn:'しなかった'},polite:{pa:'します',pn:'しません',ta:'しました',tn:'しませんでした'}},
-    'くる': {plain:{pa:'くる',pn:'こない',ta:'きた',tn:'こなかった'},polite:{pa:'きます',pn:'きません',ta:'きました',tn:'きませんでした'}},
-    'いく': {plain:{pa:'いく',pn:'いかない',ta:'いった',tn:'いかなかった'},polite:{pa:'いきます',pn:'いきません',ta:'いきました',tn:'いきませんでした'}},
-    'ある': {plain:{pa:'ある',pn:'ない',ta:'あった',tn:'なかった'},polite:{pa:'あります',pn:'ありません',ta:'ありました',tn:'ありませんでした'}},
-    'いる': {plain:{pa:'いる',pn:'いない',ta:'いた',tn:'いなかった'},polite:{pa:'います',pn:'いません',ta:'いました',tn:'いませんでした'}},
-  };
-  if (form==='te') {
-    const TE={
-      'する':'して','くる':'きて','いく':'いって','ある':'あって','いる':'いて'
-    };
-    if (TE[reading]) return TE[reading];
-    if (pos==='suru-verb') return reading.slice(0,-2)+'して';
-    if (pos==='ru-verb')   return reading.slice(0,-1)+'て';
-    if (pos==='u-verb'||pos==='u-verb-ru') {
-      const end=reading.slice(-1),base=reading.slice(0,-1);
-      const TF={'う':'って','く':'いて','ぐ':'いで','す':'して','つ':'って','ぬ':'んで','ぶ':'んで','む':'んで','る':'って'};
-      return base+(TF[end]||'て');
-    }
-    if (pos==='i-adj')  { const stem=(reading==='いい')?'よ':reading.slice(0,-1); return stem+'くて'; }
-    if (pos==='na-adj') return reading+'で';
-    return null;
-  }
-  const fkey = {'present-aff':'pa','present-neg':'pn','past-aff':'ta','past-neg':'tn'}[form];
-  if (IRR[reading]) return IRR[reading][formality][fkey];
-  if (pos==='suru-verb') { const pfx=reading.slice(0,-2); return pfx+IRR['する'][formality][fkey]; }
-  if (pos==='ru-verb') {
-    const stem=reading.slice(0,-1);
-    const m={plain:{'present-aff':reading,'present-neg':stem+'ない','past-aff':stem+'た','past-neg':stem+'なかった'},
-              polite:{'present-aff':stem+'ます','present-neg':stem+'ません','past-aff':stem+'ました','past-neg':stem+'ませんでした'}};
-    return m[formality][form];
-  }
-  if (pos==='u-verb'||pos==='u-verb-ru') {
-    const end=reading.slice(-1),base=reading.slice(0,-1);
-    const MS={'う':'い','く':'き','ぐ':'ぎ','す':'し','つ':'ち','ぬ':'に','ぶ':'び','む':'み','る':'り'};
-    const NS={'う':'わ','く':'か','ぐ':'が','す':'さ','つ':'た','ぬ':'な','ぶ':'ば','む':'ま','る':'ら'};
-    const PS={'う':'った','く':'いた','ぐ':'いだ','す':'した','つ':'った','ぬ':'んだ','ぶ':'んだ','む':'んだ','る':'った'};
-    const ms=base+(MS[end]||''),ns=base+(NS[end]||''),ps=base+(PS[end]||'');
-    if (formality==='plain') {
-      if (form==='present-aff') return reading;
-      if (form==='present-neg') return ns+'ない';
-      if (form==='past-aff')    return ps;
-      if (form==='past-neg')    return ns+'なかった';
-    } else {
-      if (form==='present-aff') return ms+'ます';
-      if (form==='present-neg') return ms+'ません';
-      if (form==='past-aff')    return ms+'ました';
-      if (form==='past-neg')    return ms+'ませんでした';
-    }
-  }
-  if (pos==='i-adj') {
-    const stem=(reading==='いい')?'よ':reading.slice(0,-1);
-    if (formality==='plain') {
-      if (form==='present-aff') return reading;
-      if (form==='present-neg') return stem+'くない';
-      if (form==='past-aff')    return stem+'かった';
-      if (form==='past-neg')    return stem+'くなかった';
-    } else {
-      if (form==='present-aff') return reading+'です';
-      if (form==='present-neg') return stem+'くないです';
-      if (form==='past-aff')    return stem+'かったです';
-      if (form==='past-neg')    return stem+'くなかったです';
-    }
-  }
-  if (pos==='na-adj') {
-    if (formality==='plain') {
-      if (form==='present-aff') return reading+'だ';
-      if (form==='present-neg') return reading+'じゃない';
-      if (form==='past-aff')    return reading+'だった';
-      if (form==='past-neg')    return reading+'じゃなかった';
-    } else {
-      if (form==='present-aff') return reading+'です';
-      if (form==='present-neg') return reading+'じゃありません';
-      if (form==='past-aff')    return reading+'でした';
-      if (form==='past-neg')    return reading+'じゃありませんでした';
-    }
-  }
-  return null;
-}
-
-function revealStemHint() { document.getElementById('conj-stem-hint').classList.add('revealed'); }
-
-// Stem hint for conjugation review: the reading of the word's KANJI portion — the invariant
-// part before the okurigana/conjugating suffix. Computed by stripping the word's trailing kana
-// (しむ, する, じる, む…) off the reading: 楽しむ→たの, 心配する→しんぱい, 飲む→の, 話す→はな.
-// Works for multi-kanji verbs (心配する) where a single reading group would only cover one kanji.
-// Kana-only verbs (する/くる/ある…) strip to nothing, so the hint stays hidden.
-function conjStem(item) {
-  const word = item.word || '', reading = item.reading || '';
-  const m = word.match(/[ぁ-ゟァ-ヿー]+$/);      // trailing okurigana of the written word
-  const okuri = m ? m[0] : '';
-  if (okuri && reading.length > okuri.length && reading.endsWith(okuri)) {
-    return reading.slice(0, reading.length - okuri.length);
-  }
-  return item.rgReading || '';
-}
-
-function conjugateAlts(reading, pos, form, formality) {
-  const primary = conjugate(reading, pos, form, formality);
-  const alts = primary ? [primary] : [];
-  if (pos==='i-adj') {
-    const stem=(reading==='いい')?'よ':reading.slice(0,-1);
-    if (formality==='polite') {
-      if (form==='present-neg') alts.push(stem+'くありません');
-      if (form==='past-neg')    alts.push(stem+'くなかったです',stem+'くありませんでした');
-    }
-  }
-  if (pos==='na-adj') {
-    if (form==='present-neg') alts.push(reading+(formality==='plain'?'ではない':'ではありません'));
-    if (form==='past-neg')    alts.push(reading+(formality==='plain'?'ではなかった':'ではありませんでした'));
-  }
-  return alts;
-}
-
-function startConjReview() {
-  const types = new Set([...document.querySelectorAll('.cp-type-cb:checked')].map(c=>c.value));
-  const forms = [...document.querySelectorAll('.cp-form-cb:checked')].map(c=>c.value);
-  const words = buildConjWordList(types);
-  const q = [];
-  words.forEach(item => {
-    forms.forEach(form => {
-      if (conjFormality==='both') {
-        q.push({type:'conj',...item,form,formality:'plain'});
-        q.push({type:'conj',...item,form,formality:'polite'});
-      } else {
-        q.push({type:'conj',...item,form,formality:conjFormality});
-      }
-    });
-  });
-  shuffle(q);
-  const limitVal = parseInt(document.getElementById('conj-limit')?.value);
-  queue = (limitVal > 0) ? q.slice(0, limitVal) : q;
-  startReview();
-}
-
-
-function resetConjPicker() {
-  document.querySelectorAll('.cp-type-cb, .cp-form-cb').forEach(cb => cb.checked = false);
-  setConjFormality('plain');
-  const lim = document.getElementById('conj-limit'); if (lim) lim.value = '';
-  updateConjGoBtn();
-}
-
-
-function checkConj(val) {
-  const inp    = document.getElementById('review-input');
-  const reveal = document.getElementById('answer-reveal');
-  const alts   = conjugateAlts(currentItem.reading, currentItem.pos, currentItem.form, currentItem.formality);
-  const norm   = s => s.trim().replace(/-/g,'ー');
-  const ok     = alts.some(a => norm(a)===norm(val));
-  if (ok) {
-    inp.className='review-input correct';
-    rPass++; updateScoreDisplay();
-    armNext(nextItem);
-  } else {
-    inp.className='review-input wrong';
-    const extra = alts.length>1 ? ' <span style="color:var(--text-dim);font-size:11px;">or '+alts.slice(1).join(' / ')+'</span>' : '';
-    reveal.innerHTML='Correct: <strong>'+(alts[0]||'?')+'</strong>'+extra;
-    reveal.className='answer-reveal show';
-    if (!itemFailed[itemKey]) itemFailed[itemKey]={};
-    if (!itemFailed[itemKey].conj) { rFail++; itemFailed[itemKey].conj=true; updateScoreDisplay(); }
-    setTimeout(()=>{ inp.value=''; inp.className='review-input'; inp.placeholder='retype the correct form…'; }, 400);
-  }
 }
 
 showScreen('home');
@@ -42071,8 +41056,9 @@ function saveGhKey() {
 }
 
 /* ---- NEW REVIEWS (REVIEW_DESIGN.md) — vocab, kanji and conjugation modes ----
-   One self-contained object so nothing clashes with the old review code (which has its own
-   shuffle/conjugate/toHiragana…). One screen, #nrev: the hub, setup screens, questions and the end
+   One self-contained object so nothing clashes with the rest of the app's code (which has its own
+   shuffle/toHiragana…; the old reviews were removed on 2026-10-08, only Review Kana / Katakana
+   Words still use the old engine). One screen, #nrev: the hub, setup screens, questions and the end
    screen all render into #nrev-app. Screen rules: REVIEW_DESIGN §3b. Everything is derived at
    runtime from VOCAB / SKGS / POS_TAGS / SAME_MEANING, so a .bat run updates the reviews too.
    Progress (JPStore): 'set:format' · 'deck:<mode>' {order,pos,round,pending} · 'deck:kmean'
