@@ -177,6 +177,43 @@ thead th{text-align:center !important;}
 #nrev .nr-end p{margin:0;color:var(--text-dim);font-size:15px;}
 #nrev .nr-btns{display:flex;flex-direction:column;gap:8px;width:100%;margin-top:28px;}
 @media (prefers-reduced-motion:reduce){#nrev .nr-bar i{transition:none;}}
+/* kanji modes */
+#nrev .nr-word-en{font-family:var(--font-ui);font-size:26px;font-weight:400;}
+#nrev .nr-kopts{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+#nrev .nr-opt-kanji{justify-content:center;position:relative;font-size:38px;padding:16px 8px;}
+#nrev .nr-opt-kanji .nr-k{position:absolute;left:12px;top:10px;}
+#nrev .nr-krgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+#nrev .nr-kr{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:13px 6px;text-align:center;
+  cursor:pointer;font-family:var(--font-ui);font-size:17px;color:var(--text);}
+#nrev .nr-kr.sel{border-color:var(--text);background:var(--surface2);}
+#nrev .nr-kr.right{border-color:var(--pass-text);color:var(--pass-text);background:rgba(74,240,128,0.08);}
+#nrev .nr-kr.wrong{border-color:var(--fail-text);color:var(--fail-text);background:rgba(240,74,74,0.08);}
+#nrev .nr-kr.missed{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,0.08);}
+#nrev .nr-kr:disabled{cursor:default;}
+/* conjugation: the block above the answer box has a fixed height (§3b) */
+#nrev .nr-cj-mean{text-align:center;font-size:15px;line-height:22px;height:22px;color:var(--text-dim);margin-bottom:6px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#nrev .nr-cj-tags{display:flex;flex-wrap:nowrap;gap:6px;justify-content:center;height:22px;overflow:hidden;margin-bottom:6px;}
+#nrev .nr-etag{font-size:11px;line-height:16px;letter-spacing:.1em;border:1px solid;border-radius:3px;padding:2px 6px;white-space:nowrap;flex:none;}
+#nrev .nr-cj-hint{display:block;height:22px;line-height:22px;padding:0;margin:0 auto 4px;border:0;background:transparent;
+  color:var(--text-dim);font-family:var(--font-ui);font-size:15px;cursor:pointer;filter:blur(6px);}
+#nrev .nr-cj-hint.revealed{filter:none;}
+#nrev .nr-cj-hint-space{height:22px;margin-bottom:4px;}
+#nrev #nr-textra:not(:empty) + .nr-reveal{min-height:34px;margin-bottom:8px;}
+@media (max-width:480px){#nrev .nr-cj-tags{gap:4px;}#nrev .nr-etag{letter-spacing:.02em;padding:2px 4px;}}
+/* tough lists */
+#nrev .nr-links{display:flex;flex-direction:column;align-items:flex-start;gap:2px;margin-top:14px;}
+#nrev .nr-link{background:none;border:0;padding:6px 0;color:var(--text-dim);font-family:var(--font-ui);font-size:13px;cursor:pointer;
+  text-decoration:underline;text-underline-offset:3px;}
+#nrev .nr-link:hover{color:var(--text);}
+#nrev .nr-tough{display:flex;flex-direction:column;gap:6px;margin-top:8px;}
+#nrev .nr-tough-row{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:baseline;background:var(--surface);
+  border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;}
+#nrev .nr-tough-w{font-size:19px;}
+#nrev .nr-tough-w2{font-size:13px;}
+#nrev .nr-tough-m{font-size:13px;color:var(--text-dim);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+#nrev .nr-tough-x{font-family:var(--font-num);font-size:13px;color:var(--fail-text);}
+#nrev .nr-empty{font-size:13px;color:var(--text-dim);margin:0;}
 #app-settings .as-panel{width:100%;max-width:380px;margin-top:12vh;background:var(--surface);
   border:1px solid var(--border);border-radius:var(--r);padding:24px;}
 .as-title{font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--text);
@@ -1830,14 +1867,14 @@ body.gr-reading #gr-top-btn{display:flex;}
     <div class="home-divider">Review</div>
     <button class="btn-primary" onclick="goTo('kana-picker','review-kana')">Review Kana</button>
     <button class="btn-primary" onclick="goTo('katakana-picker')">Review Katakana Words</button>
-    <button class="btn-primary" onclick="goTo('skg-picker','review-kanji')">Review Kanji</button>
-    <button class="btn-primary" onclick="goTo('nrev')">Review Vocab</button>
-    <button class="btn-primary" onclick="goTo('conj-picker')">Review Conjugation</button>
+    <button class="btn-primary" onclick="NR.go('kanji')">Review Kanji</button>
+    <button class="btn-primary" onclick="NR.go('vocab')">Review Vocab</button>
+    <button class="btn-primary" onclick="NR.go('conj')">Review Conjugation</button>
   </div>
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-10-08 20:24 · v129</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-10-08 20:41 · v131</div>
 </div>
 
 <!-- NEW REVIEWS (REVIEW_DESIGN.md): hub, setup screens, questions and end screen all render into #nrev-app -->
@@ -42026,14 +42063,16 @@ function saveGhKey() {
   el.value = '';
 }
 
-/* ---- NEW REVIEWS (REVIEW_DESIGN.md) — stage 1: the vocab modes ----
+/* ---- NEW REVIEWS (REVIEW_DESIGN.md) — vocab, kanji and conjugation modes ----
    One self-contained object so nothing clashes with the old review code (which has its own
    shuffle/conjugate/toHiragana…). One screen, #nrev: the hub, setup screens, questions and the end
    screen all render into #nrev-app. Screen rules: REVIEW_DESIGN §3b. Everything is derived at
    runtime from VOCAB / SKGS / POS_TAGS / SAME_MEANING, so a .bat run updates the reviews too.
-   Progress (JPStore): 'set:format' · 'deck:<mode>' {order,pos,round} · 'skg:round' {n,sets,done} ·
-   'pos:sel' {tiles,size}. A deck / One SKG item only moves on when a session is fully answered,
-   so an interrupted session comes back unchanged. */
+   Progress (JPStore): 'set:format' · 'deck:<mode>' {order,pos,round,pending} · 'deck:kmean'
+   {left,known,round,pending} · 'skg:round' {n,sets,done} · 'pos:sel' · 'conj:sel' · 'tough:<list>'
+   ({id:{x,s}} for tricky/kmean/kread, {combo:"1101…"} for conj) · 'conj:toughView'.
+   A deck / One SKG item only moves on when a session is fully answered; an interrupted session
+   comes back unchanged (the dealt session is stored as 'pending'). */
 const NR = (function() {
   'use strict';
   // ───────── small helpers ─────────
@@ -42271,7 +42310,25 @@ const NR = (function() {
       const all = []; VOCAB[k].rgs.forEach(g => g.vocab.forEach(x => all.push(x.word)));
       if (all.length === 1 && W[all[0]] && !SINGLE.includes(all[0])) SINGLE.push(all[0]);
     }
-    return { K, W, SETS, SET_OF, SET_KANJI, ALL_READINGS, HARD, MANY, TRICKY, TBASE, IRX, LONG, SAME, SINGLE };
+    // kanji (§6b) — from the KANJI list; look-alike sets from its SKG column
+    const KJ_BY = {}, KJ_SET = {}, KJ_ALL = [];
+    for (const x of KANJI) {
+      if (!x.kanji || KJ_BY[x.kanji]) continue;
+      const s = String(x.skg || '').replace('SKG ', '');
+      KJ_BY[x.kanji] = { k: x.kanji, m: String(x.meaning || '').trim(), s };
+      (KJ_SET[s] = KJ_SET[s] || []).push(x.kanji);
+      KJ_ALL.push(x.kanji);
+    }
+    const KR_KANJI = KJ_ALL.filter(k => (K[k] || []).length);
+    // conjugation words (§6c): verbs and adjectives by their first POS tag (same list as the old review)
+    const CJ = [], seenCj = new Set(IRRS.map(x => x.word));
+    for (const k in VOCAB) for (const g of VOCAB[k].rgs) for (const x of g.vocab) {
+      const t = (POS_TAGS[x.word] || [])[0];
+      if (seenCj.has(x.word) || ['ru-verb', 'u-verb', 'u-verb-ru', 'suru-verb', 'i-adj', 'na-adj'].indexOf(t) < 0) continue;
+      seenCj.add(x.word);
+      CJ.push({ word: x.word, reading: String(x.reading).split('|')[0].trim(), meaning: x.meaning, pos: t, rgReading: g.rg_reading || '' });
+    }
+    return { K, W, SETS, SET_OF, SET_KANJI, ALL_READINGS, HARD, MANY, TRICKY, TBASE, IRX, LONG, SAME, SINGLE, KJ_BY, KJ_SET, KJ_ALL, KR_KANJI, CJ };
   }
   const JP_RUN = /[぀-ヿ㐀-鿿ｦ-ﾟ々〜～・「」『』、。]+/g;
   function noteBody(line, word) {
@@ -42385,20 +42442,53 @@ const NR = (function() {
   // moves on only when a session is fully answered, so an interrupted session comes back
   function dealDeck(name, pool, n) {
     const key = 'deck:' + name, have = new Set(pool);
-    let d = sget(key, null), changed = false;
-    if (!d || !Array.isArray(d.order)) { d = { order: shuffle(pool.slice()), pos: 0, round: 1 }; changed = true; }
+    let d = sget(key, null);
+    if (d && d.pending && Array.isArray(d.pending.items) && d.pending.items.length && d.pending.items.every(x => have.has(x)))
+      return { items: d.pending.items, commit: () => sset(key, d.pending.next) };      // the unfinished session, unchanged
+    if (!d || !Array.isArray(d.order)) d = { order: shuffle(pool.slice()), pos: 0, round: 1 };
     const dealt = d.order.slice(0, d.pos).filter(x => have.has(x));
-    let rest = d.order.slice(d.pos).filter(x => have.has(x));
+    const rest = d.order.slice(d.pos).filter(x => have.has(x));
     const known = new Set(dealt.concat(rest));
-    pool.forEach(x => { if (!known.has(x)) { rest.splice(rnd(rest.length + 1), 0, x); changed = true; } });   // new words join the undealt part
-    if (dealt.length + rest.length !== d.order.length || changed) { d = { order: dealt.concat(rest), pos: dealt.length, round: d.round || 1 }; sset(key, d); }
+    pool.forEach(x => { if (!known.has(x)) rest.splice(rnd(rest.length + 1), 0, x); });   // new words join the undealt part
+    d = { order: dealt.concat(rest), pos: dealt.length, round: d.round || 1 };
     let take = rest.slice(0, n), next = { order: d.order, pos: d.pos + take.length, round: d.round };
     if (take.length < n && pool.length > take.length) {              // end of round: top up from the next one
       const fresh = shuffle(pool.filter(x => !take.includes(x))), extra = fresh.slice(0, n - take.length);
-      next = { order: extra.concat(fresh.slice(extra.length)).concat(take), pos: extra.length, round: (d.round || 1) + 1 };
+      next = { order: extra.concat(fresh.slice(extra.length)).concat(take), pos: extra.length, round: d.round + 1 };
       take = take.concat(extra);
-    } else if (next.pos >= next.order.length) next = { order: shuffle(pool.slice()), pos: 0, round: (d.round || 1) + 1 };
-    return { items: take, commit: () => sset(key, next), round: d.round || 1, left: rest.length };
+    } else if (next.pos >= next.order.length) next = { order: shuffle(pool.slice()), pos: 0, round: d.round + 1 };
+    sset(key, Object.assign({}, d, { pending: { items: take, next } }));
+    return { items: take, commit: () => sset(key, next) };
+  }
+
+  // Kanji meaning (§6b) — dual-card deck: every kanji has a kanji→meaning card (k>) and a meaning→kanji
+  // card (k<). A session = 15 + 15 cards of 30 different kanji (a kanji's two cards are never in the same
+  // session). A round ends when every card is done; then all return, freshly shuffled — a session at the
+  // end of a round is topped up from the next round, and a leftover card whose twin is in it waits.
+  function dealKanjiMeaning() {
+    const all = data().KJ_ALL, key = 'deck:kmean', haveK = new Set(all);
+    const cardsOf = ks => [].concat.apply([], ks.map(k => [k + '>', k + '<']));
+    let d = sget(key, null);
+    if (d && d.pending && Array.isArray(d.pending.items) && d.pending.items.length && d.pending.items.every(c => haveK.has(c.slice(0, -1))))
+      return { items: d.pending.items, commit: () => sset(key, d.pending.next) };
+    if (!d || !Array.isArray(d.left)) d = { left: shuffle(cardsOf(all)), known: all.join(''), round: 1 };
+    const known = new Set(Array.from(d.known || ''));
+    const left = d.left.filter(c => haveK.has(c.slice(0, -1)));
+    all.forEach(k => { if (!known.has(k)) [k + '>', k + '<'].forEach(c => left.splice(rnd(left.length + 1), 0, c)); });   // new kanji join this round
+    const pick = [], used = new Set(), cnt = { '>': 0, '<': 0 };
+    const fill = list => { for (const c of list) { if (pick.length >= 30) break; const k = c.slice(0, -1), dir = c.slice(-1); if (used.has(k) || cnt[dir] >= 15) continue; pick.push(c); used.add(k); cnt[dir]++; } };
+    fill(left);
+    let rest = left.filter(c => !pick.includes(c)), round = d.round || 1;
+    if (pick.length < 30) {
+      const restSet = new Set(rest), fresh = shuffle(cardsOf(all)).filter(c => !restSet.has(c)), before = pick.length;
+      fill(fresh);
+      const taken = new Set(pick.slice(before));
+      rest = rest.concat(fresh.filter(c => !taken.has(c)));
+      round += 1;
+    }
+    const next = { left: rest, known: all.join(''), round };
+    sset(key, { left, known: all.join(''), round: d.round || 1, pending: { items: pick, next } });
+    return { items: pick, commit: () => sset(key, next) };
   }
 
   // ───────── One SKG (§5.2): pieces, rounds, scoreboard ─────────
@@ -42445,31 +42535,44 @@ const NR = (function() {
 
   const MODES = {
     many:   { name: 'Many-reading', desc: 'The right reading of the hardest kanji — the ones with 4+ readings.', pool: () => data().MANY, opts: w => manyOptions(w) },
-    tricky: { name: 'Tricky readings', desc: 'Sound changes (花火 はなび, 学校 がっこう) and irregular words (今日, 大人).', pool: () => Object.keys(data().TRICKY), opts: w => trickyOptions(w) },
+    tricky: { name: 'Tricky readings', desc: 'Sound changes (花火 はなび, 学校 がっこう) and irregular words (今日, 大人).', pool: () => Object.keys(data().TRICKY), opts: w => trickyOptions(w), tough: 'tricky' },
     long:   { name: 'Long words', desc: 'Words with 3+ kanji — pick the reading one kanji at a time.', pool: () => data().LONG, how: 'Piece by piece', chooseOnly: true },
     same:   { name: 'Same meaning', desc: 'Same meaning, different kanji — type the reading, then choose the meaning.', pool: () => data().SAME.reduce((a, g) => a.concat(g[1].map(x => g[0] + '|' + x[0])), []), how: 'Type + choose' },
     single: { name: '1 kanji – 1 vocab', desc: 'Every kanji that has only one word — all of them, reading then meaning.', pool: () => data().SINGLE, how: 'Type only', typeOnly: true, all: true },
+    kmean:  { name: 'Kanji meaning', desc: 'See the kanji → choose its meaning (15), then see the meaning → choose the kanji (15). The wrong options are look-alike kanji.', pool: () => data().KJ_ALL, size: 30, how: 'Tap to choose', chooseOnly: true, unit: 'kanji right', tough: 'kmean', noun: 'kanji' },
+    kread:  { name: 'Kanji readings', desc: 'Tap every reading of the kanji (6–12 tiles), then Confirm.', pool: () => data().KR_KANJI, size: 30, how: 'Tap every reading', chooseOnly: true, unit: 'kanji right', tough: 'kread', noun: 'kanji' },
   };
   const SESSION = 25;
 
-  function hub() {
-    S = null; view = 'hub'; setReviewing(false);
-    const f = fmt(), r = ensureRound(), pieces = pieceList(r), done = pieces.filter(p => r.done[p.id]).length;
-    const next = pieces.find(p => !r.done[p.id]);
-    const card = key => {
-      // a mode that can't be answered the selected way is greyed out: choose-only in Type, type-only in Choose
-      const m = MODES[key], n = m.pool().length, off = (m.chooseOnly && f === 'type') || (m.typeOnly && f === 'choose');
-      return `<button class="nr-card" data-mode="${key}"${off ? ' disabled' : ''}><b>${m.name}</b><span class="nr-d">${esc(m.desc)}</span>
-        <span class="nr-t">${n} words · ${m.all ? 'all' : SESSION} per session · ${m.how || 'Choose or Type'}${m.chooseOnly ? ' · Choose only' : ''}</span></button>`;
-    };
-    root.innerHTML = `<div class="nr-wrap">
-      <h1 class="nr-h1">Review</h1>
-      <div class="nr-label">How you answer</div>
+  let section = 'vocab';                          // which home button opened Review: vocab · kanji · conj
+  function hub() { if (section === 'conj') return conjSetup(); if (section === 'kanji') return kanjiHub(); vocabHub(); }
+  // a mode that can't be answered the selected way is greyed out: choose-only in Type, type-only in Choose
+  function modeCard(key, f) {
+    const m = MODES[key], n = m.pool().length, off = (m.chooseOnly && f === 'type') || (m.typeOnly && f === 'choose');
+    return `<button class="nr-card" data-mode="${key}"${off ? ' disabled' : ''}><b>${m.name}</b><span class="nr-d">${esc(m.desc)}</span>
+      <span class="nr-t">${n} ${m.noun || 'words'} · ${m.all ? 'all' : (m.size || SESSION)} per session · ${m.how || 'Choose or Type'}${m.chooseOnly ? ' · Choose only' : ''}</span></button>`;
+  }
+  function fmtSwitch(f, hint) {
+    return `<div class="nr-label">How you answer</div>
       <div class="nr-seg" role="group" aria-label="How you answer">
         <button id="nr-fmt-choose" aria-pressed="${f === 'choose'}">Choose</button>
         <button id="nr-fmt-type" aria-pressed="${f === 'type'}">Type</button>
       </div>
-      <p class="nr-hint">${f === 'choose' ? 'Pick the reading from 4 options. The meaning is shown after.' : 'Type the reading (romaji turns into kana), then the meaning.'} Applies to every mode that offers both.</p>
+      <p class="nr-hint">${hint}</p>`;
+  }
+  function bindHub(render) {
+    $('#nr-fmt-choose').onclick = () => { setFmt('choose'); render(); };
+    $('#nr-fmt-type').onclick = () => { setFmt('type'); render(); };
+    $$('[data-mode]').forEach(b => b.onclick = () => startMode(b.dataset.mode));
+    $$('[data-tough]').forEach(b => b.onclick = () => toughView(b.dataset.tough));
+  }
+  function vocabHub() {
+    S = null; view = 'hub'; setReviewing(false);
+    const f = fmt(), r = ensureRound(), pieces = pieceList(r), done = pieces.filter(p => r.done[p.id]).length;
+    const next = pieces.find(p => !r.done[p.id]);
+    root.innerHTML = `<div class="nr-wrap">
+      <h1 class="nr-h1">Review Vocab</h1>
+      ${fmtSwitch(f, (f === 'choose' ? 'Pick the reading from 4 options. The meaning is shown after.' : 'Type the reading (romaji turns into kana), then the meaning.') + ' Applies to every mode that offers both.')}
       <div class="nr-section">One SKG</div>
       <div class="nr-skg">
         <div class="nr-skg-top"><b>One SKG</b><span class="nr-round">Round ${r.n} · ${done} / ${pieces.length}</span></div>
@@ -42478,17 +42581,55 @@ const NR = (function() {
         <div class="nr-row"><button class="nr-btn" id="nr-select">Select</button><button class="nr-btn" id="nr-random">Random</button></div>
       </div>
       <div class="nr-section">Special modes</div>
-      <div class="nr-modes">${['many', 'tricky', 'long', 'same', 'single'].map(card).join('')}
+      <div class="nr-modes">${['many', 'tricky', 'long', 'same', 'single'].map(k => modeCard(k, f)).join('')}
         <button class="nr-card" id="nr-pos-card"${f === 'choose' ? ' disabled' : ''}><b>Part of speech</b><span class="nr-d">Pick word types with tiles — nouns, verbs by group, adjectives…</span><span class="nr-t">30+ per session · Type only</span></button>
       </div>
+      <div class="nr-links"><button class="nr-link" data-tough="tricky">Tough words · Tricky readings (${toughCount('tricky')})</button></div>
     </div>`;
-    $('#nr-fmt-choose').onclick = () => { setFmt('choose'); hub(); };
-    $('#nr-fmt-type').onclick = () => { setFmt('type'); hub(); };
+    bindHub(vocabHub);
     $('#nr-continue').onclick = () => { if (next) startPiece(next, true); };
     $('#nr-select').onclick = selectView;
     $('#nr-random').onclick = () => startPiece(pieces[rnd(pieces.length)], false);
-    $$('[data-mode]').forEach(b => b.onclick = () => startMode(b.dataset.mode));
     $('#nr-pos-card').onclick = posSetup;
+  }
+  function kanjiHub() {
+    S = null; view = 'hub'; setReviewing(false);
+    const f = fmt();
+    root.innerHTML = `<div class="nr-wrap">
+      <h1 class="nr-h1">Review Kanji</h1>
+      ${fmtSwitch(f, 'Both kanji modes are answered by tapping, so they are greyed out while Type is selected.')}
+      <div class="nr-section">Kanji modes</div>
+      <div class="nr-modes">${['kmean', 'kread'].map(k => modeCard(k, f)).join('')}</div>
+      <div class="nr-links">
+        <button class="nr-link" data-tough="kmean">Tough kanji · Kanji meaning (${toughCount('kmean')})</button>
+        <button class="nr-link" data-tough="kread">Tough kanji · Kanji readings (${toughCount('kread')})</button>
+      </div>
+    </div>`;
+    bindHub(kanjiHub);
+  }
+
+  // ───────── tough lists (§5.1 vocab: Tricky readings; §6b: one per kanji mode): an item joins the
+  // moment it's answered wrong, worst at the top with its ✗ count, and leaves after 2 right answers in
+  // a row (its count resets) ─────────
+  function toughMark(list, id, ok) {
+    const key = 'tough:' + list, t = sget(key, {});
+    if (ok) { if (!t[id]) return; t[id].s = (t[id].s || 0) + 1; if (t[id].s >= 2) delete t[id]; }
+    else t[id] = { x: ((t[id] && t[id].x) || 0) + 1, s: 0 };
+    sset(key, t);
+  }
+  const toughCount = list => Object.keys(sget('tough:' + list, {})).length;
+  function toughView(list) {
+    S = null; view = 'tough'; setReviewing(false);
+    const t = sget('tough:' + list, {}), ids = Object.keys(t).sort((a, b) => t[b].x - t[a].x), { W, K, KJ_BY } = data();
+    const title = { tricky: 'Tough words · Tricky readings', kmean: 'Tough kanji · Kanji meaning', kread: 'Tough kanji · Kanji readings' }[list];
+    const sub = id => list === 'tricky' ? (W[id] ? W[id].r[0] + ' · ' + showMeaning(W[id].m) : '')
+      : list === 'kread' ? (K[id] || []).map(x => x[0]).join(' · ') : (KJ_BY[id] ? KJ_BY[id].m : '');
+    root.innerHTML = `<div class="nr-wrap">
+      <h1 class="nr-h1">${esc(title)}</h1>
+      <p class="nr-sub">Joins the list the moment it's answered wrong, leaves after 2 right answers in a row. Worst at the top.</p>
+      <div class="nr-tough">${ids.length ? ids.map(id => `<div class="nr-tough-row"><span class="nr-tough-w" lang="ja">${esc(id)}</span><span class="nr-tough-m" lang="ja">${esc(sub(id))}</span><span class="nr-tough-x">✗${t[id].x}</span></div>`).join('') : '<p class="nr-empty">Nothing here yet.</p>'}</div>
+    </div>`;
+    scrollTop();
   }
 
   function selectView() {
@@ -42542,10 +42683,15 @@ const NR = (function() {
     const pool = m.pool();
     let queue, deck = null;
     if (m.all) queue = shuffle(pool.slice());
-    else { deck = dealDeck(key, pool, SESSION); queue = shuffle(deck.items.slice()); }
+    else if (key === 'kmean') {                      // the first 15 kanji → meaning, the next 15 meaning → kanji
+      deck = dealKanjiMeaning();
+      queue = shuffle(deck.items.filter(c => c.slice(-1) === '>')).concat(shuffle(deck.items.filter(c => c.slice(-1) === '<')))
+        .map(c => ({ k: c.slice(0, -1), dir: c.slice(-1) === '>' ? 'km' : 'mk' }));
+    } else { deck = dealDeck(key, pool, m.size || SESSION); queue = shuffle(deck.items.slice()); }
     if (key === 'same') { const map = {}; data().SAME.forEach((g, gi) => g[1].forEach((x, wi) => { map[g[0] + '|' + x[0]] = { g: gi, w: wi }; })); queue = queue.map(id => map[id]).filter(Boolean); }
     const format = m.typeOnly ? 'type' : f;
-    begin({ mode: key, label: m.name, format, how: (m.how || format).toUpperCase(), queue, opts: m.opts, onDone: () => { if (deck) deck.commit(); } });
+    begin({ mode: key, label: m.name, format, how: (m.how || format).toUpperCase(), queue, opts: m.opts, unit: m.unit || 'words right', tough: m.tough,
+      onDone: () => { if (deck) deck.commit(); } });
   }
 
   function frame(inner) {
@@ -42558,12 +42704,20 @@ const NR = (function() {
     if (S.i >= S.queue.length) return end();
     const item = S.queue[S.i];
     S.word = item; S.wordOk = true; S.keys = null;
+    if (S.mode === 'kmean') return askKanjiMeaning(item);
+    if (S.mode === 'kread') return askKanjiReading(item);
+    if (S.mode === 'conj') return S.format === 'choose' ? askConjChoose(item) : askConjType(item);
     if (S.mode === 'long') return askLong(item);
     if (S.mode === 'same') return askSame(item);
     if (S.format === 'choose') return askChoose(item);
     askReading(item);
   }
-  function next() { if (S.wordOk) S.right++; S.i++; question(); }
+  function next() {
+    if (S.tough) toughMark(S.tough, S.mode === 'kmean' ? S.word.k : S.word, S.wordOk);
+    if (S.mode === 'conj') conjRecord(S.word, S.wordOk);
+    if (S.wordOk) S.right++;
+    S.i++; question();
+  }
 
   // Choose (§6.1)
   function askChoose(word) {
@@ -42748,6 +42902,404 @@ const NR = (function() {
     S.keys = e => { if (!answered && /^[1-9]$/.test(e.key) && btns[+e.key - 1]) pick(btns[+e.key - 1]); };
   }
 
+  // ───────── Kanji meaning (§6b): 4 options from the kanji's look-alike set ─────────
+  // never a kanji with the same English meaning (林/森 are both "Forest"), so only one option is right;
+  // a small set is topped up with kanji from other sets
+  const sameKanjiMeaning = (a, b) => { const B = data().KJ_BY; return B[a].m.toLowerCase() === B[b].m.toLowerCase(); };
+  function lookAlikes(k) {
+    const { KJ_BY, KJ_SET, KJ_ALL } = data(), out = [];
+    const tryAdd = c => { if (out.length < 3 && c !== k && KJ_BY[c] && !out.includes(c) && !sameKanjiMeaning(c, k) && !out.some(o => sameKanjiMeaning(o, c))) out.push(c); };
+    shuffle((KJ_SET[KJ_BY[k].s] || []).slice()).forEach(tryAdd);
+    for (let t = 0; out.length < 3 && t < 500; t++) tryAdd(KJ_ALL[rnd(KJ_ALL.length)]);
+    return out;
+  }
+  function askKanjiMeaning(item) {
+    const { KJ_BY } = data(), me = KJ_BY[item.k], km = item.dir === 'km';
+    const opts = shuffle([item.k].concat(lookAlikes(item.k)));
+    frame(`<div class="nr-word${km ? '' : ' nr-word-en'}"${km ? ' lang="ja"' : ''}>${esc(km ? me.k : me.m)}</div>
+      <div class="nr-reveal" id="nr-reveal"></div>
+      <div class="nr-step">${km ? 'Meaning' : 'Kanji'}</div>
+      <div class="nr-opts${km ? '' : ' nr-kopts'}">${opts.map((c, n) => `<button class="nr-opt ${km ? 'nr-opt-text' : 'nr-opt-kanji'}" data-o="${esc(c)}"${km ? '' : ' lang="ja"'}><span class="nr-k">${n + 1}</span><span>${esc(km ? KJ_BY[c].m : c)}</span></button>`).join('')}</div>
+      <button class="nr-btn nr-btn-primary nr-next" id="nr-next" hidden>Next →</button>`);
+    const buttons = $$('.nr-opt');
+    let answered = false;
+    const pick = b => {
+      if (answered) return; answered = true;
+      S.wordOk = b.dataset.o === item.k;
+      buttons.forEach(x => { x.disabled = true; x.classList.add(x.dataset.o === item.k ? 'is-right' : x === b ? 'is-wrong' : 'dim'); });
+      $('#nr-next').hidden = false; $('#nr-next').focus({ preventScroll: true });
+    };
+    buttons.forEach(b => b.onclick = () => pick(b));
+    $('#nr-next').onclick = next;
+    S.keys = e => {
+      if (!answered && /^[1-4]$/.test(e.key) && buttons[+e.key - 1]) pick(buttons[+e.key - 1]);
+      else if (answered && e.key === 'Enter') { e.preventDefault(); next(); }
+    };
+  }
+
+  // ───────── Kanji readings (§6b): as the old mode — tap every reading, 6–12 tiles ─────────
+  // tapping is neutral; colours only after Confirm: green = right pick, red = wrong pick, gold = missed (§3b)
+  function krDistractors(correct, want) {
+    const bad = new Set(correct), lens = correct.map(r => r.length);
+    const score = r => {
+      let sc = Math.min.apply(null, lens.map(L => Math.abs(r.length - L))) * 10;
+      if (correct.some(c => c[0] === r[0])) sc -= 4;
+      if (correct.some(c => c[c.length - 1] === r[r.length - 1])) sc -= 2;
+      return sc;
+    };
+    return data().ALL_READINGS.filter(r => !bad.has(r)).map(r => ({ r, sc: score(r) + Math.random() * 3 }))
+      .sort((a, b) => a.sc - b.sc).slice(0, want).map(x => x.r);
+  }
+  function askKanjiReading(k) {
+    const { K, KJ_BY } = data(), correct = Array.from(new Set((K[k] || []).map(x => x[0])));
+    const total = Math.max(6, Math.min(12, correct.length * 2));
+    const opts = shuffle(correct.concat(krDistractors(correct, total - correct.length)));
+    frame(`<div class="nr-word" lang="ja">${esc(k)}</div>
+      <div class="nr-reveal" id="nr-reveal"></div>
+      <div class="nr-step">Tap every reading</div>
+      <div class="nr-krgrid">${opts.map(r => `<button class="nr-kr" data-r="${esc(r)}" lang="ja">${esc(r)}</button>`).join('')}</div>
+      <button class="nr-btn nr-btn-primary nr-check" id="nr-kr-go">Confirm</button>
+      <div class="nr-nudge" id="nr-nudge"></div>`);
+    const tiles = $$('.nr-kr');
+    let done = false;
+    tiles.forEach(t => t.onclick = () => { if (!done) { t.classList.toggle('sel'); $('#nr-nudge').textContent = ''; } });
+    const confirm = () => {
+      if (done) return next();
+      const picked = tiles.filter(t => t.classList.contains('sel')).map(t => t.dataset.r);
+      if (!picked.length) { $('#nr-nudge').textContent = 'Pick at least one reading'; return; }
+      const set = new Set(correct);
+      S.wordOk = picked.length === set.size && picked.every(r => set.has(r));
+      tiles.forEach(t => {
+        const isC = set.has(t.dataset.r), sel = t.classList.contains('sel');
+        t.classList.remove('sel'); t.disabled = true;
+        if (isC && sel) t.classList.add('right'); else if (!isC && sel) t.classList.add('wrong'); else if (isC) t.classList.add('missed');
+      });
+      $('#nr-reveal').innerHTML = `<div class="nr-rd ok fix" lang="ja">${esc(correct.join(' · '))}</div><div class="nr-mn">${esc(KJ_BY[k] ? KJ_BY[k].m : '')}</div>`;
+      $('#nr-kr-go').textContent = 'Next →'; done = true;
+    };
+    $('#nr-kr-go').onclick = confirm;
+    S.keys = e => { if (e.key === 'Enter') { e.preventDefault(); confirm(); } };
+  }
+
+  // ───────── Conjugation (§6c) ─────────
+  // conjugate / conjugateAlts / conjStem come from the old review (index.html, unchanged), with ONE
+  // change: な-adj polite negatives follow the conjugation table — 静かじゃないです / 静かじゃなかったです
+  // is the main answer; ではありません… and じゃありません… are right too
+  const IRRS = [
+    { word: 'する', reading: 'する', meaning: 'To do', pos: 'irregular' },
+    { word: 'くる', reading: 'くる', meaning: 'To come', pos: 'irregular' },
+    { word: 'いく', reading: 'いく', meaning: 'To go', pos: 'irregular' },
+    { word: 'ある', reading: 'ある', meaning: 'To exist (inanimate)', pos: 'irregular' },
+    { word: 'いる', reading: 'いる', meaning: 'To exist (animate)', pos: 'irregular' },
+  ];
+  function conjugate(reading, pos, form, formality) {
+    const IRR = {
+      'する': { plain: { pa: 'する', pn: 'しない', ta: 'した', tn: 'しなかった' }, polite: { pa: 'します', pn: 'しません', ta: 'しました', tn: 'しませんでした' } },
+      'くる': { plain: { pa: 'くる', pn: 'こない', ta: 'きた', tn: 'こなかった' }, polite: { pa: 'きます', pn: 'きません', ta: 'きました', tn: 'きませんでした' } },
+      'いく': { plain: { pa: 'いく', pn: 'いかない', ta: 'いった', tn: 'いかなかった' }, polite: { pa: 'いきます', pn: 'いきません', ta: 'いきました', tn: 'いきませんでした' } },
+      'ある': { plain: { pa: 'ある', pn: 'ない', ta: 'あった', tn: 'なかった' }, polite: { pa: 'あります', pn: 'ありません', ta: 'ありました', tn: 'ありませんでした' } },
+      'いる': { plain: { pa: 'いる', pn: 'いない', ta: 'いた', tn: 'いなかった' }, polite: { pa: 'います', pn: 'いません', ta: 'いました', tn: 'いませんでした' } },
+    };
+    if (form === 'te') {
+      const TE = { 'する': 'して', 'くる': 'きて', 'いく': 'いって', 'ある': 'あって', 'いる': 'いて' };
+      if (TE[reading]) return TE[reading];
+      if (pos === 'suru-verb') return reading.slice(0, -2) + 'して';
+      if (pos === 'ru-verb') return reading.slice(0, -1) + 'て';
+      if (pos === 'u-verb' || pos === 'u-verb-ru') {
+        const TF = { 'う': 'って', 'く': 'いて', 'ぐ': 'いで', 'す': 'して', 'つ': 'って', 'ぬ': 'んで', 'ぶ': 'んで', 'む': 'んで', 'る': 'って' };
+        return reading.slice(0, -1) + (TF[reading.slice(-1)] || 'て');
+      }
+      if (pos === 'i-adj') return (reading === 'いい' ? 'よ' : reading.slice(0, -1)) + 'くて';
+      if (pos === 'na-adj') return reading + 'で';
+      return null;
+    }
+    const fkey = { 'present-aff': 'pa', 'present-neg': 'pn', 'past-aff': 'ta', 'past-neg': 'tn' }[form];
+    if (IRR[reading]) return IRR[reading][formality][fkey];
+    if (pos === 'suru-verb') return reading.slice(0, -2) + IRR['する'][formality][fkey];
+    if (pos === 'ru-verb') {
+      const stem = reading.slice(0, -1);
+      return { plain: { 'present-aff': reading, 'present-neg': stem + 'ない', 'past-aff': stem + 'た', 'past-neg': stem + 'なかった' },
+        polite: { 'present-aff': stem + 'ます', 'present-neg': stem + 'ません', 'past-aff': stem + 'ました', 'past-neg': stem + 'ませんでした' } }[formality][form];
+    }
+    if (pos === 'u-verb' || pos === 'u-verb-ru') {
+      const end = reading.slice(-1), base = reading.slice(0, -1);
+      const MS = { 'う': 'い', 'く': 'き', 'ぐ': 'ぎ', 'す': 'し', 'つ': 'ち', 'ぬ': 'に', 'ぶ': 'び', 'む': 'み', 'る': 'り' };
+      const NS = { 'う': 'わ', 'く': 'か', 'ぐ': 'が', 'す': 'さ', 'つ': 'た', 'ぬ': 'な', 'ぶ': 'ば', 'む': 'ま', 'る': 'ら' };
+      const PS = { 'う': 'った', 'く': 'いた', 'ぐ': 'いだ', 'す': 'した', 'つ': 'った', 'ぬ': 'んだ', 'ぶ': 'んだ', 'む': 'んだ', 'る': 'った' };
+      const ms = base + (MS[end] || ''), ns = base + (NS[end] || ''), ps = base + (PS[end] || '');
+      if (formality === 'plain') return { 'present-aff': reading, 'present-neg': ns + 'ない', 'past-aff': ps, 'past-neg': ns + 'なかった' }[form];
+      return { 'present-aff': ms + 'ます', 'present-neg': ms + 'ません', 'past-aff': ms + 'ました', 'past-neg': ms + 'ませんでした' }[form];
+    }
+    if (pos === 'i-adj') {
+      const stem = reading === 'いい' ? 'よ' : reading.slice(0, -1);
+      if (formality === 'plain') return { 'present-aff': reading, 'present-neg': stem + 'くない', 'past-aff': stem + 'かった', 'past-neg': stem + 'くなかった' }[form];
+      return { 'present-aff': reading + 'です', 'present-neg': stem + 'くないです', 'past-aff': stem + 'かったです', 'past-neg': stem + 'くなかったです' }[form];
+    }
+    if (pos === 'na-adj') {
+      if (formality === 'plain') return { 'present-aff': reading + 'だ', 'present-neg': reading + 'じゃない', 'past-aff': reading + 'だった', 'past-neg': reading + 'じゃなかった' }[form];
+      return { 'present-aff': reading + 'です', 'present-neg': reading + 'じゃないです', 'past-aff': reading + 'でした', 'past-neg': reading + 'じゃなかったです' }[form];
+    }
+    return null;
+  }
+  function conjugateAlts(reading, pos, form, formality) {
+    const primary = conjugate(reading, pos, form, formality), alts = primary ? [primary] : [];
+    if (pos === 'i-adj' && formality === 'polite') {
+      const stem = reading === 'いい' ? 'よ' : reading.slice(0, -1);
+      if (form === 'present-neg') alts.push(stem + 'くありません');
+      if (form === 'past-neg') alts.push(stem + 'くありませんでした');
+    }
+    if (pos === 'na-adj') {
+      if (form === 'present-neg') alts.push.apply(alts, formality === 'plain' ? [reading + 'ではない'] : [reading + 'ではありません', reading + 'じゃありません']);
+      if (form === 'past-neg') alts.push.apply(alts, formality === 'plain' ? [reading + 'ではなかった'] : [reading + 'ではありませんでした', reading + 'じゃありませんでした']);
+    }
+    return alts;
+  }
+  // the two forms the conjugation table teaches for adjective polite negatives (shown after a mistake)
+  function conjShown(item) {
+    const { reading, pos } = item.w, f = item.f, r = item.r, first = conjugate(reading, pos, f, r || 'plain');
+    if (r === 'polite' && (f === 'present-neg' || f === 'past-neg')) {
+      if (pos === 'i-adj') return [first, (reading === 'いい' ? 'よ' : reading.slice(0, -1)) + (f === 'present-neg' ? 'くありません' : 'くありませんでした')];
+      if (pos === 'na-adj') return [first, reading + (f === 'present-neg' ? 'ではありません' : 'ではありませんでした')];
+    }
+    return [first];
+  }
+  function conjStem(w) {                     // the reading of the word's kanji part: 楽しむ → たの, 心配する → しんぱい
+    const m = (w.word || '').match(/[ぁ-ゟァ-ヿー]+$/), okuri = m ? m[0] : '', reading = w.reading || '';
+    if (okuri && reading.length > okuri.length && reading.endsWith(okuri)) return reading.slice(0, reading.length - okuri.length);
+    return w.rgReading || '';
+  }
+
+  const CTYPES = [
+    ['ru', 'る-verb', w => w.pos === 'ru-verb'],
+    ['u-all', 'All う-verbs', w => w.pos === 'u-verb' || w.pos === 'u-verb-ru'],
+    ['u_tsu_ru', 'う・つ・る', w => w.pos === 'u-verb-ru' || (w.pos === 'u-verb' && 'うつ'.includes(w.reading.slice(-1)))],
+    ['mu_bu_nu', 'む・ぶ・ぬ', w => w.pos === 'u-verb' && 'むぶぬ'.includes(w.reading.slice(-1))],
+    ['ku', 'く', w => w.pos === 'u-verb' && w.reading.slice(-1) === 'く'],
+    ['gu', 'ぐ', w => w.pos === 'u-verb' && w.reading.slice(-1) === 'ぐ'],
+    ['su', 'す', w => w.pos === 'u-verb' && w.reading.slice(-1) === 'す'],
+    ['suru', 'する-verb', w => w.pos === 'suru-verb'],
+    ['irregular', 'Irregular', null],
+    ['i-adj', 'い-adj', w => w.pos === 'i-adj'],
+    ['na-adj', 'な-adj', w => w.pos === 'na-adj'],
+  ];
+  const CFORMS = [['present-aff', 'Present affirmative'], ['present-neg', 'Present negative'], ['past-aff', 'Past affirmative'], ['past-neg', 'Past negative'], ['te', 'て-form']];
+  const CREGS = [['plain', 'Plain'], ['polite', 'Polite']];
+  const conjPool = t => t === 'irregular' ? IRRS : data().CJ.filter(CTYPES.find(x => x[0] === t)[2]);
+  const conjSel = () => sget('conj:sel', null) || { types: ['ru'], forms: ['past-neg'], regs: ['plain', 'polite'], size: 30 };
+  const conjMulti = sel => sel.types.length > 1 || sel.forms.length > 1 || sel.regs.length > 1;
+
+  // setup screen: three rows of tiles (remembered); 30 questions, + / − unlock once any row has 2+ tiles
+  function conjSetup() {
+    S = null; view = 'hub'; setReviewing(false);
+    const f = fmt(), sel = conjSel();
+    if (!conjMulti(sel)) sel.size = 30;
+    const ok = sel.types.length && sel.forms.length && sel.regs.length;
+    const row = (key, list) => list.map(([v, label]) => `<button class="nr-tile" data-row="${key}" data-v="${v}" aria-pressed="${sel[key].includes(v)}">${esc(label)}${key === 'types' ? `<small>${conjPool(v).length}</small>` : ''}</button>`).join('');
+    root.innerHTML = `<div class="nr-wrap">
+      <h1 class="nr-h1">Review Conjugation</h1>
+      ${fmtSwitch(f, f === 'choose' ? 'Pick the right form from 4 options.' : 'Type the form in kana. A blurred stem hint is there if you need it.')}
+      <div class="nr-label">Word types</div><div class="nr-tiles">${row('types', CTYPES)}</div>
+      <div class="nr-label">Forms</div><div class="nr-tiles">${row('forms', CFORMS)}</div>
+      <div class="nr-label">Register</div><div class="nr-tiles">${row('regs', CREGS)}</div>
+      <p class="nr-hint">Choose at least one in each row.${sel.forms.includes('te') ? '<br>Register is ignored for the て-form.' : ''}</p>
+      <div class="nr-label">Questions</div>
+      <div class="nr-sizer"><button class="nr-btn" id="nr-minus"${conjMulti(sel) && sel.size > 30 ? '' : ' disabled'} aria-label="5 fewer">−</button><span class="nr-size">${sel.size}</span><button class="nr-btn" id="nr-plus"${conjMulti(sel) ? '' : ' disabled'} aria-label="5 more">+</button></div>
+      <button class="nr-btn nr-btn-primary" id="nr-start"${ok ? '' : ' disabled'}>Start</button>
+      <div class="nr-links"><button class="nr-link" id="nr-tough-conj">Toughest conjugations (${conjToughList().length})</button></div>
+    </div>`;
+    $('#nr-fmt-choose').onclick = () => { setFmt('choose'); conjSetup(); };
+    $('#nr-fmt-type').onclick = () => { setFmt('type'); conjSetup(); };
+    $$('.nr-tile').forEach(b => b.onclick = () => {
+      const list = sel[b.dataset.row], i = list.indexOf(b.dataset.v);
+      if (i >= 0) list.splice(i, 1); else list.push(b.dataset.v);
+      sset('conj:sel', sel); conjSetup();
+    });
+    $('#nr-minus').onclick = () => { sel.size = Math.max(30, sel.size - 5); sset('conj:sel', sel); conjSetup(); };
+    $('#nr-plus').onclick = () => { sel.size += 5; sset('conj:sel', sel); conjSetup(); };
+    $('#nr-start').onclick = startConj;
+    $('#nr-tough-conj').onclick = conjToughView;
+    scrollTop();
+  }
+  // split evenly over every type × form × register combination (て-form has no register); a combination
+  // that runs out of words is topped up from the others; words are totally random each session
+  function conjSession(sel) {
+    const combos = [];
+    for (const t of sel.types) for (const f of sel.forms) {
+      if (f === 'te') combos.push([t, f, null]);
+      else for (const r of sel.regs) combos.push([t, f, r]);
+    }
+    shuffle(combos);
+    const base = Math.floor(sel.size / combos.length), extra = sel.size % combos.length;
+    const pools = combos.map(c => shuffle(conjPool(c[0]).slice())), items = [];
+    let short = 0;
+    combos.forEach((c, i) => {
+      const want = base + (i < extra ? 1 : 0), take = pools[i].splice(0, want);
+      take.forEach(w => items.push({ w, t: c[0], f: c[1], r: c[2] }));
+      short += want - take.length;
+    });
+    for (let guard = 0; short > 0 && guard < 5000; guard++) {
+      const i = pools.findIndex(p => p.length); if (i < 0) break;
+      items.push({ w: pools[i].shift(), t: combos[i][0], f: combos[i][1], r: combos[i][2] }); short--;
+    }
+    return shuffle(items);
+  }
+  function startConj() {
+    const sel = conjSel(), f = fmt();
+    if (!sel.types.length || !sel.forms.length || !sel.regs.length) return conjSetup();
+    if (!conjMulti(sel)) sel.size = 30;
+    begin({ mode: 'conj', label: 'Conjugation', format: f, how: f.toUpperCase(), queue: conjSession(sel), unit: 'right' });
+  }
+
+  const ETAG = (label, color) => `<span class="nr-etag" style="color:${color};border-color:${color}">${label}</span>`;
+  function conjTags(item) {
+    const p = item.w.pos;
+    const type = p === 'i-adj' ? ETAG('い-ADJ', '#5db89a') : p === 'na-adj' ? ETAG('な-ADJ', '#a07ed4')
+      : ETAG({ 'ru-verb': 'る-VERB', 'u-verb': 'う-VERB', 'u-verb-ru': 'う-VERB (る)', 'suru-verb': 'する-VERB', irregular: 'IRREGULAR' }[p] || 'VERB', '#c9a84c');
+    if (item.f === 'te') return type + ETAG('て-FORM', '#8080f0');
+    const [tense, pol] = item.f.split('-');
+    return type + (tense === 'present' ? ETAG('PRESENT', '#4060e0') : ETAG('PAST', '#e09080'))
+      + (pol === 'aff' ? ETAG('AFFIRMATIVE', '#4af080') : ETAG('NEGATIVE', '#f04a4a'))
+      + (item.r === 'plain' ? ETAG('PLAIN', '#c060c0') : ETAG('POLITE', '#a0a0a0'));
+  }
+  const conjAccepted = item => conjugateAlts(item.w.reading, item.w.pos, item.f, item.r || 'plain');
+  // Choose: real forms of the SAME word that differ in exactly one respect (tense, polarity or register);
+  // て-form and past plain (た-form) of verbs use "wrong-rule" endings instead (かいて ✓ · かいで · かって…);
+  // adjective polite negatives: the right option is randomly either table form, never both
+  function conjOptions(item) {
+    const { reading, pos } = item.w, f = item.f, r = item.r;
+    const shownForms = conjShown(item), variant = rnd(shownForms.length), correct = shownForms[variant];
+    const accepted = new Set(conjAccepted(item)), traps = [];
+    const add = x => { if (x && x !== correct && !accepted.has(x) && !traps.includes(x) && traps.length < 3) traps.push(x); };
+    const verb = pos !== 'i-adj' && pos !== 'na-adj';
+    if (verb && (f === 'te' || (f === 'past-aff' && r === 'plain'))) {
+      const te = f === 'te', base = reading.slice(0, -1);
+      if (reading.endsWith('る')) [base + (te ? 'て' : 'た'), base + (te ? 'って' : 'った')].forEach(add);   // the classic る mix-up first
+      shuffle((te ? ['って', 'んで', 'いて', 'いで', 'して', 'て'] : ['った', 'んだ', 'いた', 'いだ', 'した', 'た']).map(e => base + e)).forEach(add);
+    } else if (f === 'te') {
+      shuffle(['present-aff', 'past-aff', 'present-neg', 'past-neg']).forEach(ff => add(conjugate(reading, pos, ff, 'plain')));
+    } else {
+      const flipT = { 'present-aff': 'past-aff', 'past-aff': 'present-aff', 'present-neg': 'past-neg', 'past-neg': 'present-neg' }[f];
+      const flipP = { 'present-aff': 'present-neg', 'present-neg': 'present-aff', 'past-aff': 'past-neg', 'past-neg': 'past-aff' }[f];
+      const tForms = conjShown({ w: item.w, f: flipT, r });                       // same style as the right option
+      add(tForms[Math.min(variant, tForms.length - 1)]);
+      add(conjugate(reading, pos, flipP, r)); add(conjugate(reading, pos, f, r === 'plain' ? 'polite' : 'plain'));
+    }
+    for (const ff of ['present-aff', 'present-neg', 'past-aff', 'past-neg']) for (const rr of ['plain', 'polite']) add(conjugate(reading, pos, ff, rr));
+    return { opts: shuffle([correct].concat(traps)), correct };
+  }
+  // the block above the answer box has a FIXED height (meaning on one line, tags on one line, the hint
+  // line always reserved) so the box never moves between questions (§3b)
+  function conjHeader(item, withHint) {
+    const stem = withHint ? conjStem(item.w) : '';
+    return `<div class="nr-cj-mean">${esc(item.w.meaning)}</div>
+      <div class="nr-cj-tags">${conjTags(item)}</div>
+      ${stem ? `<button class="nr-cj-hint" id="nr-cj-hint" aria-label="Show stem hint">stem: <span lang="ja">${esc(stem)}</span></button>` : (withHint ? '<div class="nr-cj-hint-space"></div>' : '')}`;
+  }
+  function askConjChoose(item) {
+    const { opts, correct } = conjOptions(item);
+    frame(`<div class="nr-word" lang="ja">${esc(item.w.word)}</div>
+      ${conjHeader(item, false)}
+      <div class="nr-reveal" id="nr-reveal"></div>
+      <div class="nr-opts">${opts.map((o, n) => `<button class="nr-opt" data-o="${esc(o)}" lang="ja"><span class="nr-k">${n + 1}</span>${esc(o)}</button>`).join('')}</div>
+      <button class="nr-btn nr-btn-primary nr-next" id="nr-next" hidden>Next →</button>`);
+    const buttons = $$('.nr-opt');
+    let answered = false;
+    const pick = b => {
+      if (answered) return; answered = true;
+      S.wordOk = b.dataset.o === correct;
+      buttons.forEach(x => { x.disabled = true; x.classList.add(x.dataset.o === correct ? 'is-right' : x === b ? 'is-wrong' : 'dim'); });
+      $('#nr-next').hidden = false; $('#nr-next').focus({ preventScroll: true });
+    };
+    buttons.forEach(b => b.onclick = () => pick(b));
+    $('#nr-next').onclick = next;
+    S.keys = e => {
+      if (!answered && /^[1-4]$/.test(e.key) && buttons[+e.key - 1]) pick(buttons[+e.key - 1]);
+      else if (answered && e.key === 'Enter') { e.preventDefault(); next(); }
+    };
+  }
+  function askConjType(item) {
+    const accepted = conjAccepted(item), shown = conjShown(item);
+    const inp = typeScreen(item.w.word, 'Form', '', true, 'type the form', conjHeader(item, true));
+    const hint = $('#nr-cj-hint');
+    if (hint) {                              // tapping the hint must not take focus from the answer box (§3b)
+      const show = () => hint.classList.add('revealed');
+      hint.addEventListener('mousedown', e => e.preventDefault());
+      hint.addEventListener('touchend', e => { e.preventDefault(); show(); });
+      hint.addEventListener('click', show);
+    }
+    let phase = 'answer', wrongLine = '';
+    inp.oninput = () => { inp.value = hira(kana(inp.value, true)); $('#nr-nudge').textContent = ''; };
+    const submit = () => {
+      if (phase === 'done') return next();
+      const val = hira(kana(inp.value.trim().replace(/\s+/g, ''), false));
+      if (!val) return;
+      $('#nr-nudge').textContent = '';
+      if (/[a-z]/i.test(val)) { $('#nr-nudge').textContent = 'That still has romaji in it — finish the kana and try again.'; return; }
+      if (/[一-鿿]/.test(val)) { $('#nr-nudge').textContent = 'Type the form in kana, not kanji.'; return; }
+      if (phase === 'answer') {
+        if (accepted.includes(val)) {
+          $('#nr-reveal').innerHTML = `<div class="nr-rd ok" lang="ja">${esc(val)}</div>`;
+          $('#nr-go').textContent = 'Next →'; phase = 'done'; markRight(inp, val);
+        } else {
+          S.wordOk = false; phase = 'retype';
+          wrongLine = `<div class="nr-rd" lang="ja"><span class="bad">${esc(val)}</span> → ${shown.map(x => `<span class="ok fix">${esc(x)}</span>`).join(' or ')}</div>`;
+          $('#nr-reveal').innerHTML = wrongLine;
+          inp.value = ''; inp.placeholder = 'type it once: ' + shown.join(' or ');
+        }
+      } else if (accepted.includes(val)) { $('#nr-go').textContent = 'Next →'; phase = 'done'; markRight(inp, val); }
+      else { $('#nr-nudge').textContent = 'Type it exactly as shown: ' + shown.join(' or '); inp.select(); }
+    };
+    inp.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); submit(); } };
+    tapButton($('#nr-go'), submit);
+  }
+
+  // "Toughest conjugations" (§6c): combinations only (10 word types × 9 forms); each keeps its last 20
+  // answers; it shows once it has 5+ answers and is below 80% right, and leaves when it climbs back
+  const CT_LABEL = { ru: 'る-verb', u_tsu_ru: 'う-verb う・つ・る', mu_bu_nu: 'う-verb む・ぶ・ぬ', ku: 'う-verb く', gu: 'う-verb ぐ', su: 'う-verb す', suru: 'する-verb', irregular: 'Irregular', 'i-adj': 'い-adj', 'na-adj': 'な-adj' };
+  const CF_LABEL = { 'present-aff': 'present affirmative', 'present-neg': 'present negative', 'past-aff': 'past affirmative', 'past-neg': 'past negative', te: 'て-form' };
+  function conjType(w) {
+    if (w.pos === 'irregular') return 'irregular';
+    if (w.pos === 'ru-verb') return 'ru';
+    if (w.pos === 'suru-verb') return 'suru';
+    if (w.pos === 'i-adj' || w.pos === 'na-adj') return w.pos;
+    if (w.pos === 'u-verb-ru') return 'u_tsu_ru';
+    const e = w.reading.slice(-1);
+    return 'うつ'.includes(e) ? 'u_tsu_ru' : 'むぶぬ'.includes(e) ? 'mu_bu_nu' : e === 'く' ? 'ku' : e === 'ぐ' ? 'gu' : 'su';
+  }
+  function conjRecord(item, ok) {
+    const t = sget('tough:conj', {}), key = conjType(item.w) + '|' + item.f + '|' + (item.r || '');
+    t[key] = ((t[key] || '') + (ok ? '1' : '0')).slice(-20);
+    sset('tough:conj', t);
+  }
+  function conjToughList() {
+    const t = sget('tough:conj', {}), out = [];
+    for (const k in t) {
+      const a = t[k]; if (a.length < 5) continue;
+      const pct = Math.round(100 * a.split('').filter(c => c === '1').length / a.length);
+      if (pct < 80) out.push({ k, pct });
+    }
+    return out.sort((a, b) => a.pct - b.pct);
+  }
+  function conjToughView() {
+    S = null; view = 'tough'; setReviewing(false);
+    const mode = JPStore.get('conj:toughView', 'worst'), list = conjToughList();
+    const row = e => { const p = e.k.split('|'); return `<div class="nr-tough-row"><span class="nr-tough-w2">${esc(CT_LABEL[p[0]] || p[0])}</span><span class="nr-tough-m">${esc(CF_LABEL[p[1]] || p[1])}${p[2] ? ' · ' + p[2] : ''}</span><span class="nr-tough-x">${e.pct}%</span></div>`; };
+    const isAdj = e => /adj/.test(e.k.split('|')[0]);
+    const body = !list.length ? '<p class="nr-empty">Nothing here yet — a combination shows up after 5 answers if it is below 80% right.</p>'
+      : mode === 'type' ? [['Verbs', list.filter(e => !isAdj(e))], ['Adjectives', list.filter(isAdj)]].filter(g => g[1].length).map(g => `<div class="nr-section">${g[0]}</div>` + g[1].map(row).join('')).join('')
+      : list.map(row).join('');
+    root.innerHTML = `<div class="nr-wrap">
+      <h1 class="nr-h1">Toughest conjugations</h1>
+      <p class="nr-sub">Each combination keeps its last 20 answers. It shows up once it has 5+ answers and is below 80% right, and leaves when it climbs back to 80%.</p>
+      <div class="nr-seg" role="group" aria-label="Order"><button id="nr-tv-worst" aria-pressed="${mode !== 'type'}">Worst first</button><button id="nr-tv-type" aria-pressed="${mode === 'type'}">By word type</button></div>
+      <div class="nr-tough">${body}</div>
+    </div>`;
+    $('#nr-tv-worst').onclick = () => { sset('conj:toughView', 'worst'); conjToughView(); };
+    $('#nr-tv-type').onclick = () => { sset('conj:toughView', 'type'); conjToughView(); };
+    scrollTop();
+  }
+
+
   // ───────── Part of speech (§5.8) ─────────
   const POS_TILES = [
     ['noun', 'Noun', w => w.t === 'noun'],
@@ -42802,7 +43354,7 @@ const NR = (function() {
     const s = S;
     if (s.onDone) s.onDone(s);
     S = null; view = 'end'; setReviewing(false);
-    const again = s.mode === 'skg' ? 'Same item again' : s.mode === 'pos' ? 'Same selection again' : 'New session';
+    const again = s.mode === 'skg' ? 'Same item again' : (s.mode === 'pos' || s.mode === 'conj') ? 'Same selection again' : 'New session';
     let extra = '';
     if (s.mode === 'skg' && s.counts) { const r = ensureRound(), ps = pieceList(r); extra = `<p>One SKG · Round ${r.n} · ${ps.filter(p => r.done[p.id]).length} / ${ps.length}</p>`; }
     root.innerHTML = `<div class="nr-wrap nr-end">
@@ -42816,6 +43368,7 @@ const NR = (function() {
     $('#nr-again').onclick = () => {
       if (s.mode === 'skg') startPiece(s.piece, s.counts);
       else if (s.mode === 'pos') { posSetup(); $('#nr-start').click(); }
+      else if (s.mode === 'conj') startConj();
       else startMode(s.mode);
     };
     $('#nr-back').onclick = hub;
@@ -42831,10 +43384,13 @@ const NR = (function() {
     if (scr && scr.classList.contains('active') && view === 'hub') hub();
   });
 
+  function open(sec) { root = document.getElementById('nrev-app'); if (sec) section = sec; hub(); }
   return {
-    open() { root = document.getElementById('nrev-app'); hub(); },
+    open,
+    go(sec) { open(sec); showScreen('nrev'); },          // the home buttons: 'vocab' · 'kanji' · 'conj'
     back() { if (view === 'hub') goHome(); else hub(); },
-    _test: { data, buildOptions, manyOptions, trickyOptions, gradeMeaning, kana, cleanNote, dealDeck, ensureRound, pieceList, posWords, state: () => ({ S, view }) },
+    _test: { data, buildOptions, manyOptions, trickyOptions, gradeMeaning, kana, cleanNote, dealDeck, dealKanjiMeaning, ensureRound, pieceList, posWords,
+      lookAlikes, conjOptions, conjAccepted, conjShown, conjSession, conjToughList, toughMark, state: () => ({ S, view, section }) },
   };
 })();
 
