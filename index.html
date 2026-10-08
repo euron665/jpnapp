@@ -65,6 +65,118 @@ thead th{text-align:center !important;}
 #app-settings .as-btn-sm{width:auto;margin-top:0;padding:8px 14px;}
 #app-settings .as-btn:hover{border-color:var(--text-dim);}
 .home-stamp .test-copy{display:block;color:var(--gold);}
+/* ── NEW REVIEWS (#nrev) — screen rules: REVIEW_DESIGN §3b. Everything scoped to #nrev, nr- classes ── */
+#nrev.screen{justify-content:flex-start;}
+#nrev .scrollable{align-items:stretch;padding-bottom:48px;}
+#nrev [hidden]{display:none !important;}
+#nrev .nr-wrap{width:100%;max-width:560px;margin:0 auto;display:flex;flex-direction:column;}
+#nrev .nr-h1{font-size:26px;font-weight:500;margin:4px 0 6px;text-wrap:balance;}
+#nrev .nr-sub{font-size:13px;color:var(--text-dim);margin:0 0 18px;line-height:1.5;}
+#nrev .nr-label{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);margin:0 0 8px;}
+#nrev .nr-section{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);margin:22px 0 8px;}
+#nrev .nr-hint{font-size:13px;color:var(--text-dim);margin:0 0 8px;line-height:1.5;}
+#nrev .nr-seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);padding:4px;margin-bottom:8px;}
+#nrev .nr-seg button{border:0;background:transparent;border-radius:3px;padding:10px 8px;font-family:var(--font-ui);
+  font-size:15px;font-weight:500;color:var(--text-dim);cursor:pointer;}
+#nrev .nr-seg button[aria-pressed="true"]{background:var(--accent);color:#fff;}
+#nrev .nr-btn{display:block;width:100%;box-sizing:border-box;border:1px solid var(--border);background:var(--surface2);
+  border-radius:var(--r);padding:14px;font-family:var(--font-ui);font-size:15px;font-weight:500;color:var(--text);
+  cursor:pointer;text-align:center;}
+#nrev .nr-btn:hover{border-color:#3a3a44;}
+#nrev .nr-btn-primary{background:var(--accent);border-color:var(--accent);color:#fff;}
+#nrev .nr-btn:disabled{opacity:.35;cursor:not-allowed;}
+#nrev .nr-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
+#nrev .nr-skg{display:grid;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;}
+#nrev .nr-skg-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;}
+#nrev .nr-skg-top b{font-size:17px;font-weight:500;}
+#nrev .nr-round{font-family:var(--font-num);font-size:13px;color:var(--text-dim);}
+#nrev .nr-skg .nr-btn-primary{margin-top:6px;}
+#nrev .nr-modes{display:flex;flex-direction:column;gap:8px;}
+#nrev .nr-card{display:grid;gap:3px;text-align:left;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);padding:14px 16px;cursor:pointer;color:var(--text);font-family:var(--font-ui);}
+#nrev .nr-card:hover{border-color:var(--accent);}
+#nrev .nr-card:disabled{opacity:.35;cursor:not-allowed;}
+#nrev .nr-card:disabled:hover{border-color:var(--border);}
+#nrev .nr-card b{font-size:17px;font-weight:500;}
+#nrev .nr-d{font-size:13px;color:var(--text-dim);line-height:1.45;}
+#nrev .nr-t{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);}
+/* One SKG set list: its own scroll box (§3b) */
+#nrev .nr-sets-wrap{position:relative;}
+#nrev .nr-sets{display:flex;flex-direction:column;gap:6px;height:60vh;height:60dvh;min-height:260px;overflow-y:auto;
+  overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border:1px solid var(--border);border-radius:var(--r);
+  padding:6px 30px 6px 6px;background:var(--bg);box-sizing:border-box;}
+#nrev .nr-vtrack{position:absolute;top:6px;bottom:6px;right:2px;width:24px;touch-action:none;cursor:pointer;}
+#nrev .nr-vtrack::before{content:"";position:absolute;top:0;bottom:0;left:50%;width:4px;transform:translateX(-50%);
+  background:var(--surface2);border-radius:2px;}
+#nrev .nr-vthumb{position:absolute;left:50%;width:6px;margin-left:-3px;top:0;border-radius:3px;background:var(--text-dim);}
+@media (hover:hover) and (pointer:fine){#nrev .nr-vtrack{display:none;}#nrev .nr-sets{padding-right:6px;}}
+@media (hover:none) and (pointer:coarse){#nrev .nr-sets{scrollbar-width:none;}#nrev .nr-sets::-webkit-scrollbar{display:none;}}
+#nrev .nr-set{display:grid;grid-template-columns:44px 1fr;gap:4px 12px;align-items:center;background:var(--surface);
+  border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;}
+#nrev .nr-set-id{font-family:var(--font-num);font-size:13px;color:var(--text-dim);grid-row:span 2;}
+#nrev .nr-set-kanji{font-size:17px;letter-spacing:.06em;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+#nrev .nr-chips{display:flex;flex-wrap:wrap;gap:6px;}
+#nrev .nr-chip{border:1px solid var(--border);background:var(--surface2);border-radius:var(--r);padding:5px 9px;font-size:11px;
+  color:var(--text);cursor:pointer;display:inline-flex;gap:6px;align-items:baseline;font-family:var(--font-ui);}
+#nrev .nr-chip b{font-family:var(--font-num);font-weight:500;font-size:13px;}
+#nrev .nr-chip span{color:var(--text-dim);}
+#nrev .nr-chip.done b{color:var(--pass-text);}
+#nrev .nr-chip:hover{border-color:var(--accent);}
+/* question screens */
+#nrev .nr-qhead{display:flex;justify-content:flex-end;min-height:22px;margin-bottom:6px;}
+#nrev .nr-qtag{font-family:var(--font-num);font-size:11px;color:var(--text-dim);letter-spacing:.1em;}
+#nrev .nr-qcount{font-family:var(--font-num);font-size:13px;color:var(--text-dim);margin-bottom:6px;font-variant-numeric:tabular-nums;}
+#nrev .nr-qcount b{color:var(--text);font-weight:500;}
+#nrev .nr-bar{height:3px;background:var(--surface2);border-radius:2px;overflow:hidden;margin-bottom:28px;}
+#nrev .nr-bar i{display:block;height:100%;background:var(--accent);transition:width .25s ease;}
+#nrev .nr-word{font-weight:400;font-size:clamp(40px,13vw,64px);text-align:center;line-height:1.2;margin:8px 0 6px;
+  word-break:keep-all;overflow-wrap:anywhere;}
+#nrev .nr-cur{color:var(--accent);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:8px;}
+#nrev .nr-reveal{text-align:center;min-height:78px;display:flex;flex-direction:column;gap:2px;justify-content:center;margin-bottom:18px;}
+#nrev .nr-rd{font-size:19px;}
+#nrev .nr-rd.big{font-size:26px;}
+#nrev .nr-mn{font-size:17px;color:var(--text);}
+#nrev .nr-note{font-size:13px;color:#e8a33a;}
+#nrev .nr-picks{font-size:17px;color:var(--text-dim);}
+#nrev .ok{color:var(--pass-text);}
+#nrev .bad{color:var(--fail-text);}
+#nrev .fix{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px;}
+#nrev .nr-step{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);text-align:center;margin-bottom:8px;}
+#nrev .nr-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+#nrev .nr-opt{border:1px solid var(--border);background:var(--surface);border-radius:var(--r);padding:14px 16px;font-family:var(--font-ui);
+  font-size:19px;color:var(--text);text-align:left;cursor:pointer;display:flex;gap:14px;align-items:center;}
+#nrev .nr-opt .nr-k{font-family:var(--font-num);font-size:11px;color:var(--text-dim);width:10px;flex:none;}
+#nrev .nr-opt:hover:not(:disabled){border-color:#3a3a44;}
+#nrev .nr-opt:disabled{cursor:default;}
+#nrev .nr-opt.is-right{background:var(--pass);border-color:var(--pass-text);}
+#nrev .nr-opt.is-wrong{background:var(--fail);border-color:var(--fail-text);}
+#nrev .nr-opt.dim{opacity:.45;}
+#nrev .nr-opt-text{font-size:15px;line-height:1.45;align-items:flex-start;}
+#nrev .nr-next{margin-top:4px;}
+#nrev .nr-answer{width:100%;box-sizing:border-box;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:14px 16px;font-family:var(--font-ui);font-size:19px;color:var(--text);text-align:center;outline:none;}
+#nrev .nr-answer.retyped{color:var(--pass-text);}
+#nrev .nr-answer::placeholder{color:var(--text-dim);font-size:15px;}
+#nrev .nr-check{margin-top:12px;}
+#nrev .nr-nudge{font-size:13px;color:#e8a33a;text-align:center;min-height:1.45em;margin:8px 0;}
+/* setup screens (Part of speech) */
+#nrev .nr-tiles{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+#nrev .nr-tile{border:1px solid var(--border);background:var(--surface);border-radius:var(--r);padding:9px 12px;font-family:var(--font-ui);
+  font-size:13px;color:var(--text);cursor:pointer;display:inline-flex;gap:6px;align-items:baseline;}
+#nrev .nr-tile small{font-family:var(--font-num);font-size:11px;color:var(--text-dim);}
+#nrev .nr-tile[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff;}
+#nrev .nr-tile[aria-pressed="true"] small{color:#fff;}
+#nrev .nr-sizer{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+#nrev .nr-sizer .nr-btn{width:52px;padding:10px 0;font-size:19px;}
+#nrev .nr-size{font-family:var(--font-num);font-size:26px;min-width:56px;text-align:center;}
+/* end screen */
+#nrev .nr-end{align-items:center;text-align:center;gap:6px;padding-top:12vh;}
+#nrev .nr-score{font-family:var(--font-num);font-size:64px;line-height:1;}
+#nrev .nr-score small{font-size:26px;color:var(--text-dim);}
+#nrev .nr-end p{margin:0;color:var(--text-dim);font-size:15px;}
+#nrev .nr-btns{display:flex;flex-direction:column;gap:8px;width:100%;margin-top:28px;}
+@media (prefers-reduced-motion:reduce){#nrev .nr-bar i{transition:none;}}
 #app-settings .as-panel{width:100%;max-width:380px;margin-top:12vh;background:var(--surface);
   border:1px solid var(--border);border-radius:var(--r);padding:24px;}
 .as-title{font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--text);
@@ -1719,14 +1831,22 @@ body.gr-reading #gr-top-btn{display:flex;}
     <button class="btn-primary" onclick="goTo('kana-picker','review-kana')">Review Kana</button>
     <button class="btn-primary" onclick="goTo('katakana-picker')">Review Katakana Words</button>
     <button class="btn-primary" onclick="goTo('skg-picker','review-kanji')">Review Kanji</button>
-    <button class="btn-primary" onclick="goTo('skg-picker','review-vocab')">Review Vocab</button>
-    <button class="btn-primary" onclick="goTo('pos-picker','review-pos')">Review by Part of Speech</button>
+    <button class="btn-primary" onclick="goTo('nrev')">Review Vocab</button>
     <button class="btn-primary" onclick="goTo('conj-picker')">Review Conjugation</button>
   </div>
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-10-08 19:52 · v126</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-10-08 20:24 · v129</div>
+</div>
+
+<!-- NEW REVIEWS (REVIEW_DESIGN.md): hub, setup screens, questions and end screen all render into #nrev-app -->
+<div id="nrev" class="screen">
+  <div class="screen-header">
+    <button class="back-btn" onclick="NR.back()">← Back</button>
+    <div class="screen-title">Review</div>
+  </div>
+  <div class="scrollable" id="nrev-app"></div>
 </div>
 
 <!-- POS PICKER -->
@@ -38356,6 +38476,7 @@ function goTo(id, mode) {
   if (id === 'kana-picker')        buildKanaPicker();
   if (id === 'study-verbs')        buildVerbStudy();
   if (id === 'conj-picker')        updateConjGoBtn();
+  if (id === 'nrev')               NR.open();
   showScreen(id);
 }
 
@@ -41742,6 +41863,7 @@ const JPStore = (function() {
   let data = { v: 1, items: {} };
   let sha = null, timer = null, busy = false, again = false;
   let st = { state: TEST ? 'test' : 'local', msg: '' };
+  const listeners = [];                         // told when a sync brought in the other device's progress
 
   function ls(fn) { try { return fn(); } catch (e) { return null; } }
   function readLocal() {
@@ -41799,9 +41921,11 @@ const JPStore = (function() {
     if (!navigator.onLine) { st = { state: 'offline', msg: '' }; return render(); }
     if (busy) { again = true; return; }
     busy = true; st = { state: 'syncing', msg: '' }; render();
+    let fresh = false;
     try {
       for (let tries = 0; ; tries++) {
         const remote = await pull();
+        for (const k in remote.items) if (!data.items[k] || (remote.items[k].t || 0) > (data.items[k].t || 0)) { fresh = true; break; }
         data = merge(data, remote);
         writeLocal();
         let newer = false;                                           // anything here the file doesn't have yet?
@@ -41811,6 +41935,7 @@ const JPStore = (function() {
         catch (e) { if (tries < 2 && e && (e.status === 409 || e.status === 422)) continue; throw e; }  // the other device saved meanwhile
       }
       st = { state: 'synced', msg: '', at: Date.now() };
+      if (fresh) listeners.forEach(fn => { try { fn(); } catch (e) {} });
     } catch (e) {
       const code = e && e.status;
       st = { state: 'error', msg: code === 401 || code === 403 ? 'The key was refused — check it, or make a new one.'
@@ -41890,7 +42015,7 @@ const JPStore = (function() {
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') sync(); });
   sync();
 
-  return { get, set, sync, render, setToken, download, loadFile, isTest: () => TEST };
+  return { get, set, sync, render, setToken, download, loadFile, isTest: () => TEST, onSync: fn => listeners.push(fn) };
 })();
 
 function saveGhKey() {
@@ -41900,6 +42025,818 @@ function saveGhKey() {
   JPStore.setToken(v);
   el.value = '';
 }
+
+/* ---- NEW REVIEWS (REVIEW_DESIGN.md) — stage 1: the vocab modes ----
+   One self-contained object so nothing clashes with the old review code (which has its own
+   shuffle/conjugate/toHiragana…). One screen, #nrev: the hub, setup screens, questions and the end
+   screen all render into #nrev-app. Screen rules: REVIEW_DESIGN §3b. Everything is derived at
+   runtime from VOCAB / SKGS / POS_TAGS / SAME_MEANING, so a .bat run updates the reviews too.
+   Progress (JPStore): 'set:format' · 'deck:<mode>' {order,pos,round} · 'skg:round' {n,sets,done} ·
+   'pos:sel' {tiles,size}. A deck / One SKG item only moves on when a session is fully answered,
+   so an interrupted session comes back unchanged. */
+const NR = (function() {
+  'use strict';
+  // ───────── small helpers ─────────
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const rnd = n => Math.floor(Math.random() * n);
+  function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = rnd(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+  function weightedPick(list) {
+    let tot = 0; for (const x of list) tot += Math.max(1, x[1]);
+    let r = Math.random() * tot;
+    for (const x of list) { r -= Math.max(1, x[1]); if (r < 0) return x[0]; }
+    return list[list.length - 1][0];
+  }
+  function takeWeighted(list) {
+    const out = [], l = list.slice();
+    while (l.length) { const r = weightedPick(l); out.push(r); l.splice(l.findIndex(x => x[0] === r), 1); }
+    return out;
+  }
+  const clone = o => o == null ? o : JSON.parse(JSON.stringify(o));
+  const sget = (k, d) => { const v = JPStore.get(k, undefined); return v === undefined ? d : clone(v); };
+  const sset = (k, v) => JPStore.set(k, v);
+  let root = null;
+  const $ = s => root.querySelector(s);
+  const $$ = s => Array.prototype.slice.call(root.querySelectorAll(s));
+
+  // ───────── kana ─────────
+  const hira = s => s.replace(/[ァ-ヵ]/g, c => String.fromCharCode(c.charCodeAt(0) - 0x60));
+  const RMAP = ROMAJI_MAP.concat([['-', 'ー']]);
+  // romaji → hiragana (the app's toHiragana, plus "-" → ー and n' → ん)
+  function kana(str, live) {
+    str = str.toLowerCase();
+    let out = '', i = 0;
+    while (i < str.length) {
+      if (i + 1 < str.length && str[i] === str[i + 1] && /[bcdfghjklmpqrstvwxyz]/.test(str[i])) { out += 'っ'; i++; continue; }
+      if (str[i] === 'n' && str[i + 1] === 'n') { out += 'ん'; i += 2; continue; }
+      if (str[i] === 'n') {
+        const nx = str[i + 1];
+        if (!nx) { out += live ? 'n' : 'ん'; i++; continue; }
+        if (nx === "'") { out += 'ん'; i += 2; continue; }
+        if (!'aiueony'.includes(nx)) { out += 'ん'; i++; continue; }
+      }
+      let hit = null;
+      for (const len of [3, 2, 1]) { const ch = str.slice(i, i + len); hit = RMAP.find(x => x[0] === ch); if (hit) { out += hit[1]; i += len; break; } }
+      if (!hit) { out += str[i]; i++; }
+    }
+    return out;
+  }
+
+  // ───────── meaning grading (REVIEW_DESIGN §6.2) ─────────
+  const FILL = new Set(['sth', 'sb', 'something', 'someone', 'somebody']);
+  function normTokens(s) {
+    let t = s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().split(' ').filter(Boolean);
+    const noFill = t.filter(x => !FILL.has(x)); if (noFill.length) t = noFill;
+    while (t.length > 1 && ['to', 'a', 'an', 'the'].includes(t[0])) t.shift();
+    return t.join('');
+  }
+  function expandSlash(s) {
+    s = s.replace(/\s*\/\s*/g, '/');
+    let res = [[]];
+    for (const tok of s.split(/\s+/).filter(Boolean)) {
+      if (tok.includes('/')) { const alts = tok.split('/').filter(Boolean); res = [].concat.apply([], res.map(r => alts.map(a => r.concat([a])))); }
+      else res.forEach(r => r.push(tok));
+    }
+    return res.map(r => r.join(' '));
+  }
+  function meaningVariants(meanings) {
+    const out = new Map();
+    for (const m of meanings) for (let alt of m.split('|')) {
+      alt = alt.trim(); if (!alt) continue;
+      const noPar = alt.replace(/\([^)]*\)/g, ' ').replace(/\s+/g, ' ').trim();
+      for (const base of [noPar, alt.replace(/[()]/g, ' ')]) for (const v of expandSlash(base)) {
+        const n = normTokens(v); if (n && !out.has(n)) out.set(n, noPar || alt);
+      }
+    }
+    return out;
+  }
+  function editDistance(a, b) {   // add / remove / replace / neighbour swap = 1
+    const d = [];
+    for (let i = 0; i <= a.length; i++) d[i] = [i];
+    for (let j = 0; j <= b.length; j++) d[0][j] = j;
+    for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++) {
+      d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1);
+    }
+    return d[a.length][b.length];
+  }
+  const tolerance = len => len <= 4 ? 0 : len <= 8 ? 1 : 2;
+  function gradeMeaning(input, meanings) {
+    const n = normTokens(input); if (!n) return { ok: false };
+    const vars = meaningVariants(meanings);
+    if (vars.has(n)) return { ok: true };
+    let best = null;
+    vars.forEach((disp, v) => { const dist = editDistance(n, v); if (dist <= tolerance(v.length) && (!best || dist < best.dist)) best = { dist, disp }; });
+    return best ? { ok: true, typo: best.disp } : { ok: false };
+  }
+  const showMeaning = meanings => meanings[0].split('|').map(s => s.trim()).join(' · ');
+
+  // ───────── data, derived once from the app's consts ─────────
+  let D = null;
+  const VOICE = {}, SEMI = { 'は': 'ぱ', 'ひ': 'ぴ', 'ふ': 'ぷ', 'へ': 'ぺ', 'ほ': 'ぽ' }, GEM = 'つくちきり';
+  'かきくけこさしすせそたちつてとはひふへほ'.split('').forEach((c, i) => { VOICE[c] = 'がぎぐげござじずぜぞだぢづでどばびぶべぼ'[i]; });
+  const isKanji = c => /[一-鿿]/.test(c);
+  function soundVariants(b) {
+    const out = new Set();
+    if (VOICE[b[0]]) out.add(VOICE[b[0]] + b.slice(1));
+    if (SEMI[b[0]]) out.add(SEMI[b[0]] + b.slice(1));
+    if (b.length > 1 && GEM.includes(b[b.length - 1])) {
+      out.add(b.slice(0, -1) + 'っ');
+      if (VOICE[b[0]]) out.add(VOICE[b[0]] + b.slice(1, -1) + 'っ');
+      if (SEMI[b[0]]) out.add(SEMI[b[0]] + b.slice(1, -1) + 'っ');
+    }
+    return out;
+  }
+  function buildData() {
+    const K = {};                                   // kanji → [[reading-group label, number of words]]
+    for (const k in VOCAB) K[k] = VOCAB[k].rgs.filter(g => g.rg_reading && g.rg_reading !== '々').map(g => [hira(g.rg_reading), g.vocab.length]);
+    const cands = k => {
+      const out = [];
+      for (const [r] of K[k] || []) {
+        out.push([r, 0, r]);
+        if (VOICE[r[0]]) out.push([VOICE[r[0]] + r.slice(1), 1, r]);
+        if (SEMI[r[0]]) out.push([SEMI[r[0]] + r.slice(1), 1, r]);
+        const gem = r.length > 1 && GEM.includes(r[r.length - 1]);
+        if (gem) out.push([r.slice(0, -1) + 'っ', 1, r]);
+        if (gem && VOICE[r[0]]) out.push([VOICE[r[0]] + r.slice(1, -1) + 'っ', 2, r]);
+        if (gem && SEMI[r[0]]) out.push([SEMI[r[0]] + r.slice(1, -1) + 'っ', 2, r]);
+      }
+      return out;
+    };
+    // split a reading into one piece per kanji (REVIEW_DESIGN §6.1): rendaku / small っ variants,
+    // okurigana overlap (大好き), 々, ヶ, katakana; a kanji that isn't in the list matches any 1–4 kana
+    function split(word, reading) {
+      const chars = Array.from(word.replace(/〜/g, ''));
+      if (chars.some(c => /[0-9０-９]/.test(c))) return null;
+      let best = null; const parts = [];
+      (function rec(i, pos, cost) {
+        if (best && cost >= best.cost) return;
+        if (i === chars.length) { if (pos === reading.length) best = { cost, parts: parts.slice() }; return; }
+        const c = chars[i];
+        if (isKanji(c) || c === '々') {
+          const src = c === '々' && i > 0 ? chars[i - 1] : c;
+          let nxt = '';
+          for (let j = i + 1; j < chars.length && !(isKanji(chars[j]) || chars[j] === '々'); j++) nxt += hira(chars[j]);
+          let cs = cands(src);
+          const prev = parts[parts.length - 1];
+          if (c === '々' && Array.isArray(prev)) { const p = prev[1]; cs = [[p, 0, p]].concat(VOICE[p[0]] ? [[VOICE[p[0]] + p.slice(1), 0, p]] : [], cs); }
+          const tried = new Set();
+          for (const [piece, cst, base] of cs) {
+            if (tried.has(piece + cst)) continue; tried.add(piece + cst);
+            if (reading.startsWith(piece, pos)) { parts.push([c, piece, base]); rec(i + 1, pos + piece.length, cost + cst); parts.pop(); }
+            if (nxt) for (let cut = 1; cut < piece.length; cut++) {
+              const p = piece.slice(0, cut), q = piece.slice(cut);
+              if (nxt.startsWith(q) && reading.startsWith(p, pos)) { parts.push([c, p, base]); rec(i + 1, pos + p.length, cost + cst + 1); parts.pop(); }
+            }
+          }
+          if (!(K[c] && K[c].length)) for (let L = 1; L < 5; L++) if (pos + L <= reading.length) {
+            parts.push([c, reading.slice(pos, pos + L), null]); rec(i + 1, pos + L, cost + 5); parts.pop();
+          }
+        } else if (c === 'ヶ') {
+          for (const alt of ['か', 'が', 'こ']) if (reading.startsWith(alt, pos)) { parts.push(alt); rec(i + 1, pos + 1, cost); parts.pop(); }
+        } else {
+          const h = hira(c);
+          if (reading.startsWith(h, pos)) { parts.push(h); rec(i + 1, pos + h.length, cost); parts.pop(); }
+        }
+      })(0, 0, 0);
+      if (!best) return null;
+      const out = [];
+      for (const p of best.parts) { if (typeof p === 'string' && typeof out[out.length - 1] === 'string') out[out.length - 1] += p; else out.push(p); }
+      return out;
+    }
+    // words: every reading (any "a | b") and every meaning over all of a word's listings
+    const W = {};
+    for (const k in VOCAB) for (const g of VOCAB[k].rgs) for (const x of g.vocab) {
+      const d = W[x.word] || (W[x.word] = { r: [], m: [] });
+      for (let r of String(x.reading).split('|')) { r = hira(r.trim()); if (r && !d.r.includes(r)) d.r.push(r); }
+      if (!d.m.includes(x.meaning)) d.m.push(x.meaning);
+    }
+    for (const w in W) {
+      if (/[0-9０-９]/.test(w)) { delete W[w]; continue; }          // ２０１１年
+      const sp = split(w, W[w].r[0]);
+      W[w].s = sp && sp.some(Array.isArray) ? sp : null;           // null = irregular (今日, 大人…)
+    }
+    // look-alike sets
+    const SETS = [], SET_OF = {}, SET_KANJI = {};
+    for (const st of SKGS) {
+      const id = String(st.id).replace('SKG ', ''), ws = [];
+      SET_KANJI[id] = st.kanji;
+      st.kanji.forEach(k => { SET_OF[k] = id; (VOCAB[k] ? VOCAB[k].rgs : []).forEach(g => g.vocab.forEach(x => { if (W[x.word] && !ws.includes(x.word)) ws.push(x.word); })); });
+      SETS.push({ id, kanji: st.kanji, words: ws });
+    }
+    const ALL_READINGS = Array.from(new Set([].concat.apply([], Object.keys(K).map(k => K[k].map(x => x[0])))));
+    // Many-reading: kanji with 4+ reading groups (§5.3)
+    const HARD = new Set(Object.keys(K).filter(k => K[k].length >= 4));
+    const MANY = [];
+    HARD.forEach(k => VOCAB[k].rgs.forEach(g => g.vocab.forEach(x => { if (W[x.word] && !MANY.includes(x.word)) MANY.push(x.word); })));
+    // Tricky readings (§5.4): words in a sound-changed group (key = that kanji) + the irregular words
+    const labels = k => (K[k] || []).map(x => x[0]);
+    const basesOf = (k, lab) => labels(k).filter(b => b !== lab && soundVariants(b).has(lab));
+    const TRICKY = {}, TBASE = {}, IRX = {};
+    for (const k in VOCAB) for (const g of VOCAB[k].rgs) {
+      const lab = g.rg_reading && g.rg_reading !== '々' ? hira(g.rg_reading) : '';
+      if (!lab) continue;
+      const bases = basesOf(k, lab);
+      if (!bases.length) continue;
+      const others = [];
+      bases.forEach(b => soundVariants(b).forEach(o => { if (o !== lab && labels(k).includes(o) && !others.includes(o)) others.push(o); }));
+      TBASE[k + '|' + lab] = [bases, others];
+      for (const x of g.vocab) {
+        const sp = W[x.word] && W[x.word].s; if (!sp) continue;
+        sp.forEach((p, i) => { if (Array.isArray(p) && p[0] === k && p[2] === lab) (TRICKY[x.word] = TRICKY[x.word] || []).includes(i) || TRICKY[x.word].push(i); });
+      }
+    }
+    for (const w in W) if (!W[w].s) {
+      TRICKY[w] = [];
+      const ex = {};
+      for (const k in VOCAB) for (const g of VOCAB[k].rgs) if (g.vocab.some(x => x.word === w)) (ex[k] = ex[k] || []).push(hira(g.rg_reading || ''));
+      IRX[w] = ex;
+    }
+    // Long words (§5.5): 3+ kanji, splittable
+    const LONG = Object.keys(W).filter(w => W[w].s && W[w].s.filter(Array.isArray).length >= 3);
+    // Same meaning (§5.6): options = the note line without the word, Japanese hidden
+    const SAME = [];
+    for (const g of SAME_MEANING) {
+      const lines = String(g.note || '').split('\n'), ws = [];
+      for (const x of g.words) {
+        if (!W[x.w]) continue;
+        let body = null;
+        for (const l of lines) { body = noteBody(l, x.w); if (body !== null) break; }
+        if (body) ws.push([x.w, hira(x.r || ''), body, cleanNote(body)]);
+      }
+      if (ws.length >= 2) SAME.push([g.m, ws]);
+    }
+    // 1 kanji – 1 vocab (§5.7): every kanji whose total vocab is exactly one word
+    const SINGLE = [];
+    for (const k in VOCAB) {
+      const all = []; VOCAB[k].rgs.forEach(g => g.vocab.forEach(x => all.push(x.word)));
+      if (all.length === 1 && W[all[0]] && !SINGLE.includes(all[0])) SINGLE.push(all[0]);
+    }
+    return { K, W, SETS, SET_OF, SET_KANJI, ALL_READINGS, HARD, MANY, TRICKY, TBASE, IRX, LONG, SAME, SINGLE };
+  }
+  const JP_RUN = /[぀-ヿ㐀-鿿ｦ-ﾟ々〜～・「」『』、。]+/g;
+  function noteBody(line, word) {
+    const l = line.trim();
+    for (const sep of [' = ', '= ', ' =', '=']) if (l.startsWith(word + sep)) return l.slice((word + sep).length).trim();
+    return null;
+  }
+  function cleanNote(text) {
+    let t = text.replace(/\([^()]*[぀-ヿ㐀-鿿ｦ-ﾟ々〜～・「」『』、。][^()]*\)/g, '');
+    t = t.replace(/な-adj/g, 'NAQADJ').replace(/い-adj/g, 'IQADJ');
+    t = t.replace(JP_RUN, '…').replace(/NAQADJ/g, 'な-adj').replace(/IQADJ/g, 'い-adj');
+    t = t.replace(/…(\s*…)+/g, '…').replace(/\(\s*[,/;]*\s*\)/g, '').replace(/\s+([,.;:!?])/g, '$1');
+    t = t.trim().replace(/[,;:—–-]\s*$/, '').replace(/\s{2,}/g, ' ').trim();
+    if (t && !/[.!?…]$/.test(t)) t += '.';
+    return t;
+  }
+  function data() { if (!D) D = buildData(); return D; }
+
+  // ───────── Choose options (REVIEW_DESIGN §6.1) ─────────
+  function soundAlikes(piece, avoid) {
+    return data().ALL_READINGS.filter(r => !avoid.has(r)).map(r => {
+      let s = 0; if (r.length === piece.length) s += 3; if (r[0] === piece[0]) s += 2; if (r[r.length - 1] === piece[piece.length - 1]) s += 1;
+      return [r, s + Math.random()];
+    }).sort((a, b) => b[1] - a[1]).slice(0, 12).map(x => [x[0], 1]);
+  }
+  // wrong readings for one kanji piece, best source first: own groups → look-alike set → sound-alikes
+  function trapSources(part, prevKanji) {
+    const { K, SET_KANJI, SET_OF } = data();
+    const [k, piece, base] = part;
+    const src = k === '々' ? prevKanji : k;
+    const overlap = base && base !== piece && base.startsWith(piece);     // 好 = す(き): don't offer すき
+    const own = (K[src] || []).filter(x => x[0] !== piece && !(overlap && x[0] === base));
+    const avoid = new Set([piece].concat(own.map(x => x[0])));
+    const look = [];
+    (SET_KANJI[SET_OF[src]] || []).forEach(m => { if (m !== src) (K[m] || []).forEach(x => { if (!avoid.has(x[0])) { look.push(x); avoid.add(x[0]); } }); });
+    return [own, look, () => soundAlikes(piece, avoid)];
+  }
+  function pickFrom(sources, taken) {
+    for (const s of sources) { const list = (typeof s === 'function' ? s() : s).filter(x => !taken.has(x[0])); if (list.length) return weightedPick(list); }
+    return null;
+  }
+  function logicalTraps(word, exclude) {             // irregular words: each kanji's "logical" readings
+    const { K, W } = data(), out = [], correct = new Set(W[word].r);
+    for (const strict of [true, false]) for (let t = 0; t < 80 && out.length < 3; t++) {
+      let s = '';
+      for (const c of Array.from(word.replace(/〜/g, ''))) {
+        let l = (K[c] || []).filter(x => !strict || !((exclude || {})[c] || []).includes(x[0]));
+        if (!l.length) l = K[c] || [];
+        s += l.length ? weightedPick(l) : hira(c);
+      }
+      if (!correct.has(s) && !out.includes(s)) out.push(s);
+    }
+    return out;
+  }
+  // balanced whole-word options: one wrong reading per kanji, each correct piece in exactly 2 of 4
+  function buildOptions(word, only) {
+    const { W, IRX } = data();
+    const readings = W[word].r, parts = W[word].s, correct = readings[0], accepted = new Set(readings);
+    for (let attempt = 0; attempt < 40; attempt++) {
+      let traps;
+      if (!parts) traps = logicalTraps(word, IRX[word]);
+      else {
+        const kp = []; let prev = '';
+        parts.forEach((p, i) => { if (Array.isArray(p)) { if (!only || only.has(i)) kp.push({ i, p, prev }); if (p[0] !== '々') prev = p[0]; } });
+        const src = kp.map(x => trapSources(x.p, x.prev));
+        const build = wrong => parts.map((p, i) => typeof p === 'string' ? p : (wrong.has(i) ? wrong.get(i) : p[1])).join('');
+        if (kp.length === 1) {
+          const taken = new Set(); traps = [];
+          for (let t = 0; t < 3; t++) { const r = pickFrom(src[0], taken); if (!r) break; taken.add(r); traps.push(build(new Map([[kp[0].i, r]]))); }
+        } else {
+          const wrong = kp.map((x, n) => pickFrom(src[n], new Set()));
+          const groups = [[], [], []]; shuffle(kp.map((x, n) => n)).forEach((n, j) => groups[j % 3].push(n));
+          traps = shuffle(groups).map(keep => build(new Map(kp.map((x, n) => keep.includes(n) ? null : [x.i, wrong[n]]).filter(Boolean))));
+        }
+      }
+      if (traps.length === 3 && new Set(traps).size === 3 && !traps.some(t => accepted.has(t))) return { opts: shuffle([correct].concat(traps)), correct };
+    }
+    const opts = [correct];
+    soundAlikes(correct, accepted).forEach(r => { if (opts.length < 4 && !opts.includes(r[0])) opts.push(r[0]); });
+    return { opts: shuffle(opts), correct };
+  }
+  function manyOptions(word) {                      // §5.3: only the many-reading kanji change
+    const { W, HARD } = data(), parts = W[word].s;
+    const idx = parts ? parts.map((p, i) => Array.isArray(p) && HARD.has(p[0]) ? i : -1).filter(i => i >= 0) : [];
+    return buildOptions(word, idx.length ? new Set(idx) : null);
+  }
+  function trickyOptions(word) {                    // §5.4: only the sound-changed kanji changes
+    const { W, K, TRICKY, TBASE, IRX, SET_KANJI, SET_OF } = data();
+    const readings = W[word].r, parts = W[word].s, correct = readings[0], accepted = new Set(readings), traps = [];
+    const add = s => { if (s && !accepted.has(s) && !traps.includes(s) && traps.length < 3) traps.push(s); };
+    if (!parts) logicalTraps(word, IRX[word]).forEach(add);
+    else {
+      const keys = TRICKY[word] || [];
+      const ki = keys.length ? keys[rnd(keys.length)] : parts.findIndex(Array.isArray);
+      const [k, piece, base] = parts[ki];
+      const build = r => parts.map((q, i) => typeof q === 'string' ? q : (i === ki ? r : q[1])).join('');
+      const tb = TBASE[k + '|' + base] || [[], []];
+      const order = tb[0].concat(shuffle(tb[1].slice()));             // 1 unchanged reading · 2 other sound version
+      takeWeighted((K[k] || []).filter(x => !order.includes(x[0]))).forEach(r => order.push(r));   // 3 other groups
+      const look = []; (SET_KANJI[SET_OF[k]] || []).forEach(m => { if (m !== k) (K[m] || []).forEach(x => look.push(x)); });
+      takeWeighted(look).forEach(r => order.push(r));                // 4 a look-alike's reading
+      order.forEach(r => { if (r !== piece) add(build(r)); });
+      soundAlikes(piece, new Set([piece])).forEach(r => add(build(r[0])));
+    }
+    soundAlikes(correct, accepted).forEach(r => add(r[0]));
+    return { opts: shuffle([correct].concat(traps)), correct };
+  }
+
+  // ───────── decks (§4 "remembered deck") ─────────
+  // every item seen once before any repeat; only the order + position are stored; the position
+  // moves on only when a session is fully answered, so an interrupted session comes back
+  function dealDeck(name, pool, n) {
+    const key = 'deck:' + name, have = new Set(pool);
+    let d = sget(key, null), changed = false;
+    if (!d || !Array.isArray(d.order)) { d = { order: shuffle(pool.slice()), pos: 0, round: 1 }; changed = true; }
+    const dealt = d.order.slice(0, d.pos).filter(x => have.has(x));
+    let rest = d.order.slice(d.pos).filter(x => have.has(x));
+    const known = new Set(dealt.concat(rest));
+    pool.forEach(x => { if (!known.has(x)) { rest.splice(rnd(rest.length + 1), 0, x); changed = true; } });   // new words join the undealt part
+    if (dealt.length + rest.length !== d.order.length || changed) { d = { order: dealt.concat(rest), pos: dealt.length, round: d.round || 1 }; sset(key, d); }
+    let take = rest.slice(0, n), next = { order: d.order, pos: d.pos + take.length, round: d.round };
+    if (take.length < n && pool.length > take.length) {              // end of round: top up from the next one
+      const fresh = shuffle(pool.filter(x => !take.includes(x))), extra = fresh.slice(0, n - take.length);
+      next = { order: extra.concat(fresh.slice(extra.length)).concat(take), pos: extra.length, round: (d.round || 1) + 1 };
+      take = take.concat(extra);
+    } else if (next.pos >= next.order.length) next = { order: shuffle(pool.slice()), pos: 0, round: (d.round || 1) + 1 };
+    return { items: take, commit: () => sset(key, next), round: d.round || 1, left: rest.length };
+  }
+
+  // ───────── One SKG (§5.2): pieces, rounds, scoreboard ─────────
+  function cutSet(words) {
+    const ws = shuffle(words.slice()), k = ws.length <= 30 ? 1 : Math.ceil(ws.length / 25), out = [];
+    let at = 0;
+    for (let p = 0; p < k; p++) { const size = Math.floor(ws.length / k) + (p < ws.length % k ? 1 : 0); out.push(ws.slice(at, at + size)); at += size; }
+    return out;
+  }
+  const pieceId = (id, n, i) => id + (n > 1 ? 'abcdefghij'[i] : '');
+  function pieceList(r) {
+    const out = [];
+    data().SETS.forEach(st => { const ps = r.sets[st.id] || []; ps.forEach((words, i) => out.push({ id: pieceId(st.id, ps.length, i), set: st.id, words })); });
+    return out;
+  }
+  function ensureRound() {
+    let r = sget('skg:round', null), changed = false;
+    const fresh = n => { const o = { n, sets: {}, done: {} }; data().SETS.forEach(st => { o.sets[st.id] = cutSet(st.words); }); return o; };
+    if (!r || !r.sets) { r = fresh(1); changed = true; }
+    const ids = new Set();
+    data().SETS.forEach(st => {
+      ids.add(st.id);
+      const cur = r.sets[st.id], flat = cur ? [].concat.apply([], cur) : null;
+      // spreadsheet changed this set's words → that set is re-cut and loses its ✓ marks
+      if (!flat || flat.length !== st.words.length || flat.slice().sort().join('|') !== st.words.slice().sort().join('|')) {
+        r.sets[st.id] = cutSet(st.words);
+        Object.keys(r.done).forEach(p => { if (p.replace(/[a-j]$/, '') === st.id) delete r.done[p]; });
+        changed = true;
+      }
+    });
+    Object.keys(r.sets).forEach(id => { if (!ids.has(id)) { delete r.sets[id]; changed = true; } });
+    const all = pieceList(r);
+    if (all.length && all.every(p => r.done[p.id])) { r = fresh((r.n || 1) + 1); changed = true; }   // all done → new round
+    if (changed) sset('skg:round', r);
+    return r;
+  }
+
+  // ───────── state & screens ─────────
+  let S = null, view = 'hub';
+  const fmt = () => JPStore.get('set:format', 'choose');
+  function setFmt(f) { sset('set:format', f); }
+  function scrollTop() { const el = document.getElementById('nrev'); if (el) el.scrollTop = 0; }
+  function setReviewing(on) { document.body.classList.toggle('review-active', !!on); }
+
+  const MODES = {
+    many:   { name: 'Many-reading', desc: 'The right reading of the hardest kanji — the ones with 4+ readings.', pool: () => data().MANY, opts: w => manyOptions(w) },
+    tricky: { name: 'Tricky readings', desc: 'Sound changes (花火 はなび, 学校 がっこう) and irregular words (今日, 大人).', pool: () => Object.keys(data().TRICKY), opts: w => trickyOptions(w) },
+    long:   { name: 'Long words', desc: 'Words with 3+ kanji — pick the reading one kanji at a time.', pool: () => data().LONG, how: 'Piece by piece', chooseOnly: true },
+    same:   { name: 'Same meaning', desc: 'Same meaning, different kanji — type the reading, then choose the meaning.', pool: () => data().SAME.reduce((a, g) => a.concat(g[1].map(x => g[0] + '|' + x[0])), []), how: 'Type + choose' },
+    single: { name: '1 kanji – 1 vocab', desc: 'Every kanji that has only one word — all of them, reading then meaning.', pool: () => data().SINGLE, how: 'Type only', typeOnly: true, all: true },
+  };
+  const SESSION = 25;
+
+  function hub() {
+    S = null; view = 'hub'; setReviewing(false);
+    const f = fmt(), r = ensureRound(), pieces = pieceList(r), done = pieces.filter(p => r.done[p.id]).length;
+    const next = pieces.find(p => !r.done[p.id]);
+    const card = key => {
+      // a mode that can't be answered the selected way is greyed out: choose-only in Type, type-only in Choose
+      const m = MODES[key], n = m.pool().length, off = (m.chooseOnly && f === 'type') || (m.typeOnly && f === 'choose');
+      return `<button class="nr-card" data-mode="${key}"${off ? ' disabled' : ''}><b>${m.name}</b><span class="nr-d">${esc(m.desc)}</span>
+        <span class="nr-t">${n} words · ${m.all ? 'all' : SESSION} per session · ${m.how || 'Choose or Type'}${m.chooseOnly ? ' · Choose only' : ''}</span></button>`;
+    };
+    root.innerHTML = `<div class="nr-wrap">
+      <h1 class="nr-h1">Review</h1>
+      <div class="nr-label">How you answer</div>
+      <div class="nr-seg" role="group" aria-label="How you answer">
+        <button id="nr-fmt-choose" aria-pressed="${f === 'choose'}">Choose</button>
+        <button id="nr-fmt-type" aria-pressed="${f === 'type'}">Type</button>
+      </div>
+      <p class="nr-hint">${f === 'choose' ? 'Pick the reading from 4 options. The meaning is shown after.' : 'Type the reading (romaji turns into kana), then the meaning.'} Applies to every mode that offers both.</p>
+      <div class="nr-section">One SKG</div>
+      <div class="nr-skg">
+        <div class="nr-skg-top"><b>One SKG</b><span class="nr-round">Round ${r.n} · ${done} / ${pieces.length}</span></div>
+        <span class="nr-d">Practise one item of a look-alike set.</span>
+        <button class="nr-btn nr-btn-primary" id="nr-continue"${next ? '' : ' disabled'}>Continue${next ? ' · ' + next.id : ''}</button>
+        <div class="nr-row"><button class="nr-btn" id="nr-select">Select</button><button class="nr-btn" id="nr-random">Random</button></div>
+      </div>
+      <div class="nr-section">Special modes</div>
+      <div class="nr-modes">${['many', 'tricky', 'long', 'same', 'single'].map(card).join('')}
+        <button class="nr-card" id="nr-pos-card"${f === 'choose' ? ' disabled' : ''}><b>Part of speech</b><span class="nr-d">Pick word types with tiles — nouns, verbs by group, adjectives…</span><span class="nr-t">30+ per session · Type only</span></button>
+      </div>
+    </div>`;
+    $('#nr-fmt-choose').onclick = () => { setFmt('choose'); hub(); };
+    $('#nr-fmt-type').onclick = () => { setFmt('type'); hub(); };
+    $('#nr-continue').onclick = () => { if (next) startPiece(next, true); };
+    $('#nr-select').onclick = selectView;
+    $('#nr-random').onclick = () => startPiece(pieces[rnd(pieces.length)], false);
+    $$('[data-mode]').forEach(b => b.onclick = () => startMode(b.dataset.mode));
+    $('#nr-pos-card').onclick = posSetup;
+  }
+
+  function selectView() {
+    S = null; view = 'select'; setReviewing(false);
+    const r = ensureRound(), pieces = pieceList(r);
+    const rows = data().SETS.map(st => {
+      const ps = pieces.filter(p => p.set === st.id);
+      return `<div class="nr-set"><div class="nr-set-id">${st.id}</div><div class="nr-set-kanji" lang="ja">${esc(st.kanji.join(''))}</div>
+        <div class="nr-chips">${ps.map(p => `<button class="nr-chip${r.done[p.id] ? ' done' : ''}" data-piece="${p.id}"><b>${r.done[p.id] ? '✓ ' : ''}${p.id}</b><span>${r.done[p.id] ? esc(r.done[p.id]) : p.words.length + ' words'}</span></button>`).join('')}</div></div>`;
+    }).join('');
+    root.innerHTML = `<div class="nr-wrap">
+      <h1 class="nr-h1">One SKG</h1>
+      <p class="nr-sub">Round ${r.n} · ${pieces.filter(p => r.done[p.id]).length} / ${pieces.length} done. Picking an item here counts it, and Continue skips it later.</p>
+      <div class="nr-sets-wrap"><div class="nr-sets" id="nr-sets">${rows}</div>
+        <div class="nr-vtrack" id="nr-vtrack" aria-hidden="true"><div class="nr-vthumb" id="nr-vthumb"></div></div></div>
+    </div>`;
+    $$('[data-piece]').forEach(b => b.onclick = () => startPiece(pieces.find(p => p.id === b.dataset.piece), true));
+    attachVTrack($('#nr-sets'), $('#nr-vtrack'), $('#nr-vthumb'));
+    scrollTop();
+  }
+  // permanent scroll bar for the set list on phones (§3b): drag the thumb or tap the track
+  function attachVTrack(box, track, thumb) {
+    const update = () => {
+      const h = Math.max(32, track.clientHeight * box.clientHeight / Math.max(1, box.scrollHeight)), max = box.scrollHeight - box.clientHeight;
+      thumb.style.height = h + 'px';
+      thumb.style.transform = 'translateY(' + (max > 0 ? box.scrollTop / max * (track.clientHeight - h) : 0) + 'px)';
+    };
+    const to = y => { const r = track.getBoundingClientRect(), h = thumb.offsetHeight; box.scrollTop = Math.min(1, Math.max(0, (y - r.top - h / 2) / (r.height - h))) * (box.scrollHeight - box.clientHeight); update(); };
+    let drag = false;
+    track.addEventListener('pointerdown', e => { drag = true; track.setPointerCapture(e.pointerId); to(e.clientY); e.preventDefault(); });
+    track.addEventListener('pointermove', e => { if (drag) to(e.clientY); });
+    track.addEventListener('pointerup', () => { drag = false; });
+    track.addEventListener('pointercancel', () => { drag = false; });
+    box.addEventListener('scroll', update, { passive: true });
+    update(); requestAnimationFrame(update);
+  }
+
+  function begin(s) {
+    S = Object.assign({ i: 0, right: 0, keys: null, unit: 'words right' }, s);
+    view = 'session'; setReviewing(true); scrollTop();
+    question();
+  }
+  function startPiece(piece, counts) {
+    const f = fmt();
+    begin({ mode: 'skg', piece, counts, label: piece.id, format: f, how: f.toUpperCase(), queue: shuffle(piece.words.slice()), opts: w => buildOptions(w),
+      onDone: s => { if (!counts) return; const r = ensureRound(); if (r.sets[piece.set]) { r.done[piece.id] = s.right + '/' + s.queue.length; sset('skg:round', r); } } });
+  }
+  function startMode(key) {
+    const m = MODES[key], f = fmt();
+    if ((m.chooseOnly && f === 'type') || (m.typeOnly && f === 'choose')) return;
+    const pool = m.pool();
+    let queue, deck = null;
+    if (m.all) queue = shuffle(pool.slice());
+    else { deck = dealDeck(key, pool, SESSION); queue = shuffle(deck.items.slice()); }
+    if (key === 'same') { const map = {}; data().SAME.forEach((g, gi) => g[1].forEach((x, wi) => { map[g[0] + '|' + x[0]] = { g: gi, w: wi }; })); queue = queue.map(id => map[id]).filter(Boolean); }
+    const format = m.typeOnly ? 'type' : f;
+    begin({ mode: key, label: m.name, format, how: (m.how || format).toUpperCase(), queue, opts: m.opts, onDone: () => { if (deck) deck.commit(); } });
+  }
+
+  function frame(inner) {
+    root.innerHTML = `<div class="nr-wrap nr-q">
+      <div class="nr-qhead"><span class="nr-qtag">${esc(S.label)} · ${esc(S.how)}</span></div>
+      <div class="nr-qcount">Question <b>${S.i + 1}</b> / ${S.queue.length}</div>
+      <div class="nr-bar"><i style="width:${Math.round(S.i / S.queue.length * 100)}%"></i></div>${inner}</div>`;
+  }
+  function question() {
+    if (S.i >= S.queue.length) return end();
+    const item = S.queue[S.i];
+    S.word = item; S.wordOk = true; S.keys = null;
+    if (S.mode === 'long') return askLong(item);
+    if (S.mode === 'same') return askSame(item);
+    if (S.format === 'choose') return askChoose(item);
+    askReading(item);
+  }
+  function next() { if (S.wordOk) S.right++; S.i++; question(); }
+
+  // Choose (§6.1)
+  function askChoose(word) {
+    const { opts, correct } = S.opts(word);
+    frame(`<div class="nr-word" lang="ja">${esc(word)}</div>
+      <div class="nr-reveal" id="nr-reveal"></div>
+      <div class="nr-opts">${opts.map((o, n) => `<button class="nr-opt" data-o="${esc(o)}" lang="ja"><span class="nr-k">${n + 1}</span>${esc(o)}</button>`).join('')}</div>
+      <button class="nr-btn nr-btn-primary nr-next" id="nr-next" hidden>Next →</button>`);
+    const buttons = $$('.nr-opt');
+    let answered = false;
+    const pick = b => {
+      if (answered) return; answered = true;
+      S.wordOk = b.dataset.o === correct;
+      buttons.forEach(x => { x.disabled = true; x.classList.add(x.dataset.o === correct ? 'is-right' : x === b ? 'is-wrong' : 'dim'); });
+      $('#nr-reveal').innerHTML = `<div class="nr-mn">${esc(showMeaning(data().W[word].m))}</div>`;
+      $('#nr-next').hidden = false; $('#nr-next').focus({ preventScroll: true });
+    };
+    buttons.forEach(b => b.onclick = () => pick(b));
+    $('#nr-next').onclick = next;
+    S.keys = e => {
+      if (!answered && /^[1-4]$/.test(e.key) && buttons[+e.key - 1]) pick(buttons[+e.key - 1]);
+      else if (answered && e.key === 'Enter') { e.preventDefault(); next(); }
+    };
+  }
+
+  // Type (§3, §3b): built ONCE per session and only updated — the input is never replaced, so the
+  // iPhone keyboard stays up and the screen never jumps
+  function tapButton(btn, fn) { btn.ontouchend = e => { e.preventDefault(); fn(); }; btn.onclick = fn; }
+  function markRight(inp, val) { inp.value = val + '　✓'; inp.classList.add('retyped'); }
+  function typeScreen(word, stepLabel, revealHtml, jp, placeholder, extraHtml) {
+    if (!$('#nr-ans')) {
+      frame(`<div class="nr-word" id="nr-tword" lang="ja"></div>
+        <div id="nr-textra"></div>
+        <div class="nr-reveal" id="nr-reveal"></div>
+        <div class="nr-step" id="nr-tstep"></div>
+        <input id="nr-ans" class="nr-answer" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="enter">
+        <button class="nr-btn nr-btn-primary nr-check" id="nr-go" onmousedown="event.preventDefault()">Check</button>
+        <div class="nr-opts" id="nr-topts" hidden></div>
+        <div class="nr-nudge" id="nr-nudge"></div>`);
+    }
+    $('.nr-qcount').innerHTML = `Question <b>${S.i + 1}</b> / ${S.queue.length}`;
+    $('.nr-bar i').style.width = Math.round(S.i / S.queue.length * 100) + '%';
+    $('#nr-tword').textContent = word;
+    $('#nr-textra').innerHTML = extraHtml || '';
+    $('#nr-reveal').innerHTML = revealHtml;
+    $('#nr-tstep').textContent = stepLabel;
+    $('#nr-go').textContent = 'Check';
+    $('#nr-nudge').textContent = '';
+    $('#nr-topts').hidden = true; $('#nr-topts').innerHTML = '';
+    const inp = $('#nr-ans');
+    inp.hidden = false; $('#nr-go').hidden = false;
+    inp.value = ''; inp.placeholder = placeholder;
+    inp.classList.remove('retyped');
+    inp.classList.toggle('jp', jp);
+    if (jp) inp.setAttribute('lang', 'ja'); else inp.removeAttribute('lang');
+    if (document.activeElement !== inp) inp.focus({ preventScroll: true });
+    return inp;
+  }
+  function askReading(word, then, readingsOverride) {
+    const readings = readingsOverride || data().W[word].r;
+    const cont = then || (html => askMeaning(word, html));
+    const inp = typeScreen(word, 'Reading', '', true, 'type the reading');
+    let phase = 'answer', wrongLine = '';
+    inp.oninput = () => { if (phase === 'wait') return; inp.value = hira(kana(inp.value, true)); $('#nr-nudge').textContent = ''; };
+    const submit = () => {
+      if (phase === 'wait') return;
+      const val = hira(kana(inp.value.trim().replace(/\s+/g, ''), false));
+      if (!val) return;
+      $('#nr-nudge').textContent = '';
+      if (/[a-z]/i.test(val)) { $('#nr-nudge').textContent = 'That still has romaji in it — finish the kana and try again.'; return; }
+      if (/[一-鿿]/.test(val)) { $('#nr-nudge').textContent = 'Type the reading in kana, not kanji.'; return; }
+      if (phase === 'answer') {
+        if (readings.includes(val)) { phase = 'wait'; markRight(inp, val); setTimeout(() => cont(`<div class="nr-rd ok" lang="ja">${esc(val)}</div>`), 900); }
+        else {
+          S.wordOk = false; phase = 'retype';
+          wrongLine = `<div class="nr-rd" lang="ja"><span class="bad">${esc(val)}</span> → <span class="ok fix">${esc(readings.join(' · '))}</span></div>`;
+          $('#nr-reveal').innerHTML = wrongLine;
+          inp.value = ''; inp.placeholder = 'type it once: ' + readings[0];
+        }
+      } else {                                        // forced retype — doesn't count again
+        if (readings.includes(val)) { phase = 'wait'; markRight(inp, val); setTimeout(() => cont(wrongLine), 900); }
+        else { $('#nr-nudge').textContent = 'Type it exactly as shown: ' + readings[0]; inp.select(); }
+      }
+    };
+    inp.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); submit(); } };
+    tapButton($('#nr-go'), submit);
+  }
+  function askMeaning(word, readingHtml) {
+    const meanings = data().W[word].m;
+    const inp = typeScreen(word, 'Meaning', readingHtml, false, 'type the meaning');
+    let phase = 'answer', wrongLine = '';
+    inp.oninput = () => { $('#nr-nudge').textContent = ''; };
+    const done = html => { $('#nr-reveal').innerHTML = readingHtml + html; $('#nr-go').textContent = 'Next →'; phase = 'done'; };
+    const submit = () => {
+      if (phase === 'done') return next();
+      const val = inp.value.trim();
+      if (!val) return;
+      $('#nr-nudge').textContent = '';
+      if (/[぀-ヿ一-鿿]/.test(val)) { $('#nr-nudge').textContent = 'Type the meaning in English.'; return; }
+      const g = gradeMeaning(val, meanings);
+      if (phase === 'answer') {
+        if (g.ok) { done(`<div class="nr-mn ok">${esc(showMeaning(meanings))}</div>` + (g.typo ? `<div class="nr-note">Accepted, check spelling: ${esc(g.typo)}</div>` : '')); markRight(inp, val); }
+        else {
+          S.wordOk = false; phase = 'retype';
+          wrongLine = `<div class="nr-mn"><span class="bad">${esc(val)}</span> → <span class="ok fix">${esc(showMeaning(meanings))}</span></div>`;
+          $('#nr-reveal').innerHTML = readingHtml + wrongLine;
+          inp.value = ''; inp.placeholder = 'type it once: ' + meanings[0].split('|')[0].trim();
+        }
+      } else if (g.ok) { done(wrongLine); markRight(inp, val); }
+      else { $('#nr-nudge').textContent = 'Type the meaning as shown to continue.'; inp.select(); }
+    };
+    inp.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); submit(); } };
+    tapButton($('#nr-go'), submit);
+  }
+
+  // Long words (§5.5): one kanji at a time, no feedback until the end of the word
+  function askLong(word) {
+    const steps = []; let prev = '';
+    data().W[word].s.forEach((p, i) => { if (Array.isArray(p)) { steps.push({ i, p, prev }); if (p[0] !== '々') prev = p[0]; } });
+    const picks = [];
+    const wordHtml = cur => { let n = -1; return Array.from(word).map(c => { if (isKanji(c) || c === '々') { n++; if (n === cur) return `<span class="nr-cur">${esc(c)}</span>`; } return esc(c); }).join(''); };
+    const render = () => {
+      const s = picks.length;
+      if (s < steps.length) {
+        const st = steps[s], opts = [st.p[1]], taken = new Set([st.p[1]]), src = trapSources(st.p, st.prev);
+        while (opts.length < 4) { const r = pickFrom(src, taken); if (!r) break; taken.add(r); opts.push(r); }
+        shuffle(opts);
+        frame(`<div class="nr-word" lang="ja">${wordHtml(s)}</div>
+          <div class="nr-reveal"><div class="nr-picks" lang="ja">${steps.map((x, n) => n < picks.length ? esc(picks[n]) : '＿').join(' · ')}</div></div>
+          <div class="nr-step">Kanji ${s + 1} of ${steps.length}</div>
+          <div class="nr-opts">${opts.map((o, n) => `<button class="nr-opt" data-o="${esc(o)}" lang="ja"><span class="nr-k">${n + 1}</span>${esc(o)}</button>`).join('')}</div>`);
+        const btns = $$('.nr-opt'), choose = b => { picks.push(b.dataset.o); render(); };
+        btns.forEach(b => b.onclick = () => choose(b));
+        S.keys = e => { if (/^[1-4]$/.test(e.key) && btns[+e.key - 1]) choose(btns[+e.key - 1]); };
+      } else {
+        S.wordOk = steps.every((x, n) => picks[n] === x.p[1]);
+        const marked = steps.map((x, n) => `<span class="${picks[n] === x.p[1] ? 'ok' : 'bad'}">${esc(picks[n])}</span>`).join(' · ');
+        frame(`<div class="nr-word" lang="ja">${esc(word)}</div>
+          <div class="nr-reveal"><div class="nr-picks" lang="ja">Your picks: ${marked}</div>
+            <div class="nr-rd big ok fix" lang="ja">${esc(data().W[word].r.join(' · '))}</div>
+            <div class="nr-mn">${esc(showMeaning(data().W[word].m))}</div></div>
+          <button class="nr-btn nr-btn-primary nr-next" id="nr-next">Next →</button>`);
+        $('#nr-next').onclick = next;
+        S.keys = e => { if (e.key === 'Enter') { e.preventDefault(); next(); } };
+      }
+    };
+    render();
+  }
+
+  // Same meaning (§5.6): type the reading, then choose the meaning — all on the question screen
+  function askSame(item) {
+    const ws = data().SAME[item.g][1], word = ws[item.w][0];
+    const readings = Array.from(new Set((data().W[word] ? data().W[word].r : []).concat(ws[item.w][1] ? [ws[item.w][1]] : [])));
+    askReading(word, html => sameMeaning(item, html), readings);
+  }
+  function sameMeaning(item, readingHtml) {
+    const ws = data().SAME[item.g][1], word = ws[item.w][0], inp = $('#nr-ans');
+    inp.blur(); inp.hidden = true; $('#nr-go').hidden = true; $('#nr-nudge').textContent = '';
+    $('#nr-reveal').innerHTML = readingHtml;
+    $('#nr-tstep').textContent = 'Meaning';
+    const box = $('#nr-topts');
+    box.innerHTML = shuffle(ws.map((x, n) => n)).map((n, j) => `<button class="nr-opt nr-opt-text" data-n="${n}"><span class="nr-k">${j + 1}</span><span>${esc(ws[n][3])}</span></button>`).join('')
+      + `<button class="nr-btn nr-btn-primary nr-next" id="nr-same-next" hidden>Next →</button>`;
+    box.hidden = false;
+    const btns = $$('#nr-topts .nr-opt');
+    let answered = false;
+    const pick = b => {
+      if (answered) return; answered = true;
+      if (+b.dataset.n !== item.w) S.wordOk = false;
+      btns.forEach(x => {
+        x.disabled = true;
+        x.classList.add(+x.dataset.n === item.w ? 'is-right' : x === b ? 'is-wrong' : 'dim');
+        x.lastElementChild.textContent = ws[+x.dataset.n][2];     // full note, Japanese examples included
+        x.lastElementChild.lang = 'ja';
+      });
+      if (data().W[word]) $('#nr-reveal').innerHTML = readingHtml + `<div class="nr-mn">${esc(showMeaning(data().W[word].m))}</div>`;
+      $('#nr-same-next').hidden = false;
+      $('#nr-same-next').onclick = next;
+      S.keys = e => { if (e.key === 'Enter') { e.preventDefault(); next(); } };
+    };
+    btns.forEach(b => b.onclick = () => pick(b));
+    S.keys = e => { if (!answered && /^[1-9]$/.test(e.key) && btns[+e.key - 1]) pick(btns[+e.key - 1]); };
+  }
+
+  // ───────── Part of speech (§5.8) ─────────
+  const POS_TILES = [
+    ['noun', 'Noun', w => w.t === 'noun'],
+    ['ru', 'る-verb', w => w.t === 'ru-verb'],
+    ['na', 'な-adj', w => w.t === 'na-adj'],
+    ['i', 'い-adj', w => w.t === 'i-adj'],
+    ['uall', 'All う-verbs', w => w.t === 'u-verb' || w.t === 'u-verb-ru'],
+    ['uru', 'う-verb る (godan)', w => w.t === 'u-verb-ru'],
+    ['uutsu', 'う-verb う・つ・る', w => w.t === 'u-verb' && 'うつる'.includes(w.end)],
+    ['umbn', 'う-verb む・ぶ・ぬ', w => w.t === 'u-verb' && 'むぶぬ'.includes(w.end)],
+    ['ukg', 'う-verb く・ぐ', w => w.t === 'u-verb' && 'くぐ'.includes(w.end)],
+    ['usu', 'う-verb す', w => w.t === 'u-verb' && w.end === 'す'],
+    ['suru', 'する-verb', w => w.t === 'suru-verb'],
+    ['adv', 'Adverb', w => w.t === 'adverb'],
+    ['expr', 'Expression', w => w.t === 'expression'],
+  ];
+  function posWords() {
+    const { W } = data();
+    return Object.keys(W).map(w => ({ w, t: ((POS_TAGS[w] || ['noun'])[0]), end: W[w].r[0].slice(-1) }));
+  }
+  function posSetup() {
+    S = null; view = 'pos'; setReviewing(false);
+    const sel = sget('pos:sel', { tiles: [], size: 30 }), all = posWords();
+    const counts = {}; POS_TILES.forEach(([k, , f]) => { counts[k] = all.filter(f).length; });
+    root.innerHTML = `<div class="nr-wrap">
+      <h1 class="nr-h1">Part of speech</h1>
+      <p class="nr-sub">Pick one or more word types. Questions are split equally between them. Type only.</p>
+      <div class="nr-tiles">${POS_TILES.map(([k, label]) => `<button class="nr-tile" data-k="${k}" aria-pressed="${sel.tiles.includes(k)}">${esc(label)}<small>${counts[k]}</small></button>`).join('')}</div>
+      <p class="nr-hint">Choose at least 1.</p>
+      <div class="nr-label">Questions</div>
+      <div class="nr-sizer"><button class="nr-btn" id="nr-minus"${sel.size > 30 ? '' : ' disabled'} aria-label="5 fewer">−</button><span class="nr-size">${sel.size}</span><button class="nr-btn" id="nr-plus" aria-label="5 more">+</button></div>
+      <button class="nr-btn nr-btn-primary" id="nr-start"${sel.tiles.length ? '' : ' disabled'}>Start</button>
+    </div>`;
+    $$('.nr-tile').forEach(b => b.onclick = () => { const i = sel.tiles.indexOf(b.dataset.k); if (i >= 0) sel.tiles.splice(i, 1); else sel.tiles.push(b.dataset.k); sset('pos:sel', sel); posSetup(); });
+    $('#nr-minus').onclick = () => { sel.size = Math.max(30, sel.size - 5); sset('pos:sel', sel); posSetup(); };
+    $('#nr-plus').onclick = () => { sel.size += 5; sset('pos:sel', sel); posSetup(); };
+    $('#nr-start').onclick = () => {
+      // split equally; a pick that runs out → its share is filled from the other pick(s); no repeats
+      const pools = sel.tiles.map(k => shuffle(all.filter(POS_TILES.find(t => t[0] === k)[2]).map(x => x.w)));
+      const used = new Set(), q = [];
+      const take = (p, n) => { let got = 0; while (got < n && pools[p].length) { const w = pools[p].shift(); if (!used.has(w)) { used.add(w); q.push(w); got++; } } return got; };
+      const base = Math.floor(sel.size / pools.length), extra = sel.size % pools.length;
+      let short = 0;
+      pools.forEach((p, i) => { const want = base + (i < extra ? 1 : 0); short += want - take(i, want); });
+      for (let i = 0; short > 0 && pools.some(p => p.length); i = (i + 1) % pools.length) short -= take(i, 1);
+      begin({ mode: 'pos', label: 'Part of speech', format: 'type', how: 'TYPE ONLY', queue: shuffle(q) });
+    };
+    scrollTop();
+  }
+
+  function end() {
+    const s = S;
+    if (s.onDone) s.onDone(s);
+    S = null; view = 'end'; setReviewing(false);
+    const again = s.mode === 'skg' ? 'Same item again' : s.mode === 'pos' ? 'Same selection again' : 'New session';
+    let extra = '';
+    if (s.mode === 'skg' && s.counts) { const r = ensureRound(), ps = pieceList(r); extra = `<p>One SKG · Round ${r.n} · ${ps.filter(p => r.done[p.id]).length} / ${ps.length}</p>`; }
+    root.innerHTML = `<div class="nr-wrap nr-end">
+      <div class="nr-label">${esc(s.label)} · done</div>
+      <div class="nr-score">${s.right}<small> / ${s.queue.length}</small></div>
+      <p>${esc(s.unit)}</p>${extra}
+      <div class="nr-btns">
+        <button class="nr-btn nr-btn-primary" id="nr-again">${again}</button>
+        <button class="nr-btn" id="nr-back">Back to selection menu</button>
+      </div></div>`;
+    $('#nr-again').onclick = () => {
+      if (s.mode === 'skg') startPiece(s.piece, s.counts);
+      else if (s.mode === 'pos') { posSetup(); $('#nr-start').click(); }
+      else startMode(s.mode);
+    };
+    $('#nr-back').onclick = hub;
+    scrollTop();
+  }
+
+  document.addEventListener('keydown', e => {
+    const scr = document.getElementById('nrev');
+    if (scr && scr.classList.contains('active') && S && S.keys) S.keys(e);
+  });
+  JPStore.onSync(() => {                     // the other device's progress arrived → refresh the hub
+    const scr = document.getElementById('nrev');
+    if (scr && scr.classList.contains('active') && view === 'hub') hub();
+  });
+
+  return {
+    open() { root = document.getElementById('nrev-app'); hub(); },
+    back() { if (view === 'hub') goHome(); else hub(); },
+    _test: { data, buildOptions, manyOptions, trickyOptions, gradeMeaning, kana, cleanNote, dealDeck, ensureRound, pieceList, posWords, state: () => ({ S, view }) },
+  };
+})();
 
 applyLevels();
 </script>
