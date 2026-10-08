@@ -9,6 +9,7 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>JpnApp</title>
+<script>/* theme before first paint (⚙ → Theme; setTheme() below) */(function(){try{var t=localStorage.getItem('jpnapp-theme');if(t&&t!=='red')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -16,12 +17,26 @@
   --bg:#0c0c0e; --surface:#141416; --surface2:#1c1c20;
   --border:#2a2a30; --text:#e8e8f0; --text-dim:#8a8aa3; --text-muted:var(--text-dim); /* one grey: muted (#333345, 1.6:1) retired, kept as alias */
   --accent:#e8193c; --accent-glow:rgba(232,25,60,0.4); --gold:#c9a84c;
+  /* theme (⚙ → Theme, html[data-theme]): only the red changes. --ui-accent = the theme colour, also
+     inside #grammar, where --accent stays red for the Japanese constructs; --on-accent = text on it */
+  --ui-accent:var(--accent); --on-accent:#fff;
   --pass:#1a3a2a; --fail:#3a1a1a; --pass-text:#4af080; --fail-text:#f04a4a;
   /* Fonts: ONE text stack. Inter draws Latin; it has no Japanese glyphs, so every kana/kanji
      falls back to Noto Sans JP automatically. --font-jp and --font-mono are kept as aliases of
      that stack (hundreds of existing references). Real monospace is only --font-num, for digits.
      --font-noto is Noto-first, for furigana: .fw's box metrics anchor the reading above the kanji. */
   --font-ui:"Inter","Noto Sans JP",sans-serif; --font-jp:var(--font-ui); --font-mono:var(--font-ui); --font-num:"DM Mono",monospace; --font-noto:"Noto Sans JP",sans-serif; --r:4px; --color-noun:#5090d0; --color-i-adj:#5db89a; --color-na-adj:#a07ed4; --furi-hit:#ff9d3c;}
+:root[data-theme="blue"]{--accent:#2f6fe4;}
+:root[data-theme="violet"]{--accent:#8a5cf0;}
+:root[data-theme="pink"]{--accent:#d6337a;}
+:root[data-theme="orange"]{--accent:#e2620f;--on-accent:#0c0c0e;}
+:root[data-theme="silver"]{--accent:#c8c8d6;--on-accent:#0c0c0e;}
+/* grammar: the red of the Japanese constructs is part of the grammar colour system — it never
+   follows the theme; grammar's own frames, labels and buttons use --ui-accent instead */
+#grammar{--accent:#e8193c;}
+/* red frames on hover are for mouse users only (@media (hover:hover)); on touch screens a tap gives a
+   short flash instead (.tap-flash, set by tapFlash() on click — never by touching or scrolling) */
+.tap-flash{border-color:var(--ui-accent) !important;}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-text-size-adjust:100% !important;text-size-adjust:100% !important;}
 html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-family:var(--font-ui);font-weight:300;line-height:1.45;overflow:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
 /* line-height 1.45 = Noto Sans JP's natural line height, so switching the primary font to Inter
@@ -46,7 +61,7 @@ thead th{text-align:center !important;}
 .home-cog{position:absolute;top:9px;right:12px;width:34px;height:34px;padding:0;display:flex;
   align-items:center;justify-content:center;background:var(--bg);border:1px solid var(--border);
   border-radius:var(--r);color:var(--text-dim);cursor:pointer;transition:color .15s,border-color .15s;}
-.home-cog:hover{color:var(--accent);border-color:var(--accent);}
+@media (hover:hover){.home-cog:hover{color:var(--ui-accent);border-color:var(--ui-accent);}}
 .home-cog svg{width:17px;height:17px;display:block;}
 /* app settings sheet (opened from the home cog) */
 #app-settings{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:450;
@@ -79,12 +94,12 @@ thead th{text-align:center !important;}
   border-radius:var(--r);padding:4px;margin-bottom:8px;}
 #nrev .nr-seg button{border:0;background:transparent;border-radius:3px;padding:10px 8px;font-family:var(--font-ui);
   font-size:15px;font-weight:500;color:var(--text-dim);cursor:pointer;}
-#nrev .nr-seg button[aria-pressed="true"]{background:var(--accent);color:#fff;}
+#nrev .nr-seg button[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);}
 #nrev .nr-btn{display:block;width:100%;box-sizing:border-box;border:1px solid var(--border);background:var(--surface2);
   border-radius:var(--r);padding:14px;font-family:var(--font-ui);font-size:15px;font-weight:500;color:var(--text);
   cursor:pointer;text-align:center;}
 #nrev .nr-btn:hover{border-color:#3a3a44;}
-#nrev .nr-btn-primary{background:var(--accent);border-color:var(--accent);color:#fff;}
+#nrev .nr-btn-primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent);}
 #nrev .nr-btn:disabled{opacity:.35;cursor:not-allowed;}
 #nrev .nr-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
 #nrev .nr-skg{display:grid;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;}
@@ -95,7 +110,7 @@ thead th{text-align:center !important;}
 #nrev .nr-modes{display:flex;flex-direction:column;gap:8px;}
 #nrev .nr-card{display:grid;gap:3px;text-align:left;background:var(--surface);border:1px solid var(--border);
   border-radius:var(--r);padding:14px 16px;cursor:pointer;color:var(--text);font-family:var(--font-ui);}
-#nrev .nr-card:hover{border-color:var(--accent);}
+@media (hover:hover){#nrev .nr-card:hover{border-color:var(--accent);}}
 #nrev .nr-card:disabled{opacity:.35;cursor:not-allowed;}
 #nrev .nr-card:disabled:hover{border-color:var(--border);}
 #nrev .nr-card b{font-size:17px;font-weight:500;}
@@ -115,14 +130,14 @@ thead th{text-align:center !important;}
 #nrev .nr-set{display:grid;grid-template-columns:44px 1fr;gap:4px 12px;align-items:center;background:var(--surface);
   border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;}
 #nrev .nr-set-id{font-family:var(--font-num);font-size:13px;color:var(--text-dim);grid-row:span 2;}
-#nrev .nr-set-kanji{font-size:17px;letter-spacing:.06em;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+#nrev .nr-set-kanji{font-size:17px;letter-spacing:.06em;min-width:0;overflow-wrap:anywhere;line-height:1.35;}
 #nrev .nr-chips{display:flex;flex-wrap:wrap;gap:6px;}
 #nrev .nr-chip{border:1px solid var(--border);background:var(--surface2);border-radius:var(--r);padding:5px 9px;font-size:11px;
   color:var(--text);cursor:pointer;display:inline-flex;gap:6px;align-items:baseline;font-family:var(--font-ui);}
 #nrev .nr-chip b{font-family:var(--font-num);font-weight:500;font-size:13px;}
 #nrev .nr-chip span{color:var(--text-dim);}
 #nrev .nr-chip.done b{color:var(--pass-text);}
-#nrev .nr-chip:hover{border-color:var(--accent);}
+@media (hover:hover){#nrev .nr-chip:hover{border-color:var(--accent);}}
 /* question screens */
 #nrev .nr-qhead{display:flex;justify-content:flex-end;min-height:22px;margin-bottom:6px;}
 #nrev .nr-qtag{font-family:var(--font-num);font-size:11px;color:var(--text-dim);letter-spacing:.1em;}
@@ -165,8 +180,8 @@ thead th{text-align:center !important;}
 #nrev .nr-tile{border:1px solid var(--border);background:var(--surface);border-radius:var(--r);padding:9px 12px;font-family:var(--font-ui);
   font-size:13px;color:var(--text);cursor:pointer;display:inline-flex;gap:6px;align-items:baseline;}
 #nrev .nr-tile small{font-family:var(--font-num);font-size:11px;color:var(--text-dim);}
-#nrev .nr-tile[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff;}
-#nrev .nr-tile[aria-pressed="true"] small{color:#fff;}
+#nrev .nr-tile[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent);}
+#nrev .nr-tile[aria-pressed="true"] small{color:var(--on-accent);}
 #nrev .nr-sizer{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
 #nrev .nr-sizer .nr-btn{width:52px;padding:10px 0;font-size:19px;}
 #nrev .nr-size{font-family:var(--font-num);font-size:26px;min-width:56px;text-align:center;}
@@ -201,11 +216,7 @@ thead th{text-align:center !important;}
 #nrev .nr-cj-hint-space{height:22px;margin-bottom:4px;}
 #nrev #nr-textra:not(:empty) + .nr-reveal{min-height:34px;margin-bottom:8px;}
 @media (max-width:480px){#nrev .nr-cj-tags{gap:4px;}#nrev .nr-etag{letter-spacing:.02em;padding:2px 4px;}}
-/* tough lists */
-#nrev .nr-links{display:flex;flex-direction:column;align-items:flex-start;gap:2px;margin-top:14px;}
-#nrev .nr-link{background:none;border:0;padding:6px 0;color:var(--text-dim);font-family:var(--font-ui);font-size:13px;cursor:pointer;
-  text-decoration:underline;text-underline-offset:3px;}
-#nrev .nr-link:hover{color:var(--text);}
+/* tough lists (inside their pop-up) */
 #nrev .nr-tough{display:flex;flex-direction:column;gap:6px;margin-top:8px;}
 #nrev .nr-tough-row{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:baseline;background:var(--surface);
   border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;}
@@ -215,6 +226,33 @@ thead th{text-align:center !important;}
 #nrev .nr-tough-x{font-family:var(--font-num);font-size:13px;color:var(--fail-text);}
 #nrev .nr-empty{font-size:13px;color:var(--text-dim);margin:0;}
 #nrev .nr-warn{font-size:13px;line-height:1.5;color:#e8a33a;margin:4px 0 0;}
+#nrev .nr-tnote{text-align:center;}
+/* pop-ups over a hub (One SKG Select, tough lists, How the SRS works): tap the background, ✕ or
+   Escape → back to the hub. The list inside scrolls in its own box (§3b), with the phone scroll bar */
+#nrev .nr-pop{position:fixed;inset:0;z-index:420;background:rgba(0,0,0,0.72);display:flex;align-items:center;
+  justify-content:center;padding:16px;overscroll-behavior:contain;cursor:pointer;}
+#nrev .nr-pop-panel{width:100%;max-width:560px;max-height:100%;display:flex;flex-direction:column;background:var(--bg);
+  border:1px solid var(--border);border-radius:var(--r);padding:18px 16px 16px;cursor:auto;}
+#nrev .nr-pop-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+#nrev .nr-pop-head .nr-h1{margin:0 0 6px;}
+#nrev .nr-pop-x{flex:none;width:34px;height:34px;padding:0;background:var(--bg);border:1px solid var(--border);
+  border-radius:var(--r);color:var(--text-dim);font-size:15px;cursor:pointer;font-family:var(--font-ui);}
+@media (hover:hover){#nrev .nr-pop-x:hover{color:var(--accent);border-color:var(--accent);}}
+#nrev .nr-pop .nr-sub{margin-bottom:12px;}
+#nrev .nr-pop .nr-seg{flex:none;}
+#nrev .nr-pop .nr-sets-wrap{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;}
+#nrev .nr-pop .nr-sets{height:auto;min-height:0;max-height:62vh;max-height:62dvh;flex:1 1 auto;}
+#nrev .nr-pop .nr-tough{margin-top:0;}
+#nrev.nr-popped{overflow:hidden;}
+/* How the SRS works */
+#nrev .nr-guide{padding:12px 14px;font-size:15px;line-height:1.6;}
+#nrev .nr-guide p{margin:0 0 12px;}
+#nrev .nr-guide p:last-child{margin-bottom:0;}
+#nrev .nr-stages{width:100%;border-collapse:collapse;margin:0 0 14px;font-size:13px;}
+#nrev .nr-stages th,#nrev .nr-stages td{border:1px solid var(--border);padding:6px 10px;text-align:left;}
+#nrev .nr-stages th{font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);background:var(--surface2);}
+#nrev .nr-stages td:first-child{font-family:var(--font-num);text-align:center;width:64px;}
+#nrev .nr-stages tr.nr-limit td{color:var(--gold);}
 #app-settings .as-panel{width:100%;max-width:380px;margin-top:12vh;background:var(--surface);
   border:1px solid var(--border);border-radius:var(--r);padding:24px;}
 .as-title{font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--text);
@@ -223,14 +261,21 @@ thead th{text-align:center !important;}
 .as-done{margin-top:20px;width:100%;padding:10px;background:none;border:1px solid var(--border);
   border-radius:var(--r);color:var(--text-dim);font-size:11px;letter-spacing:0.18em;
   text-transform:uppercase;cursor:pointer;}
-.as-done:hover{color:var(--accent);border-color:var(--accent);}
+@media (hover:hover){.as-done:hover{color:var(--accent);border-color:var(--accent);}}
+/* theme picker (⚙ → Theme): tiles like the review tiles — the chosen one is filled with its colour */
+.th-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.th-btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:9px 6px;background:var(--bg);
+  border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-size:13px;cursor:pointer;}
+.th-btn i{width:12px;height:12px;border-radius:50%;flex:none;box-shadow:0 0 0 1px rgba(255,255,255,.55);}
+.th-btn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent);}
+@media (hover:hover){.th-btn:hover{border-color:var(--accent);}}
 /* text size stepper row — shared by the app settings sheet and the grammar settings panel */
 .ts-row{display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--border);}
 .ts-label{flex:1;font-size:13px;color:var(--text);font-weight:300;}
 .ts-btn{width:34px;height:34px;padding:0;display:flex;align-items:center;justify-content:center;
   background:var(--bg);border:1px solid var(--border);border-radius:var(--r);color:var(--text-dim);
   font-size:13px;font-weight:500;cursor:pointer;transition:color .15s,border-color .15s;}
-.ts-btn:hover:not(:disabled){color:var(--accent);border-color:var(--accent);}
+@media (hover:hover){.ts-btn:hover:not(:disabled){color:var(--ui-accent);border-color:var(--ui-accent);}}
 .ts-btn:disabled{opacity:.35;cursor:default;}
 .ts-btn .zl,#zoom-ctl .zl{font-size:11px;margin-left:1px;}
 .ts-val{min-width:46px;text-align:center;font-family:var(--font-num);font-size:13px;color:var(--text);}
@@ -277,15 +322,22 @@ thead th{text-align:center !important;}
 
 /* SKG GRID */
 #skg-picker{justify-content:flex-start;padding-top:56px;}
-.skg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
-  gap:8px;width:100%;max-width:600px;padding-bottom:24px;}
-.skg-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
-  padding:18px 12px 12px;cursor:pointer;transition:all 0.15s;text-align:center;position:relative;}
-.skg-card:hover{border-color:var(--accent);background:var(--surface2);}
-.skg-card:active{transform:scale(0.97);}
-.skg-card-id{position:absolute;top:4px;right:7px;font-size:11px;letter-spacing:0.05em;color:var(--text-muted);font-family:var(--font-num);}
-.skg-card-kanji{font-family:var(--font-jp);font-weight:300;font-size:25px;line-height:1.1;}
-.skg-card-count{font-size:11px;color:var(--text);margin-top:7px;}
+/* set list = the same rows as Review Vocab → One SKG → Select (#nrev .nr-set): number · all its kanji */
+.skg-grid{display:flex;flex-direction:column;gap:6px;width:100%;max-width:600px;padding-bottom:24px;}
+.skg-card{display:grid;grid-template-columns:44px 1fr;gap:4px 12px;align-items:center;width:100%;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;
+  cursor:pointer;text-align:left;color:var(--text);font-family:var(--font-ui);transition:border-color .15s;}
+@media (hover:hover){.skg-card:hover{border-color:var(--accent);}}
+.skg-card-id{font-family:var(--font-num);font-size:13px;color:var(--text-dim);grid-row:span 2;}
+.skg-card-kanji{font-family:var(--font-jp);font-weight:400;font-size:17px;letter-spacing:.06em;min-width:0;
+  overflow-wrap:anywhere;line-height:1.35;}
+.skg-card-count{font-size:11px;color:var(--text-dim);}
+/* "Special Drills" in the set picker: boxes like the review mode cards */
+.study-drill{display:grid;gap:3px;width:100%;text-align:left;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);padding:14px 16px;margin-bottom:8px;cursor:pointer;color:var(--text);font-family:var(--font-ui);}
+.study-drill b{font-size:17px;font-weight:500;}
+.study-drill span{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);}
+@media (hover:hover){.study-drill:hover{border-color:var(--accent);}}
 .picker-label{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);font-family:var(--font-ui);padding:4px 0 10px;}
 .picker-divider{height:1px;background:var(--border);margin:6px 0 20px;}
 .picker-head{display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;}
@@ -363,7 +415,7 @@ thead th{text-align:center !important;}
 .pos-check-row{display:flex;align-items:center;gap:12px;padding:12px 14px;
   background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
   cursor:pointer;transition:border-color 0.15s;}
-.pos-check-row:hover{border-color:var(--text-dim);}
+@media (hover:hover){.pos-check-row:hover{border-color:var(--accent);}}
 .pos-check-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
 .pos-check-label{flex:1;font-family:var(--font-ui);font-size:13px;font-weight:500;letter-spacing:0.05em;}
 .pos-check-count{font-family:var(--font-num);font-size:11px;color:var(--text-dim);}
@@ -374,8 +426,8 @@ thead th{text-align:center !important;}
 .svk-card{background:var(--surface);border:1px solid var(--border);
   border-radius:var(--r);padding:14px 16px;scroll-margin-top:68px;}
 .kata-cat-card{transition:border-color 0.15s,background 0.15s;}
-.kata-cat-card:hover{border-color:var(--accent);background:var(--surface2);}
-.kata-cat-card.cat-open:hover{border-color:var(--border);background:var(--surface);}
+@media (hover:hover){.kata-cat-card:hover{border-color:var(--accent);background:var(--surface2);}
+.kata-cat-card.cat-open:hover{border-color:var(--border);background:var(--surface);}}
 .svk-header{display:flex;align-items:center;gap:14px;cursor:pointer;margin-bottom:0;}
 .svk-kanji{font-family:var(--font-jp);font-weight:300;font-size:29px;line-height:1;}
 .svk-info{flex:1;}
@@ -383,82 +435,6 @@ thead th{text-align:center !important;}
 .svk-meaning{font-size:13px;}
 .svk-body{margin-top:10px;border-top:1px solid var(--border);padding-top:10px;display:none;}
 .svk-body.open{display:block;}
-
-/* REVIEW */
-#review{gap:0;justify-content:flex-start;padding:0;overflow:hidden;}
-.review-header{width:100%;padding:14px 20px;border-bottom:1px solid var(--border);
-  display:flex;align-items:center;gap:12px;flex-shrink:0;}
-.review-progress{flex:1;height:2px;background:var(--border);border-radius:1px;overflow:hidden;}
-.review-progress-fill{height:100%;background:var(--accent);border-radius:1px;transition:width 0.3s ease;}
-.review-counter{font-size:11px;letter-spacing:0.1em;color:var(--text-dim);font-family:var(--font-num);white-space:nowrap;}
-
-.review-body{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;
-  justify-content:flex-start;padding:22px 16px 14px;gap:14px;width:100%;max-width:100%;}
-.review-card{text-align:center;width:100%;max-width:480px;}
-.review-kanji-display{font-family:var(--font-jp);font-weight:300;font-size:clamp(75px,19vw,140px);
-  line-height:1;color:var(--text);margin-bottom:10px;
-  text-shadow:0 0 60px rgba(232,25,60,0.15);}
-.review-known-meaning{font-size:15px;color:var(--gold);min-height:20px;font-weight:400;font-family:var(--font-ui);}
-
-.review-input-area{width:100%;max-width:480px;display:flex;flex-direction:column;gap:8px;}
-.step-label{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);font-family:var(--font-ui);font-weight:300;}
-.input-row{display:flex;gap:8px;align-items:stretch;width:100%;}
-.review-input{flex:1;background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--r);padding:13px 15px;font-family:var(--font-jp);font-size:19px;font-weight:300;
-  color:var(--text);outline:none;transition:border-color 0.15s;-webkit-appearance:none;}
-.review-input::placeholder{color:var(--text-muted);font-family:var(--font-ui);font-size:15px;}
-.review-input:focus{border-color:var(--accent);}
-.review-input.correct{border-color:var(--pass-text);background:rgba(74,240,128,0.05);}
-.review-input.wrong{border-color:var(--fail-text);background:rgba(240,74,74,0.05);animation:shake 0.3s ease;}
-.review-input:disabled{opacity:0.5;}
-@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
-
-.submit-btn{background:var(--accent);border:none;border-radius:var(--r);padding:13px 18px;
-  color:#fff;font-family:var(--font-ui);font-size:13px;letter-spacing:0.05em;
-  text-transform:uppercase;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
-.submit-btn:hover{opacity:0.9;} .submit-btn:active{transform:scale(0.97);}
-.submit-btn:disabled{opacity:0.4;cursor:default;}
-.submit-btn.next-ready{background:var(--pass-text);color:#0c0c0e;font-weight:600;}
-@media(max-width:520px){
-  .input-row{flex-direction:column;}
-  .submit-btn{width:100%;padding:14px;}
-}
-
-.answer-reveal{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
-  padding:11px 15px;font-size:13px;color:var(--fail-text);text-align:center;font-family:var(--font-ui);display:none;}
-.answer-reveal.show{display:block;}
-.answer-reveal.hint{display:block;color:var(--gold);border-color:rgba(201,168,76,0.35);}
-.answer-reveal strong{color:var(--text);font-family:var(--font-jp);font-size:17px;font-weight:300;}
-
-.feedback-row{display:none;gap:8px;}
-.feedback-row.show{display:flex;}
-.btn-pass{flex:1;padding:13px;border:none;border-radius:var(--r);background:var(--pass);
-  color:var(--pass-text);font-family:var(--font-ui);font-size:13px;letter-spacing:0.05em;
-  text-transform:uppercase;cursor:pointer;transition:all 0.15s;}
-.btn-pass:hover{background:#224433;}
-.btn-fail{flex:1;padding:13px;border:none;border-radius:var(--r);background:var(--fail);
-  color:var(--fail-text);font-family:var(--font-ui);font-size:13px;letter-spacing:0.05em;
-  text-transform:uppercase;cursor:pointer;transition:all 0.15s;}
-.btn-fail:hover{background:#442222;}
-
-.review-footer{width:100%;padding:11px 16px;border-top:1px solid var(--border);
-  display:flex;justify-content:space-between;align-items:center;flex-shrink:0;gap:8px;}
-.score-display{display:flex;gap:10px;font-size:11px;font-family:var(--font-num);flex-wrap:wrap;}
-.score-pass{color:var(--pass-text);} .score-fail{color:var(--fail-text);}
-.score-sep{color:var(--text-muted);}
-
-/* DONE */
-#done{gap:28px;}
-.done-title{font-family:var(--font-jp);font-size:45px;font-weight:300;}
-.done-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;
-  background:var(--border);border:1px solid var(--border);border-radius:var(--r);
-  overflow:hidden;width:100%;max-width:340px;}
-.done-cell{background:var(--surface);padding:16px;text-align:center;}
-.done-cell-label{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;
-  color:var(--text-muted);margin-bottom:6px;}
-.done-cell-val{font-size:29px;font-weight:500;line-height:1;}
-.done-cell-val.p{color:var(--pass-text);} .done-cell-val.f{color:var(--fail-text);}
-.done-buttons{width:100%;max-width:340px;display:flex;flex-direction:column;gap:10px;}
 
 .scrollable{overflow-y:auto;width:100%;display:flex;flex-direction:column;align-items:center;}
 
@@ -498,7 +474,7 @@ body.search-open #global-search-bar{transform:translateY(0);}
   -webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cline%20x1='19'%20y1='12'%20x2='6'%20y2='12'/%3E%3Cpolyline%20points='13,5%206,12%2013,19'/%3E%3C/svg%3E") no-repeat center/contain;
   mask:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cline%20x1='19'%20y1='12'%20x2='6'%20y2='12'/%3E%3Cpolyline%20points='13,5%206,12%2013,19'/%3E%3C/svg%3E") no-repeat center/contain;
 }
-.screen-header .back-btn:hover{color:var(--accent);border-color:var(--accent);}
+@media (hover:hover){.screen-header .back-btn:hover{color:var(--accent);border-color:var(--accent);}}
 /* content no longer has to clear a 56px bar */
 .screen:not(#grammar) .scrollable{padding-top:16px !important;}
 @media (max-width:480px){
@@ -512,7 +488,8 @@ body.search-open #global-search-bar{transform:translateY(0);}
   color:var(--text-dim);cursor:pointer;padding:0;
   transition:color 0.15s,border-color 0.15s,opacity 0.15s,top .22s ease;
 }
-#search-fab:hover,#search-fab.on{color:var(--accent);border-color:var(--accent);}
+#search-fab.on{color:var(--accent);border-color:var(--accent);}
+@media (hover:hover){#search-fab:hover{color:var(--accent);border-color:var(--accent);}}
 #search-fab svg{width:17px;height:17px;display:block;}
 body.search-open #search-fab{color:var(--accent);border-color:var(--accent);}
 body.grammar-active #search-fab,body.review-active #search-fab{display:none;}
@@ -587,7 +564,7 @@ body.search-open.home-active #search-fab{top:97px;}
   border-radius:var(--r);padding:8px;font-family:var(--font-jp);font-size:15px;
   color:var(--text-dim);cursor:pointer;transition:all 0.15s;text-align:center;}
 .kana-script-btn:hover{border-color:var(--text-dim);color:var(--text);}
-.kana-script-btn.active{background:var(--surface2);border-color:var(--accent);color:var(--accent);}
+.kana-script-btn.active{background:var(--accent);border-color:var(--accent);color:var(--on-accent);}
 .kana-section-title{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;
   color:var(--text-dim);padding:16px 0 8px;font-family:var(--font-mono);
   width:100%;max-width:600px;border-top:1px solid var(--border);margin-top:8px;}
@@ -614,11 +591,6 @@ body.search-open.home-active #search-fab{top:97px;}
 .kana-script-separator{width:100%;max-width:600px;border-top:1px solid var(--border);
   margin:20px 0 4px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;
   color:var(--accent);font-family:var(--font-mono);padding-top:12px;}
-/* Kana picker */
-.kana-set-group{margin-bottom:20px;}
-.kana-set-group-title{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;
-  color:var(--accent);font-family:var(--font-mono);margin-bottom:8px;}
-
 /* ── SORT BAR ── */
 .sort-bar{
   display:flex;gap:6px;width:100%;max-width:600px;
@@ -632,20 +604,19 @@ body.search-open.home-active #search-fab{top:97px;}
   white-space:nowrap;
 }
 .sort-btn:hover{border-color:var(--text-dim);color:var(--text);}
-.sort-btn.active{background:var(--surface2);border-color:var(--accent);color:var(--accent);}
+.sort-btn.active{background:var(--accent);border-color:var(--accent);color:var(--on-accent);}
 
 /* ── VERB CONJUGATION STUDY ── */
 #study-verbs{justify-content:flex-start;padding-top:56px;}
 .verb-type-toggle{display:flex;gap:6px;width:100%;max-width:680px;padding:12px 0 4px;flex-wrap:wrap;}
 .verb-subtype-toggle{display:none;gap:6px;width:100%;max-width:680px;padding:4px 0 6px;flex-wrap:wrap;}
 .verb-subtype-toggle.open{display:flex;}
-.verb-type-btn,.verb-subtype-btn{background:transparent;border:1px solid var(--border);border-radius:var(--r);
+.verb-type-btn,.verb-subtype-btn{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
   padding:7px 14px;font-family:var(--font-jp);font-size:11px;letter-spacing:0.08em;
   text-transform:uppercase;color:var(--text-dim);cursor:pointer;transition:all 0.15s;white-space:nowrap;}
 .verb-type-btn:hover,.verb-subtype-btn:hover{border-color:var(--text-dim);color:var(--text);}
-.verb-type-btn.active{background:var(--surface2);border-color:var(--accent);color:var(--accent);}
-.verb-subtype-btn.active{background:var(--surface2);border-color:var(--gold);color:var(--gold);}
-#adj-type-toggle .verb-subtype-btn.active{border-color:var(--accent);color:var(--accent);}
+/* selected = solid accent, like the review tiles (Study and Review share one selection look) */
+.verb-type-btn.active,.verb-subtype-btn.active{background:var(--accent);border-color:var(--accent);color:var(--on-accent);}
 .vc-block{width:100%;max-width:680px;margin-bottom:28px;overflow-x:auto;}
 /* pinch-zoom lives on the conjugation tables only (conjPinchZoom); the browser's own pinch is
    switched off here so the two never fight */
@@ -740,7 +711,7 @@ body.search-open.home-active #search-fab{top:97px;}
   font-size: 11px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--ui-accent);
   font-family: var(--font-mono);
   margin-bottom: 14px;
 }
@@ -763,7 +734,7 @@ body.search-open.home-active #search-fab{top:97px;}
   letter-spacing: 0.22em;
   text-transform: uppercase;
   font-family: var(--font-mono);
-  color: var(--accent);
+  color: var(--ui-accent);
 }
 #grammar .examples-toggle:hover .toggle-hint{ opacity: 1; }
 /* ── EXAMPLES FILTER BAR ── */
@@ -1190,15 +1161,18 @@ body.search-open.home-active #search-fab{top:97px;}
   transition: border-color 0.15s, background 0.15s;
   text-align: left;
 }
+@media (hover:hover){
 #grammar .chapter-btn:hover{
-  border-color: var(--accent);
+  border-color: var(--ui-accent);
   background: rgba(232,25,60,0.04);
+  background: color-mix(in srgb, var(--ui-accent) 4%, transparent);
+}
 }
 #grammar .btn-numeral{
   font-size: 11px;
   font-family: var(--font-mono);
   letter-spacing: 0.12em;
-  color: var(--accent);
+  color: var(--ui-accent);
   min-width: 52px;
   font-weight: 500;
 }
@@ -1266,7 +1240,7 @@ body.search-open.home-active #search-fab{top:97px;}
   font-size: 11px;
   font-family: var(--font-mono);
   letter-spacing: 0.18em;
-  color: var(--accent);
+  color: var(--ui-accent);
   font-weight: 500;
 }
 #grammar .chapter-name{
@@ -1339,8 +1313,10 @@ body.search-open.home-active #search-fab{top:97px;}
   min-width: 22px;
   letter-spacing: 0.08em;
 }
+@media (hover:hover){
 #grammar .toc-item a:hover .toc-jp, #grammar .toc-item a:hover .toc-en{
-  color: var(--accent);
+  color: var(--ui-accent);
+}
 }
 #grammar .toc-jp{
   font-size: 15px;
@@ -1400,7 +1376,7 @@ body.search-open.home-active #search-fab{top:97px;}
   text-align: center;
   transition: color 0.12s, border-color 0.12s;
 }
-#grammar .settings-cog:hover{ color: var(--accent); border-color: var(--accent); }
+@media (hover:hover){ #grammar .settings-cog:hover{ color: var(--ui-accent); border-color: var(--ui-accent); } }
 #grammar #settings-overlay{
   display: none;
   position: fixed;
@@ -1474,13 +1450,13 @@ body.search-open.home-active #search-fab{top:97px;}
   height: 17px;
   border: 1px solid var(--border);
   border-radius: 3px;
-  color: var(--accent);
+  color: var(--ui-accent);
   font-size: 11px;
   line-height: 15px;
   text-align: center;
   flex-shrink: 0;
 }
-#grammar .settings-row.is-on .settings-box{ border-color: var(--accent); }
+#grammar .settings-row.is-on .settings-box{ border-color: var(--ui-accent); }
 #grammar .settings-close{
   margin-top: 20px;
   width: 100%;
@@ -1495,7 +1471,7 @@ body.search-open.home-active #search-fab{top:97px;}
   text-transform: uppercase;
   cursor: pointer;
 }
-#grammar .settings-close:hover{ color: var(--accent); border-color: var(--accent); }
+@media (hover:hover){ #grammar .settings-close:hover{ color: var(--ui-accent); border-color: var(--ui-accent); } }
 /* ── LEVEL FILTER STATE ──
    N4 off: card bodies, recap rows and in-card N4 sections are REMOVED;
    TOC entries and N4-only chapter buttons are DIMMED but stay in the flow,
@@ -1592,8 +1568,12 @@ body.hide-n4 #grammar .chapter-btn.lv-n4{ opacity: 0.28; pointer-events: none; }
 #grammar .guide-btn{ background: var(--surface); border: 1px solid var(--border); border-radius: var(--r);
   padding: 15px 12px 13px; cursor: pointer; display: flex; flex-direction: column; align-items: center;
   gap: 5px; transition: border-color .15s, background .15s; text-align: center; }
+@media (hover:hover){
 #grammar .guide-btn:hover{ border-color: #3dd6c8; background: rgba(61,214,200,0.05); }
 #grammar .guide-btn.lv-n4:hover{ border-color: #4ecb6e; background: rgba(78,203,110,0.05); }
+}
+#grammar .guide-btn.tap-flash{ border-color: #3dd6c8 !important; }
+#grammar .guide-btn.lv-n4.tap-flash{ border-color: #4ecb6e !important; }
 #grammar .guide-btn .level-badge{ position: static; }
 #grammar .guide-btn-label{ font-family: var(--font-jp); font-size: 15px; font-weight: 300; color: var(--text); letter-spacing: .02em; }
 #grammar .guide-btn-sub{ font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-dim); }
@@ -1605,7 +1585,7 @@ body.hide-n4 #grammar .guide-btn.lv-n4{ opacity: .28; pointer-events: none; }
 #grammar .guide-stage{ margin-top: 38px; padding-top: 22px; border-top: 1px solid var(--border); }
 #grammar .guide-stage-head{ display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px; }
 #grammar .guide-stage-num{ font-family: var(--font-mono); font-size: 11px; letter-spacing: .18em;
-  text-transform: uppercase; color: var(--accent); font-weight: 500; white-space: nowrap; }
+  text-transform: uppercase; color: var(--ui-accent); font-weight: 500; white-space: nowrap; }
 #grammar .guide-stage-name{ font-family: var(--font-jp); font-size: 15px; font-weight: 300; color: var(--text); letter-spacing: .02em; }
 #grammar .guide-p{ font-family: var(--font-jp); font-size: 15px; font-weight: 300; line-height: 1.8;
   color: var(--text); margin: 0 0 16px; text-align: justify; hyphens: auto; -webkit-hyphens: auto;
@@ -1614,7 +1594,7 @@ body.hide-n4 #grammar .guide-btn.lv-n4{ opacity: .28; pointer-events: none; }
 #grammar .guide-ref{ display: flex; align-items: baseline; gap: 12px; width: 100%; text-align: left;
   background: transparent; border: 1px solid var(--border); border-radius: var(--r);
   padding: 8px 12px; cursor: pointer; transition: border-color .15s, background .15s; }
-#grammar .guide-ref:hover{ border-color: var(--accent); background: rgba(232,25,60,0.04); }
+@media (hover:hover){ #grammar .guide-ref:hover{ border-color: var(--ui-accent); background: rgba(232,25,60,0.04); background: color-mix(in srgb, var(--ui-accent) 4%, transparent); } }
 #grammar .gr-coord{ font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; color: var(--text-dim);
   min-width: 82px; white-space: nowrap; }
 #grammar .gr-name{ font-family: var(--font-jp); font-size: 13px; font-weight: 400; color: var(--accent); }
@@ -1693,7 +1673,7 @@ html.furi-click #grammar .formula-gram, html.furi-on #grammar .formula-gram{ lin
   color:var(--text-dim);font-size:0;letter-spacing:0;
   transition:color .15s,border-color .15s;
 }
-#grammar .grammar-home-btn:hover{color:var(--accent);border-color:var(--accent);}
+@media (hover:hover){#grammar .grammar-home-btn:hover{color:var(--ui-accent);border-color:var(--ui-accent);}}
 @media (max-width:480px){#grammar .grammar-home-btn{top:14px;left:16px;}}
 /* scroll-to-top, grammar only, sits under the back icon while reading */
 #gr-top-btn{
@@ -1705,11 +1685,11 @@ html.furi-click #grammar .formula-gram, html.furi-on #grammar .formula-gram{ lin
   transition:color .15s,border-color .15s;
 }
 body.gr-reading #gr-top-btn{display:flex;}
-#gr-top-btn:hover{color:var(--accent);border-color:var(--accent);}
+@media (hover:hover){#gr-top-btn:hover{color:var(--ui-accent);border-color:var(--ui-accent);}}
 #gr-top-btn svg{width:17px;height:17px;display:block;}
 /* phones: ↑ sits in one row beside ← (same slots as ← and 🔍 on the rest of the app) */
 @media (max-width:480px){#gr-top-btn{top:9px;left:54px;}}
-#grammar .chapter-header .back-btn:hover{border-color:var(--accent);color:var(--accent);}
+@media (hover:hover){#grammar .chapter-header .back-btn:hover{border-color:var(--ui-accent);color:var(--ui-accent);}}
 </style>
 </head>
 <body>
@@ -1777,6 +1757,16 @@ body.gr-reading #gr-top-btn{display:flex;}
       <span class="ts-val zoom-val">100%</span>
       <button type="button" class="ts-btn zoom-plus" onclick="stepZoom(1)" aria-label="Larger text">A<span class="zl">+</span></button>
     </div>
+    <div class="as-title as-sec">Theme</div>
+    <div class="as-note">Changes the red of the app — buttons, frames, selections. Right and wrong answers keep their green and red. Saved on this device.</div>
+    <div class="th-row" role="group" aria-label="Theme">
+      <button type="button" class="th-btn" data-theme="red" onclick="setTheme('red')"><i style="background:#e8193c"></i>Red</button>
+      <button type="button" class="th-btn" data-theme="blue" onclick="setTheme('blue')"><i style="background:#2f6fe4"></i>Blue</button>
+      <button type="button" class="th-btn" data-theme="violet" onclick="setTheme('violet')"><i style="background:#8a5cf0"></i>Violet</button>
+      <button type="button" class="th-btn" data-theme="pink" onclick="setTheme('pink')"><i style="background:#d6337a"></i>Pink</button>
+      <button type="button" class="th-btn" data-theme="orange" onclick="setTheme('orange')"><i style="background:#e2620f"></i>Orange</button>
+      <button type="button" class="th-btn" data-theme="silver" onclick="setTheme('silver')"><i style="background:#c8c8d6"></i>Silver</button>
+    </div>
     <div class="as-title as-sec">Progress</div>
     <div class="as-status" id="sync-status">Saved on this device</div>
     <div class="as-key">
@@ -1803,8 +1793,8 @@ body.gr-reading #gr-top-btn{display:flex;}
     <button class="btn-secondary" onclick="goTo('study-verbs')">Study Conjugation</button>
     <button class="btn-secondary" onclick="goTo('grammar')">Study Grammar</button>
     <div class="home-divider">Review</div>
-    <button class="btn-primary" onclick="goTo('kana-picker','review-kana')">Review Kana</button>
-    <button class="btn-primary" onclick="goTo('katakana-picker')">Review Katakana Words</button>
+    <button class="btn-primary" onclick="NR.go('kana')">Review Kana</button>
+    <button class="btn-primary" onclick="NR.go('kata')">Review Katakana Words</button>
     <button class="btn-primary" onclick="NR.go('kanji')">Review Kanji</button>
     <button class="btn-primary" onclick="NR.go('vocab')">Review Vocab</button>
     <button class="btn-primary" onclick="NR.go('conj')">Review Conjugation</button>
@@ -1812,7 +1802,7 @@ body.gr-reading #gr-top-btn{display:flex;}
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-10-08 21:30 · v134</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-10-08 22:54 · v135</div>
 </div>
 
 <!-- NEW REVIEWS (REVIEW_DESIGN.md): hub, setup screens, questions and end screen all render into #nrev-app -->
@@ -1855,8 +1845,8 @@ body.gr-reading #gr-top-btn{display:flex;}
   <div class="scrollable" style="padding-top:56px;width:100%;">
     <div id="quick-drills" style="display:none;width:100%;max-width:600px;">
       <div class="picker-label">Special Drills</div>
-      <button id="study-single-btn" class="btn-primary" style="width:100%;margin-bottom:10px;display:none;" onclick="openStudySingleVocab()">1 Kanji &#8211; 1 Vocab&#9;·&#9;<span id="study-single-count">0</span> cards</button>
-      <button id="study-sm-btn" class="btn-primary" style="width:100%;margin-bottom:10px;display:none;" onclick="openStudySameMeaning()">Same-Meaning Words&#9;·&#9;<span id="study-sm-count">0</span> groups</button>
+      <button id="study-single-btn" class="study-drill" style="display:none;" onclick="openStudySingleVocab()"><b>1 Kanji &#8211; 1 Vocab</b><span><span id="study-single-count">0</span> cards</span></button>
+      <button id="study-sm-btn" class="study-drill" style="display:none;" onclick="openStudySameMeaning()"><b>Same-Meaning Words</b><span><span id="study-sm-count">0</span> groups</span></button>
       <div class="picker-divider"></div>
     </div>
     <div class="picker-head" style="width:100%;max-width:600px;">
@@ -1922,30 +1912,6 @@ body.gr-reading #gr-top-btn{display:flex;}
   </div>
 </div>
 
-<!-- KATAKANA PICKER (review) -->
-<div id="katakana-picker" class="screen">
-  <div class="screen-header">
-    <button class="back-btn" onclick="goHome()">← Back</button>
-    <div class="screen-title">Review Katakana — Select Categories</div>
-  </div>
-  <div class="scrollable" style="padding-top:56px;width:100%;max-width:460px;">
-    <div style="padding:16px 0 8px;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);font-family:var(--font-ui);">Select one or more</div>
-    <label class="pos-check-row" style="margin-bottom:8px;">
-      <input type="checkbox" id="kata-all" onchange="toggleAllKata(this)">
-      <span class="pos-check-label" style="font-weight:600;">All categories</span>
-      <span class="pos-check-count" id="kata-all-count"></span>
-    </label>
-    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px;" id="katakana-picker-sets"></div>
-    <label class="pos-check-row" style="margin-bottom:24px;">
-      <input type="checkbox" id="kata-ff" onchange="updateKatakanaCount()">
-      <span class="pos-check-label">False Friends only</span>
-      <span class="pos-check-count" id="kata-ff-count"></span>
-    </label>
-    <div style="font-size:13px;color:var(--text-dim);font-family:var(--font-ui);margin-bottom:16px;" id="katakana-total-count"></div>
-    <button class="btn-primary" style="width:100%;" id="katakana-go-btn" onclick="startKatakanaReview()" disabled>Begin Review</button>
-  </div>
-</div>
-
 <!-- SAME-MEANING POPUP -->
 <div id="sm-modal-overlay" class="sm-modal-overlay" onclick="closeSameMeaning()">
   <div class="sm-modal" onclick="event.stopPropagation()">
@@ -1963,45 +1929,6 @@ body.gr-reading #gr-top-btn{display:flex;}
       <button class="btn-secondary" style="flex:1;" onclick="closeSingleVocabJump()">Stay</button>
       <button class="btn-primary" id="svj-go" style="flex:1;">Go to set →</button>
     </div>
-  </div>
-</div>
-
-<!-- REVIEW -->
-<div id="review" class="screen">
-  <div class="review-header">
-    <button class="back-btn" onclick="exitReview()">✕</button>
-    <div class="review-progress"><div class="review-progress-fill" id="progress-fill"></div></div>
-    <div class="review-counter" id="review-counter">0 / 0</div>
-  </div>
-  <div class="review-body">
-    <div class="review-card">
-      <div class="review-kanji-display" id="review-display"></div>
-      <div class="review-known-meaning" id="known-meaning"></div>
-    </div>
-    <div class="review-input-area">
-      <div class="step-label" id="step-label">Step 1 — Meaning</div>
-      <div class="input-row">
-        <input type="text" class="review-input" id="review-input"
-               placeholder="type meaning…" autocomplete="off"
-               autocorrect="off" spellcheck="false" autocapitalize="off">
-        <button class="submit-btn" id="submit-btn" onmousedown="event.preventDefault()" ontouchend="event.preventDefault(); handleSubmit();" onclick="handleSubmit()">Enter</button>
-      </div>
-      <div class="answer-reveal" id="answer-reveal"></div>
-      <div class="feedback-row" id="feedback-row">
-        <button class="btn-pass" onclick="nextItem(true)">✓ Got it</button>
-        <button class="btn-fail" onclick="nextItem(false)">✗ Missed</button>
-      </div>
-    </div>
-  </div>
-  <div class="review-footer">
-    <div class="score-display">
-      <span class="score-pass" id="score-m-pass" title="Meaning correct">M✓ 0</span>
-      <span class="score-fail" id="score-m-fail" title="Meaning failed">M✗ 0</span>
-      <span class="score-sep">|</span>
-      <span class="score-pass" id="score-r-pass" title="Reading correct">R✓ 0</span>
-      <span class="score-fail" id="score-r-fail" title="Reading failed">R✗ 0</span>
-    </div>
-    <button class="back-btn" onmousedown="event.preventDefault()" ontouchend="event.preventDefault(); skipItem();" onclick="skipItem()">Skip →</button>
   </div>
 </div>
 
@@ -2052,88 +1979,6 @@ body.gr-reading #gr-top-btn{display:flex;}
     <div id="verb-conj-container" style="width:100%;max-width:680px;padding-bottom:32px;"></div>
   </div>
 </div>
-
-<!-- KANA PICKER (review) -->
-<div id="kana-picker" class="screen">
-  <div class="screen-header">
-    <button class="back-btn" onclick="goHome()">← Back</button>
-    <div class="screen-title">Review Kana — Select Sets</div>
-  </div>
-  <div class="scrollable" style="padding-top:56px;width:100%;max-width:460px;">
-    <div style="padding:16px 0 8px;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);font-family:var(--font-ui);">Select one or more</div>
-    <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:24px;" id="kana-picker-sets">
-      <div class="kana-set-group">
-        <div class="kana-set-group-title">Hiragana</div>
-        <div style="display:flex;flex-direction:column;gap:8px;">
-          <label class="pos-check-row">
-            <input type="checkbox" class="kana-checkbox" value="hiragana_basic" onchange="updateKanaCount()">
-            <span class="pos-check-label">Gojūon</span>
-            <span class="pos-check-count" id="kcc-hiragana_basic"></span>
-          </label>
-          <label class="pos-check-row">
-            <input type="checkbox" class="kana-checkbox" value="hiragana_dakuon" onchange="updateKanaCount()">
-            <span class="pos-check-label">Dakuon & Handakuon</span>
-            <span class="pos-check-count" id="kcc-hiragana_dakuon"></span>
-          </label>
-          <label class="pos-check-row">
-            <input type="checkbox" class="kana-checkbox" value="hiragana_yoon" onchange="updateKanaCount()">
-            <span class="pos-check-label">Yōon</span>
-            <span class="pos-check-count" id="kcc-hiragana_yoon"></span>
-          </label>
-        </div>
-      </div>
-      <div class="kana-set-group">
-        <div class="kana-set-group-title">Katakana</div>
-        <div style="display:flex;flex-direction:column;gap:8px;">
-          <label class="pos-check-row">
-            <input type="checkbox" class="kana-checkbox" value="katakana_basic" onchange="updateKanaCount()">
-            <span class="pos-check-label">Gojūon</span>
-            <span class="pos-check-count" id="kcc-katakana_basic"></span>
-          </label>
-          <label class="pos-check-row">
-            <input type="checkbox" class="kana-checkbox" value="katakana_dakuon" onchange="updateKanaCount()">
-            <span class="pos-check-label">Dakuon & Handakuon</span>
-            <span class="pos-check-count" id="kcc-katakana_dakuon"></span>
-          </label>
-          <label class="pos-check-row">
-            <input type="checkbox" class="kana-checkbox" value="katakana_yoon" onchange="updateKanaCount()">
-            <span class="pos-check-label">Yōon</span>
-            <span class="pos-check-count" id="kcc-katakana_yoon"></span>
-          </label>
-        </div>
-      </div>
-    </div>
-    <div style="font-size:13px;color:var(--text-dim);font-family:var(--font-ui);margin-bottom:16px;" id="kana-total-count"></div>
-    <button class="btn-primary" style="width:100%;" id="kana-go-btn" onclick="startKanaReview()" disabled>Begin Review</button>
-  </div>
-</div>
-
-<!-- DONE -->
-<div id="done" class="screen">
-  <div class="done-title">完了</div>
-  <div class="done-grid">
-    <div class="done-cell">
-      <div class="done-cell-label">Meaning ✓</div>
-      <div class="done-cell-val p" id="done-mp">0</div>
-    </div>
-    <div class="done-cell">
-      <div class="done-cell-label">Meaning ✗</div>
-      <div class="done-cell-val f" id="done-mf">0</div>
-    </div>
-    <div class="done-cell">
-      <div class="done-cell-label">Reading ✓</div>
-      <div class="done-cell-val p" id="done-rp">0</div>
-    </div>
-    <div class="done-cell">
-      <div class="done-cell-label">Reading ✗</div>
-      <div class="done-cell-val f" id="done-rf">0</div>
-    </div>
-  </div>
-  <div class="done-buttons">
-    <button class="btn-primary" onclick="goHome()">Back to Menu</button>
-  </div>
-</div>
-
 
 <!-- GRAMMAR MODULE -->
 <div id="grammar" class="screen">
@@ -38265,22 +38110,9 @@ const POS_TAGS = {"青い":["i-adj"],"赤い":["i-adj"],"明るい":["i-adj"],"�
 KANJI.forEach(k => KANJI_MAP[k.kanji] = k);
 
 // ── STATE ──────────────────────────────────────────────────────────────
-let currentMode = 'study-kanji'; // 'study-kanji'|'study-vocab'|'study-pos'|'review-kana'|'review-katakana'
+let currentMode = 'study-kanji'; // 'study-kanji'|'study-vocab'|'study-pos'
 let selectedPOS = [];
 let currentSKG  = null;
-let queue       = [];
-let queueIndex  = 0;
-
-// Scores: meaning pass/fail, reading pass/fail
-let mPass=0, mFail=0, rPass=0, rFail=0;
-// Per-item fail tracking: {itemKey: {meaning: bool, reading: bool}}
-// Once an item has already been failed for a step, no extra fail counted
-let itemFailed  = {};
-
-let reviewStep  = 'meaning';
-let currentItem = null;
-let itemKey     = '';
-
 // ── NAVIGATION ─────────────────────────────────────────────────────────
 function goHome() { skgSortMode = 'num'; showScreen('home'); }
 
@@ -38293,20 +38125,12 @@ function goTo(id, mode) {
   if (id === 'study-pos')          buildStudyPOS();
   if (id === 'study-kana')         buildStudyKana();
   if (id === 'study-katakana')     buildStudyKatakana();
-  if (id === 'katakana-picker')    buildKatakanaPicker();
-  if (id === 'kana-picker')        buildKanaPicker();
   if (id === 'study-verbs')        buildVerbStudy();
   if (id === 'nrev')               NR.open();
   showScreen(id);
 }
 
-let reviewReturn = 'home';
-function exitReview() { showScreen(reviewReturn || 'home'); }
 function showScreen(id) {
-  if (id === 'review') {
-    const cur = document.querySelector('.screen.active');
-    if (cur && cur.id !== 'review') reviewReturn = cur.id;
-  }
   // Close the search overlay whenever the screen changes
   _srCollapsed = false;
   document.body.classList.remove('search-collapsed');
@@ -38314,7 +38138,7 @@ function showScreen(id) {
   document.body.classList.toggle('grammar-active', id === 'grammar');
   document.body.classList.toggle('home-active', id === 'home');
   document.body.classList.remove('gr-reading');   // grammar opens on its chapter menu
-  document.body.classList.toggle('review-active', id === 'review');
+  document.body.classList.remove('review-active');   // the reviews (NR) set it again while a session runs
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   const el = document.getElementById(id);
@@ -38516,7 +38340,7 @@ function buildStudyPOS() {
       btn.style.cssText = 'padding:6px 14px;border-radius:var(--r);border:1px solid '
         + (active ? 'var(--accent)' : 'var(--border)') + ';'
         + 'background:' + (active ? 'var(--accent)' : 'var(--surface)') + ';'
-        + 'color:' + (active ? '#fff' : 'var(--text-dim)') + ';'
+        + 'color:' + (active ? 'var(--on-accent)' : 'var(--text-dim)') + ';'
         + 'font-size:13px;cursor:pointer;font-family:var(--font-jp);';
       btn.addEventListener('click', () => { uVerbFilter = sub.p; buildStudyPOS(); });
       pillRow.appendChild(btn);
@@ -38700,156 +38524,6 @@ function getSingleVocabItems() {
   return items;
 }
 
-// ── REVIEW ENGINE ──────────────────────────────────────────────────────
-function makeItemKey(item, index) {
-  return `${index}_${item.kanji}`;
-}
-
-function loadItem() {
-  if (queueIndex >= queue.length) { endReview(); return; }
-  currentItem = queue[queueIndex];
-  itemKey     = makeItemKey(currentItem, queueIndex);
-
-  document.getElementById('answer-reveal').className = 'answer-reveal';
-  document.getElementById('answer-reveal').innerHTML = '';
-  document.getElementById('feedback-row').className = 'feedback-row';
-  document.getElementById('submit-btn').disabled = false;
-  document.getElementById('submit-btn').textContent = 'Enter';
-  document.getElementById('submit-btn').classList.remove('next-ready');
-  awaitingNext = false; pendingNext = null;
-
-  const inp = document.getElementById('review-input');
-  inp.value = ''; inp.className = 'review-input'; inp.disabled = false;
-  document.getElementById('review-display').style.fontSize = '';
-
-  if (currentItem.type === 'katakana') {
-    reviewStep = 'katakana';
-    const _kd = document.getElementById('review-display');
-    _kd.textContent = currentItem.word;
-    _kd.style.fontSize = currentItem.word.length <= 3 ? 'clamp(60px,16vw,110px)'
-                       : currentItem.word.length <= 5 ? 'clamp(46px,12vw,82px)'
-                       : 'clamp(34px,9vw,60px)';
-    document.getElementById('step-label').textContent = 'Meaning';
-    document.getElementById('known-meaning').textContent = '';
-    inp.placeholder = 'type meaning…';
-  } else {                                     // kana (_type 'kana')
-    reviewStep = 'kana';
-    document.getElementById('review-display').textContent = currentItem.kana;
-    document.getElementById('step-label').textContent = 'Romaji';
-    document.getElementById('known-meaning').textContent = '';
-    inp.placeholder = 'type romaji…';
-  }
-
-  updateProgress();
-  setTimeout(() => inp.focus(), 50);
-}
-
-function handleSubmit() {
-  if (awaitingNext) { awaitingNext = false; const a = pendingNext; pendingNext = null; if (a) a(); return; }
-  const inp = document.getElementById('review-input');
-  const val = inp.value.trim();
-  if (!val) return;
-  // Guard: a stray Japanese character nudges "try again" instead of failing + advancing
-  // (both answers here — romaji, English meaning — are typed in Latin letters).
-  if (/[぀-ヿ々㐀-鿿]/.test(val)) { showTryAgain('Type your answer'); return; }
-  if (reviewStep === 'kana') checkKana(val);
-  else checkKatakana(val);
-}
-
-// Non-penalising nudge: shows a hint, keeps the input, does NOT count a fail or advance.
-function showTryAgain(msg) {
-  const reveal = document.getElementById('answer-reveal');
-  const inp = document.getElementById('review-input');
-  reveal.textContent = msg;
-  reveal.className = 'answer-reveal hint';
-  inp.className = 'review-input';
-  clearTimeout(window._taTimer);
-  window._taTimer = setTimeout(() => {
-    if (reveal.classList.contains('hint')) { reveal.className = 'answer-reveal'; reveal.textContent = ''; }
-  }, 1800);
-  inp.focus();
-}
-
-function checkKana(val) {
-  const inp = document.getElementById('review-input');
-  const reveal = document.getElementById('answer-reveal');
-  const correct = currentItem.romaji;
-  const ok = val.trim().toLowerCase() === correct;
-  if (ok) {
-    inp.className = 'review-input correct';
-    rPass++;
-    updateScoreDisplay();
-    armNext(nextItem);
-  } else {
-    inp.className = 'review-input wrong';
-    reveal.innerHTML = `Correct: <strong>${correct}</strong>`;
-    reveal.className = 'answer-reveal show';
-    if (!itemFailed[itemKey]) itemFailed[itemKey] = {};
-    if (!itemFailed[itemKey].reading) {
-      rFail++;
-      itemFailed[itemKey].reading = true;
-      updateScoreDisplay();
-    }
-    setTimeout(() => {
-      inp.value = ''; inp.className = 'review-input';
-      inp.placeholder = 'try again…';
-    }, 400);
-  }
-}
-
-function nextItem() {
-  queueIndex++;
-  loadItem();
-}
-
-function skipItem() { queueIndex++; loadItem(); }
-
-function endReview() {
-  // restore score display if coming from kana review
-  document.getElementById('score-m-pass').style.display = '';
-  document.getElementById('score-m-fail').style.display = '';
-  document.getElementById('score-r-pass').style.display = '';
-  document.getElementById('score-r-fail').style.display = '';
-  document.querySelector('.score-sep').style.display = '';
-  document.getElementById('score-m-pass').textContent = 'M✓ 0';
-  document.getElementById('score-m-fail').textContent = 'M✗ 0';
-  if (currentMode === 'review-kana') {
-    document.getElementById('done-mp').textContent = '—';
-    document.getElementById('done-mf').textContent = '—';
-  } else {
-    document.getElementById('done-mp').textContent = mPass;
-    document.getElementById('done-mf').textContent = mFail;
-  }
-  if (currentMode === 'review-katakana') {
-    document.getElementById('done-rp').textContent = '—';
-    document.getElementById('done-rf').textContent = '—';
-  } else {
-    document.getElementById('done-rp').textContent = rPass;
-    document.getElementById('done-rf').textContent = rFail;
-  }
-  showScreen('done');
-}
-
-function updateProgress() {
-  const pct = queue.length ? (queueIndex / queue.length) * 100 : 0;
-  document.getElementById('progress-fill').style.width = pct + '%';
-  document.getElementById('review-counter').textContent = (queueIndex+1) + ' / ' + queue.length;
-}
-
-function updateScoreDisplay() {
-  document.getElementById('score-m-pass').textContent = 'M✓ ' + mPass;
-  document.getElementById('score-m-fail').textContent = 'M✗ ' + mFail;
-  document.getElementById('score-r-pass').textContent = 'R✓ ' + rPass;
-  document.getElementById('score-r-fail').textContent = 'R✗ ' + rFail;
-}
-
-function meaningMatches(input, correct) {
-  const clean = s => s.toLowerCase().replace(/[|｜]/g,'|').trim();
-  const inp = clean(input);
-  const parts = clean(correct).split('|').map(p=>p.trim()).filter(Boolean);
-  return parts.some(p => inp === p || inp.includes(p) || p.includes(inp));
-}
-
 function shuffle(arr) {
   for (let i=arr.length-1;i>0;i--) {
     const j=Math.floor(Math.random()*(i+1));
@@ -38857,12 +38531,6 @@ function shuffle(arr) {
   }
 }
 
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && document.getElementById('review').classList.contains('active')) {
-    e.preventDefault();
-    handleSubmit();
-  }
-});
 
 // ── KANA DATA ────────────────────────────────────────────────────────
 const KATAKANA = [{"word":"リンゴ","meaning":"apple","category":"Food & Drink","note":"","romaji":"ringo"},{"word":"コーヒー","meaning":"coffee","category":"Food & Drink","note":"","romaji":"kōhī"},{"word":"メニュー","meaning":"menu","category":"Food & Drink","note":"","romaji":"menyū"},{"word":"スパゲッティ","meaning":"spaghetti","category":"Food & Drink","note":"","romaji":"supagetti"},{"word":"カレー","meaning":"curry","category":"Food & Drink","note":"","romaji":"karē"},{"word":"サンドイッチ","meaning":"sandwich","category":"Food & Drink","note":"","romaji":"sandoicchi"},{"word":"アイスクリーム","meaning":"ice cream","category":"Food & Drink","note":"","romaji":"aisukurīmu"},{"word":"ラーメン","meaning":"ramen","category":"Food & Drink","note":"","romaji":"rāmen"},{"word":"ハンバーガー","meaning":"hamburger","category":"Food & Drink","note":"","romaji":"hanbāgā"},{"word":"コーラ","meaning":"cola","category":"Food & Drink","note":"","romaji":"kōra"},{"word":"サラダ","meaning":"salad","category":"Food & Drink","note":"","romaji":"sarada"},{"word":"ミルク","meaning":"milk","category":"Food & Drink","note":"","romaji":"miruku"},{"word":"フライドポテト","meaning":"French fries","category":"Food & Drink","note":"ORIGIN: wasei-eigo \"fried potato.\"","romaji":"furaidopoteto"},{"word":"ケーキ","meaning":"cake","category":"Food & Drink","note":"","romaji":"kēki"},{"word":"ジュース","meaning":"juice; soft drink","category":"Food & Drink","note":"USAGE: any soft drink, not only fruit juice.","romaji":"jūsu"},{"word":"オレンジジュース","meaning":"orange juice","category":"Food & Drink","note":"","romaji":"orenjijūsu"},{"word":"ステーキ","meaning":"steak","category":"Food & Drink","note":"","romaji":"sutēki"},{"word":"ピザ","meaning":"pizza","category":"Food & Drink","note":"","romaji":"piza"},{"word":"トースト","meaning":"toast","category":"Food & Drink","note":"","romaji":"tōsuto"},{"word":"レモンティー","meaning":"lemon tea","category":"Food & Drink","note":"","romaji":"remontī"},{"word":"パン","meaning":"bread","category":"Food & Drink","note":"ORIGIN: Portuguese \"pão\" = bread, not \"pan.\"","romaji":"pan"},{"word":"トマト","meaning":"tomato","category":"Food & Drink","note":"","romaji":"tomato"},{"word":"カレーライス","meaning":"curry with rice","category":"Food & Drink","note":"","romaji":"karēraisu"},{"word":"スープ","meaning":"soup","category":"Food & Drink","note":"","romaji":"sūpu"},{"word":"ヨーグルト","meaning":"yogurt","category":"Food & Drink","note":"","romaji":"yōguruto"},{"word":"チョコレート","meaning":"chocolate","category":"Food & Drink","note":"","romaji":"chokorēto"},{"word":"スプーン","meaning":"spoon","category":"Food & Drink","note":"","romaji":"supūn"},{"word":"バナナ","meaning":"banana","category":"Food & Drink","note":"","romaji":"banana"},{"word":"ポップコーン","meaning":"popcorn","category":"Food & Drink","note":"","romaji":"poppukōn"},{"word":"ビール","meaning":"beer","category":"Food & Drink","note":"","romaji":"bīru"},{"word":"ワイン","meaning":"wine","category":"Food & Drink","note":"","romaji":"wain"},{"word":"バター","meaning":"butter","category":"Food & Drink","note":"","romaji":"batā"},{"word":"チーズ","meaning":"cheese","category":"Food & Drink","note":"","romaji":"chīzu"},{"word":"ハム","meaning":"ham","category":"Food & Drink","note":"","romaji":"hamu"},{"word":"ソーセージ","meaning":"sausage","category":"Food & Drink","note":"","romaji":"sōsēji"},{"word":"ベーコン","meaning":"bacon","category":"Food & Drink","note":"","romaji":"bēkon"},{"word":"ジャム","meaning":"jam","category":"Food & Drink","note":"","romaji":"jamu"},{"word":"デザート","meaning":"dessert","category":"Food & Drink","note":"","romaji":"dezāto"},{"word":"オレンジ","meaning":"orange","category":"Food & Drink","note":"","romaji":"orenji"},{"word":"レモン","meaning":"lemon","category":"Food & Drink","note":"","romaji":"remon"},{"word":"クッキー","meaning":"cookie","category":"Food & Drink","note":"","romaji":"kukkī"},{"word":"ドーナツ","meaning":"doughnut","category":"Food & Drink","note":"","romaji":"dōnatsu"},{"word":"ガム","meaning":"chewing gum","category":"Food & Drink","note":"CLIPPING: チューインガム → ガム.","romaji":"gamu"},{"word":"キャンディー","meaning":"candy","category":"Food & Drink","note":"","romaji":"kyandī"},{"word":"ナイフ","meaning":"knife","category":"Food & Drink","note":"","romaji":"naifu"},{"word":"フォーク","meaning":"fork","category":"Food & Drink","note":"","romaji":"fōku"},{"word":"グラス","meaning":"drinking glass","category":"Food & Drink","note":"USAGE: a glass for drinking; window/material glass is ガラス.","romaji":"gurasu"},{"word":"コップ","meaning":"cup; tumbler","category":"Food & Drink","note":"ORIGIN: Dutch \"kop\" — a drinking cup.","romaji":"koppu"},{"word":"ナプキン","meaning":"napkin","category":"Food & Drink","note":"","romaji":"napukin"},{"word":"ランチ","meaning":"lunch","category":"Food & Drink","note":"","romaji":"ranchi"},{"word":"バイキング","meaning":"buffet","category":"Food & Drink","note":"FALSE FRIEND: not \"viking\" — all-you-can-eat buffet (from \"Viking smörgåsbord\").","romaji":"baikingu"},{"word":"ペットボトル","meaning":"plastic bottle","category":"Food & Drink","note":"ORIGIN: wasei-eigo \"PET bottle\" — a plastic drink bottle.","romaji":"pettobotoru"},{"word":"ボトル","meaning":"bottle","category":"Food & Drink","note":"","romaji":"botoru"},{"word":"カバン","meaning":"bag","category":"Clothing & Accessories","note":"","romaji":"kaban"},{"word":"ワンピース","meaning":"dress","category":"Clothing & Accessories","note":"ORIGIN: \"one-piece\" = a dress.","romaji":"wanpīsu"},{"word":"ジーンズ","meaning":"jeans","category":"Clothing & Accessories","note":"","romaji":"jīnzu"},{"word":"Ｔシャツ","meaning":"T-shirt","category":"Clothing & Accessories","note":"","romaji":"Ｔshatsu"},{"word":"シャツ","meaning":"shirt","category":"Clothing & Accessories","note":"","romaji":"shatsu"},{"word":"パンツ","meaning":"underwear; trousers","category":"Clothing & Accessories","note":"FALSE FRIEND: usually underwear; can mean trousers — context decides.","romaji":"pantsu"},{"word":"セーター","meaning":"sweater","category":"Clothing & Accessories","note":"","romaji":"sētā"},{"word":"トレーナー","meaning":"sweatshirt","category":"Clothing & Accessories","note":"FALSE FRIEND: \"trainer\" = a sweatshirt, not a coach or shoe.","romaji":"torēnā"},{"word":"ネクタイ","meaning":"necktie","category":"Clothing & Accessories","note":"","romaji":"nekutai"},{"word":"マフラー","meaning":"winter scarf","category":"Clothing & Accessories","note":"FALSE FRIEND: \"muffler\" = a winter scarf.","romaji":"mafurā"},{"word":"ブーツ","meaning":"boots","category":"Clothing & Accessories","note":"","romaji":"būtsu"},{"word":"スカート","meaning":"skirt","category":"Clothing & Accessories","note":"","romaji":"sukāto"},{"word":"ハイヒール","meaning":"high heels","category":"Clothing & Accessories","note":"","romaji":"haihīru"},{"word":"スーツ","meaning":"suit","category":"Clothing & Accessories","note":"","romaji":"sūtsu"},{"word":"コート","meaning":"coat","category":"Clothing & Accessories","note":"","romaji":"kōto"},{"word":"ジャケット","meaning":"jacket","category":"Clothing & Accessories","note":"","romaji":"jaketto"},{"word":"ベルト","meaning":"belt","category":"Clothing & Accessories","note":"","romaji":"beruto"},{"word":"ボタン","meaning":"button","category":"Clothing & Accessories","note":"ORIGIN: Portuguese \"botão.\"","romaji":"botan"},{"word":"ポケット","meaning":"pocket","category":"Clothing & Accessories","note":"","romaji":"poketto"},{"word":"ハンカチ","meaning":"handkerchief","category":"Clothing & Accessories","note":"CLIPPING: ハンカチーフ → ハンカチ.","romaji":"hankachi"},{"word":"サンダル","meaning":"sandals","category":"Clothing & Accessories","note":"","romaji":"sandaru"},{"word":"スニーカー","meaning":"sneakers; trainers","category":"Clothing & Accessories","note":"","romaji":"sunīkā"},{"word":"アクセサリー","meaning":"accessory","category":"Clothing & Accessories","note":"","romaji":"akusesarī"},{"word":"ホテル","meaning":"hotel","category":"Places & Buildings","note":"","romaji":"hoteru"},{"word":"コンビニ","meaning":"convenience store|conbini|konbini","category":"Places & Buildings","note":"CLIPPING: コンビニエンスストア → コンビニ.","romaji":"konbini"},{"word":"デパート","meaning":"department store|depato","category":"Places & Buildings","note":"CLIPPING: デパートメントストア → デパート.","romaji":"depāto"},{"word":"ビル","meaning":"building","category":"Places & Buildings","note":"FALSE FRIEND: clip of ビルディング = a building, not a \"bill.\"","romaji":"biru"},{"word":"マンション","meaning":"apartment; condo","category":"Places & Buildings","note":"FALSE FRIEND: looks like \"mansion\" — actually an ordinary apartment/condo, nothing grand.","romaji":"manshon"},{"word":"トイレ","meaning":"toilet; restroom","category":"Places & Buildings","note":"CLIPPING: トイレット → トイレ.","romaji":"toire"},{"word":"スーパー","meaning":"supermarket","category":"Places & Buildings","note":"CLIPPING: スーパーマーケット → スーパー.","romaji":"sūpā"},{"word":"レストラン","meaning":"restaurant","category":"Places & Buildings","note":"","romaji":"resutoran"},{"word":"ホーム","meaning":"platform","category":"Places & Buildings","note":"CLIPPING: train platform, from プラットホーム; also means \"home.\"","romaji":"hōmu"},{"word":"フロント","meaning":"reception; front desk","category":"Places & Buildings","note":"FALSE FRIEND: \"front\" = a hotel reception desk.","romaji":"furonto"},{"word":"ショッピングモール","meaning":"shopping mall","category":"Places & Buildings","note":"","romaji":"shoppingumōru"},{"word":"アパート","meaning":"apartment (low-rise)","category":"Places & Buildings","note":"USAGE: a cheaper low-rise flat; a pricier concrete block is マンション. CLIPPING of アパートメント.","romaji":"apāto"},{"word":"プール","meaning":"swimming pool","category":"Places & Buildings","note":"","romaji":"pūru"},{"word":"エレベーター","meaning":"elevator; lift","category":"Places & Buildings","note":"","romaji":"erebētā"},{"word":"エスカレーター","meaning":"escalator","category":"Places & Buildings","note":"","romaji":"esukarētā"},{"word":"レジ","meaning":"cash register; checkout","category":"Places & Buildings","note":"CLIPPING: レジスター → レジ.","romaji":"reji"},{"word":"ガソリンスタンド","meaning":"petrol station","category":"Places & Buildings","note":"ORIGIN: wasei-eigo \"gasoline + stand.\"","romaji":"gasorinsutando"},{"word":"オフィス","meaning":"office","category":"Places & Buildings","note":"","romaji":"ofisu"},{"word":"カウンター","meaning":"counter","category":"Places & Buildings","note":"","romaji":"kauntā"},{"word":"テレビ","meaning":"television|tv","category":"Tech & Electronics","note":"CLIPPING: テレビジョン → テレビ.","romaji":"terebi"},{"word":"コンピューター","meaning":"computer","category":"Tech & Electronics","note":"","romaji":"konpyūtā"},{"word":"メール","meaning":"email|e-mail|mail","category":"Tech & Electronics","note":"USAGE: normally means e-mail.","romaji":"mēru"},{"word":"シーディー","meaning":"CD","category":"Tech & Electronics","note":"","romaji":"shīdī"},{"word":"カメラ","meaning":"camera","category":"Tech & Electronics","note":"","romaji":"kamera"},{"word":"ビデオカメラ","meaning":"camcorder","category":"Tech & Electronics","note":"","romaji":"bideokamera"},{"word":"ラジオ","meaning":"radio","category":"Tech & Electronics","note":"","romaji":"rajio"},{"word":"インターネット","meaning":"internet","category":"Tech & Electronics","note":"","romaji":"intānetto"},{"word":"ファイル","meaning":"file","category":"Tech & Electronics","note":"","romaji":"fairu"},{"word":"ソフト","meaning":"software","category":"Tech & Electronics","note":"USAGE: clip of ソフトウェア; also means \"soft.\"","romaji":"sofuto"},{"word":"パソコン","meaning":"pc|computer|personal computer","category":"Tech & Electronics","note":"CLIPPING: パーソナルコンピューター → パソコン.","romaji":"pasokon"},{"word":"スマホ","meaning":"smartphone|smart phone|phone","category":"Tech & Electronics","note":"CLIPPING: スマートフォン → スマホ.","romaji":"sumaho"},{"word":"アプリ","meaning":"app","category":"Tech & Electronics","note":"CLIPPING: アプリケーション → アプリ.","romaji":"apuri"},{"word":"ゲーム","meaning":"game","category":"Tech & Electronics","note":"","romaji":"gēmu"},{"word":"マウス","meaning":"mouse (computer)","category":"Tech & Electronics","note":"","romaji":"mausu"},{"word":"キーボード","meaning":"keyboard","category":"Tech & Electronics","note":"","romaji":"kībōdo"},{"word":"プリンター","meaning":"printer","category":"Tech & Electronics","note":"","romaji":"purintā"},{"word":"コピー","meaning":"copy","category":"Tech & Electronics","note":"","romaji":"kopī"},{"word":"データ","meaning":"data","category":"Tech & Electronics","note":"","romaji":"dēta"},{"word":"サイト","meaning":"website","category":"Tech & Electronics","note":"CLIPPING: ウェブサイト → サイト.","romaji":"saito"},{"word":"カード","meaning":"card","category":"Tech & Electronics","note":"","romaji":"kādo"},{"word":"クレジットカード","meaning":"credit card|card","category":"Tech & Electronics","note":"","romaji":"kurejittokādo"},{"word":"ビデオ","meaning":"video","category":"Tech & Electronics","note":"","romaji":"bideo"},{"word":"メッセージ","meaning":"message","category":"Tech & Electronics","note":"","romaji":"messēji"},{"word":"パスワード","meaning":"password","category":"Tech & Electronics","note":"","romaji":"pasuwādo"},{"word":"ログイン","meaning":"login","category":"Tech & Electronics","note":"","romaji":"roguin"},{"word":"トランプ","meaning":"deck of cards","category":"Sports & Leisure","note":"FALSE FRIEND: English \"trump\" = playing cards.","romaji":"toranpu"},{"word":"スポーツ","meaning":"sport","category":"Sports & Leisure","note":"","romaji":"supōtsu"},{"word":"テニス","meaning":"tennis","category":"Sports & Leisure","note":"","romaji":"tenisu"},{"word":"サーフィン","meaning":"surfing","category":"Sports & Leisure","note":"","romaji":"sāfin"},{"word":"コンサート","meaning":"concert","category":"Sports & Leisure","note":"","romaji":"konsāto"},{"word":"クラシック","meaning":"classical music","category":"Sports & Leisure","note":"USAGE: refers to classical music.","romaji":"kurashikku"},{"word":"カラオケ","meaning":"karaoke","category":"Sports & Leisure","note":"ORIGIN: 空 (kara, empty) + オーケストラ (orchestra).","romaji":"karaoke"},{"word":"パーティー","meaning":"party","category":"Sports & Leisure","note":"","romaji":"pātī"},{"word":"バーベキュー","meaning":"barbecue","category":"Sports & Leisure","note":"","romaji":"bābekyū"},{"word":"ピアノ","meaning":"piano","category":"Sports & Leisure","note":"","romaji":"piano"},{"word":"スキー","meaning":"skiing","category":"Sports & Leisure","note":"","romaji":"sukī"},{"word":"サッカー","meaning":"soccer","category":"Sports & Leisure","note":"","romaji":"sakkā"},{"word":"ゴルフ","meaning":"golf","category":"Sports & Leisure","note":"","romaji":"gorufu"},{"word":"バイオリン","meaning":"violin","category":"Sports & Leisure","note":"","romaji":"baiorin"},{"word":"アニメ","meaning":"animation; anime","category":"Sports & Leisure","note":"CLIPPING: アニメーション → アニメ.","romaji":"anime"},{"word":"ボール","meaning":"ball","category":"Sports & Leisure","note":"","romaji":"bōru"},{"word":"ジョギング","meaning":"jogging","category":"Sports & Leisure","note":"","romaji":"jogingu"},{"word":"マラソン","meaning":"marathon","category":"Sports & Leisure","note":"","romaji":"marason"},{"word":"バスケットボール","meaning":"basketball","category":"Sports & Leisure","note":"","romaji":"basukettobōru"},{"word":"バレーボール","meaning":"volleyball","category":"Sports & Leisure","note":"","romaji":"barēbōru"},{"word":"ジム","meaning":"gym","category":"Sports & Leisure","note":"","romaji":"jimu"},{"word":"ヨガ","meaning":"yoga","category":"Sports & Leisure","note":"","romaji":"yoga"},{"word":"ダンス","meaning":"dance","category":"Sports & Leisure","note":"","romaji":"dansu"},{"word":"ドライブ","meaning":"drive; road trip","category":"Sports & Leisure","note":"USAGE: going for a drive.","romaji":"doraibu"},{"word":"ピクニック","meaning":"picnic","category":"Sports & Leisure","note":"","romaji":"pikunikku"},{"word":"キャンプ","meaning":"camping","category":"Sports & Leisure","note":"","romaji":"kyanpu"},{"word":"ハイキング","meaning":"hiking","category":"Sports & Leisure","note":"","romaji":"haikingu"},{"word":"ギター","meaning":"guitar","category":"Sports & Leisure","note":"","romaji":"gitā"},{"word":"バンド","meaning":"band","category":"Sports & Leisure","note":"","romaji":"bando"},{"word":"ガラス","meaning":"glass (material)","category":"Home & Furniture","note":"ORIGIN: Dutch \"glas\" — window/material glass; a drinking glass is コップ/グラス.","romaji":"garasu"},{"word":"ドア","meaning":"door (western-style)","category":"Home & Furniture","note":"USAGE: a hinged western door; a sliding door is 戸.","romaji":"doa"},{"word":"カーテン","meaning":"curtain","category":"Home & Furniture","note":"","romaji":"kāten"},{"word":"ヒーター","meaning":"heater","category":"Home & Furniture","note":"","romaji":"hītā"},{"word":"エアコン","meaning":"air conditioner|aircon|ac","category":"Home & Furniture","note":"CLIPPING: エアコンディショナー → エアコン.","romaji":"eakon"},{"word":"クッション","meaning":"cushion","category":"Home & Furniture","note":"","romaji":"kusshon"},{"word":"スイッチ","meaning":"switch","category":"Home & Furniture","note":"","romaji":"suicchi"},{"word":"ソファ","meaning":"sofa","category":"Home & Furniture","note":"","romaji":"sofa"},{"word":"タオル","meaning":"towel","category":"Home & Furniture","note":"","romaji":"taoru"},{"word":"テーブル","meaning":"table","category":"Home & Furniture","note":"","romaji":"tēburu"},{"word":"ベッド","meaning":"bed","category":"Home & Furniture","note":"","romaji":"beddo"},{"word":"シャワー","meaning":"shower","category":"Home & Furniture","note":"","romaji":"shawā"},{"word":"ストーブ","meaning":"space heater","category":"Home & Furniture","note":"FALSE FRIEND: \"stove\" = a heater for warmth, not a cooking stove (コンロ).","romaji":"sutōbu"},{"word":"カレンダー","meaning":"calendar","category":"Home & Furniture","note":"","romaji":"karendā"},{"word":"ハンガー","meaning":"clothes hanger","category":"Home & Furniture","note":"","romaji":"hangā"},{"word":"スリッパ","meaning":"slippers","category":"Home & Furniture","note":"","romaji":"surippa"},{"word":"ランプ","meaning":"lamp","category":"Home & Furniture","note":"","romaji":"ranpu"},{"word":"リモコン","meaning":"remote control|remote","category":"Home & Furniture","note":"CLIPPING: リモートコントロール → リモコン.","romaji":"rimokon"},{"word":"レンジ","meaning":"microwave","category":"Home & Furniture","note":"CLIPPING/USAGE: from 電子レンジ — usually means a microwave oven.","romaji":"renji"},{"word":"ドライヤー","meaning":"hair dryer","category":"Home & Furniture","note":"","romaji":"doraiyā"},{"word":"アイロン","meaning":"clothes iron","category":"Home & Furniture","note":"FALSE FRIEND: \"iron\" = the clothes iron, not the metal (鉄).","romaji":"airon"},{"word":"トースター","meaning":"toaster","category":"Home & Furniture","note":"","romaji":"tōsutā"},{"word":"タクシー","meaning":"taxi","category":"Transport","note":"","romaji":"takushī"},{"word":"バス","meaning":"bus","category":"Transport","note":"","romaji":"basu"},{"word":"バイク","meaning":"motorcycle","category":"Transport","note":"FALSE FRIEND: \"bike\" = motorcycle, not bicycle (自転車).","romaji":"baiku"},{"word":"タイヤ","meaning":"tyre","category":"Transport","note":"","romaji":"taiya"},{"word":"ガソリン","meaning":"petrol; gasoline","category":"Transport","note":"","romaji":"gasorin"},{"word":"エンジン","meaning":"engine","category":"Transport","note":"","romaji":"enjin"},{"word":"ハンドル","meaning":"steering wheel","category":"Transport","note":"FALSE FRIEND: \"handle\" = a steering wheel (or handlebars), not a door handle.","romaji":"handoru"},{"word":"ブレーキ","meaning":"brake","category":"Transport","note":"","romaji":"burēki"},{"word":"ヘリコプター","meaning":"helicopter","category":"Transport","note":"","romaji":"herikoputā"},{"word":"アメリカ","meaning":"USA","category":"Countries & Places","note":"","romaji":"amerika"},{"word":"イギリス","meaning":"Britain; UK","category":"Countries & Places","note":"ORIGIN: Portuguese \"Inglês.\"","romaji":"igirisu"},{"word":"オーストラリア","meaning":"Australia","category":"Countries & Places","note":"","romaji":"ōsutoraria"},{"word":"スウェーデン","meaning":"Sweden","category":"Countries & Places","note":"","romaji":"suwēden"},{"word":"ドイツ","meaning":"Germany","category":"Countries & Places","note":"ORIGIN: Dutch \"Duits.\"","romaji":"doitsu"},{"word":"ヨーロッパ","meaning":"Europe","category":"Countries & Places","note":"","romaji":"yōroppa"},{"word":"フランス","meaning":"France","category":"Countries & Places","note":"","romaji":"furansu"},{"word":"イタリア","meaning":"Italy","category":"Countries & Places","note":"","romaji":"itaria"},{"word":"スペイン","meaning":"Spain","category":"Countries & Places","note":"","romaji":"supein"},{"word":"カナダ","meaning":"Canada","category":"Countries & Places","note":"","romaji":"kanada"},{"word":"ロシア","meaning":"Russia","category":"Countries & Places","note":"","romaji":"roshia"},{"word":"インド","meaning":"India","category":"Countries & Places","note":"","romaji":"indo"},{"word":"ブラジル","meaning":"Brazil","category":"Countries & Places","note":"","romaji":"burajiru"},{"word":"アジア","meaning":"Asia","category":"Countries & Places","note":"","romaji":"ajia"},{"word":"ノート","meaning":"notebook","category":"Daily Life & Abstract","note":"USAGE: \"note\" = a notebook, not a memo.","romaji":"nōto"},{"word":"ドル","meaning":"dollar","category":"Daily Life & Abstract","note":"","romaji":"doru"},{"word":"キロ","meaning":"kilo","category":"Daily Life & Abstract","note":"CLIPPING: short for kilogram or kilometre.","romaji":"kiro"},{"word":"タバコ","meaning":"tobacco; cigarettes","category":"Daily Life & Abstract","note":"ORIGIN: Portuguese \"tabaco\".","romaji":"tabako"},{"word":"サービス","meaning":"service","category":"Daily Life & Abstract","note":"USAGE: often means a free extra — \"on the house.\"","romaji":"sābisu"},{"word":"オノマトペ","meaning":"onomatopoeia","category":"Daily Life & Abstract","note":"ORIGIN: French \"onomatopée.\"","romaji":"onomatope"},{"word":"ペラペラ","meaning":"fluent","category":"Daily Life & Abstract","note":"USAGE: onomatopoeia — speaking a language fluently.","romaji":"perapera"},{"word":"ドキドキ","meaning":"racing heart","category":"Daily Life & Abstract","note":"USAGE: onomatopoeia — heart pounding from nerves or excitement.","romaji":"dokidoki"},{"word":"ペン","meaning":"pen","category":"Daily Life & Abstract","note":"","romaji":"pen"},{"word":"デート","meaning":"date (romantic)","category":"Daily Life & Abstract","note":"FALSE FRIEND: a romantic date, not a calendar date (日付).","romaji":"dēto"},{"word":"テスト","meaning":"test","category":"Daily Life & Abstract","note":"","romaji":"tesuto"},{"word":"ホームステイ","meaning":"homestay","category":"Daily Life & Abstract","note":"","romaji":"hōmusutei"},{"word":"ピンク","meaning":"pink","category":"Daily Life & Abstract","note":"","romaji":"pinku"},{"word":"ホストファミリー","meaning":"host family","category":"Daily Life & Abstract","note":"","romaji":"hosutofamirī"},{"word":"ルームメート","meaning":"roommate","category":"Daily Life & Abstract","note":"","romaji":"rūmumēto"},{"word":"プレゼント","meaning":"present; gift","category":"Daily Life & Abstract","note":"","romaji":"purezento"},{"word":"ホームシック","meaning":"homesickness","category":"Daily Life & Abstract","note":"","romaji":"hōmushikku"},{"word":"マイナス","meaning":"minus; negative","category":"Daily Life & Abstract","note":"","romaji":"mainasu"},{"word":"レントゲン","meaning":"X-ray","category":"Daily Life & Abstract","note":"ORIGIN: German, after W. Röntgen.","romaji":"rentogen"},{"word":"ウエイター","meaning":"waiter","category":"Daily Life & Abstract","note":"","romaji":"ueitā"},{"word":"チケット","meaning":"ticket","category":"Daily Life & Abstract","note":"","romaji":"chiketto"},{"word":"バレンタインデー","meaning":"Valentine's Day","category":"Daily Life & Abstract","note":"","romaji":"barentaindē"},{"word":"サラリーマン","meaning":"office worker; salaryman","category":"Daily Life & Abstract","note":"ORIGIN: wasei-eigo \"salary + man.\"","romaji":"sararīman"},{"word":"コンタクト","meaning":"contact lenses","category":"Daily Life & Abstract","note":"CLIPPING: コンタクトレンズ → コンタクト.","romaji":"kontakuto"},{"word":"ニュース","meaning":"news","category":"Daily Life & Abstract","note":"","romaji":"nyūsu"},{"word":"パンダ","meaning":"panda","category":"Daily Life & Abstract","note":"","romaji":"panda"},{"word":"シャンプー","meaning":"shampoo","category":"Daily Life & Abstract","note":"","romaji":"shanpū"},{"word":"パーマ","meaning":"perm","category":"Daily Life & Abstract","note":"CLIPPING: パーマネントウェーブ → パーマ.","romaji":"pāma"},{"word":"セット","meaning":"set","category":"Daily Life & Abstract","note":"","romaji":"setto"},{"word":"ブロー","meaning":"blow-dry","category":"Daily Life & Abstract","note":"USAGE: \"blow\" = blow-drying hair.","romaji":"burō"},{"word":"スピーチ","meaning":"speech","category":"Daily Life & Abstract","note":"","romaji":"supīchi"},{"word":"ポスター","meaning":"poster","category":"Daily Life & Abstract","note":"","romaji":"posutā"},{"word":"プロジェクト","meaning":"project","category":"Daily Life & Abstract","note":"","romaji":"purojekuto"},{"word":"ボーナス","meaning":"bonus","category":"Daily Life & Abstract","note":"","romaji":"bōnasu"},{"word":"アルバイト","meaning":"part-time job","category":"Daily Life & Abstract","note":"ORIGIN: German \"Arbeit\" (work); often clipped to バイト.","romaji":"arubaito"},{"word":"ストレス","meaning":"stress","category":"Daily Life & Abstract","note":"","romaji":"sutoresu"},{"word":"リラックス","meaning":"relax","category":"Daily Life & Abstract","note":"","romaji":"rirakkusu"},{"word":"アイデア","meaning":"idea","category":"Daily Life & Abstract","note":"","romaji":"aidea"},{"word":"チャンス","meaning":"chance; opportunity","category":"Daily Life & Abstract","note":"","romaji":"chansu"},{"word":"スタート","meaning":"start","category":"Daily Life & Abstract","note":"","romaji":"sutāto"},{"word":"ゴール","meaning":"goal","category":"Daily Life & Abstract","note":"","romaji":"gōru"},{"word":"ルール","meaning":"rule","category":"Daily Life & Abstract","note":"","romaji":"rūru"},{"word":"レベル","meaning":"level","category":"Daily Life & Abstract","note":"","romaji":"reberu"},{"word":"グループ","meaning":"group","category":"Daily Life & Abstract","note":"","romaji":"gurūpu"},{"word":"メンバー","meaning":"member","category":"Daily Life & Abstract","note":"","romaji":"menbā"},{"word":"スケジュール","meaning":"schedule","category":"Daily Life & Abstract","note":"","romaji":"sukejūru"},{"word":"アドバイス","meaning":"advice","category":"Daily Life & Abstract","note":"","romaji":"adobaisu"},{"word":"チェック","meaning":"check","category":"Daily Life & Abstract","note":"","romaji":"chekku"},{"word":"サイン","meaning":"signature; autograph","category":"Daily Life & Abstract","note":"FALSE FRIEND: \"sign\" = a signature or autograph.","romaji":"sain"},{"word":"プラン","meaning":"plan","category":"Daily Life & Abstract","note":"","romaji":"puran"},{"word":"パスポート","meaning":"passport","category":"Daily Life & Abstract","note":"","romaji":"pasupōto"},{"word":"スーツケース","meaning":"suitcase","category":"Daily Life & Abstract","note":"","romaji":"sūtsukēsu"},{"word":"カンニング","meaning":"cheating (on a test)","category":"Daily Life & Abstract","note":"FALSE FRIEND: not \"cunning\" — cheating on an exam.","romaji":"kanningu"},{"word":"テンション","meaning":"mood; energy level","category":"Daily Life & Abstract","note":"FALSE FRIEND: \"tension\" = your mood/energy, not stress. テンションが高い = upbeat.","romaji":"tenshon"},{"word":"スマート","meaning":"slim; slender","category":"Daily Life & Abstract","note":"FALSE FRIEND: \"smart\" = slim in build, not clever.","romaji":"sumāto"},{"word":"ハーフ","meaning":"biracial person","category":"Daily Life & Abstract","note":"FALSE FRIEND: \"half\" = a person of mixed heritage.","romaji":"hāfu"},{"word":"クレーム","meaning":"complaint","category":"Daily Life & Abstract","note":"FALSE FRIEND: \"claim\" = a customer complaint, not an insurance claim.","romaji":"kurēmu"},{"word":"キャンセル","meaning":"cancellation","category":"Daily Life & Abstract","note":"","romaji":"kyanseru"},{"word":"トラブル","meaning":"trouble","category":"Daily Life & Abstract","note":"","romaji":"toraburu"},{"word":"マナー","meaning":"manners; etiquette","category":"Daily Life & Abstract","note":"","romaji":"manā"},{"word":"インタビュー","meaning":"interview (media)","category":"Daily Life & Abstract","note":"USAGE: a media/press interview; a job interview is 面接.","romaji":"intabyū"},{"word":"コミュニケーション","meaning":"communication","category":"Daily Life & Abstract","note":"","romaji":"komyunikēshon"},{"word":"マスク","meaning":"face mask","category":"Daily Life & Abstract","note":"","romaji":"masuku"},{"word":"レシート","meaning":"receipt","category":"Daily Life & Abstract","note":"","romaji":"reshīto"},{"word":"ポイント","meaning":"point; loyalty points","category":"Daily Life & Abstract","note":"USAGE: a key point, or store loyalty points.","romaji":"pointo"}];
@@ -39095,60 +38763,7 @@ function renderKanaTable() {
   });
 }
 
-function buildKanaPicker() {
-  // reset checkboxes
-  document.querySelectorAll('.kana-checkbox').forEach(cb => cb.checked = false);
-  // fill counts
-  Object.keys(KANA_SETS).forEach(key => {
-    const el = document.getElementById('kcc-' + key);
-    if (el) el.textContent = KANA_SETS[key].items.length + ' chars';
-  });
-  updateKanaCount();
-}
-
-function updateKanaCount() {
-  const checked = [...document.querySelectorAll('.kana-checkbox:checked')].map(c => c.value);
-  const total = checked.reduce((s, k) => s + (KANA_SETS[k] ? KANA_SETS[k].items.length : 0), 0);
-  const countEl = document.getElementById('kana-total-count');
-  const btn = document.getElementById('kana-go-btn');
-  countEl.textContent = checked.length ? total + ' characters' : '';
-  btn.disabled = checked.length === 0;
-}
-
-function startKanaReview() {
-  const checked = [...document.querySelectorAll('.kana-checkbox:checked')].map(c => c.value);
-  if (!checked.length) return;
-  queue = [];
-  checked.forEach(key => {
-    KANA_SETS[key].items.forEach(it => queue.push({ kana: it.kana, romaji: it.romaji, _type: 'kana' }));
-  });
-  shuffle(queue);
-  queueIndex = 0;
-  mPass = 0; mFail = 0; rPass = 0; rFail = 0;
-  itemFailed = {};
-  currentMode = 'review-kana';
-  // update score labels for kana mode
-  document.getElementById('score-m-pass').style.display = 'none';
-  document.getElementById('score-m-fail').style.display = 'none';
-  document.querySelector('.score-sep').style.display = 'none';
-  document.getElementById('score-r-pass').textContent = '✓ 0';
-  document.getElementById('score-r-fail').textContent = '✗ 0';
-  loadItem();
-  showScreen('review');
-}
-
 // ── KATAKANA WORDS ─────────────────────────────────────────────────────
-let awaitingNext = false;
-let pendingNext = null;
-function armNext(action) {
-  pendingNext = action;
-  awaitingNext = true;
-  const b = document.getElementById('submit-btn');
-  b.disabled = false;
-  b.textContent = 'Next →';
-  b.classList.add('next-ready');
-}
-
 function kataNoteHTML(note, block) {
   const colors = {'FALSE FRIEND':'#e8193c','ORIGIN':'#5090d0','CLIPPING':'#5db89a','USAGE':'#c9a84c'};
   let chip = '', body = note;
@@ -39201,94 +38816,6 @@ function kataIsFF(w) {
   if (!w.note) return false;
   const i = w.note.indexOf(':');
   return (i > -1 ? w.note.slice(0, i).trim().toUpperCase() : '') === 'FALSE FRIEND';
-}
-
-function buildKatakanaPicker() {
-  const wrap = document.getElementById('katakana-picker-sets');
-  wrap.innerHTML = '';
-  KATA_CAT_ORDER.forEach(cat => {
-    const count = KATAKANA.filter(w => w.category === cat).length;
-    if (!count) return;
-    const label = document.createElement('label'); label.className = 'pos-check-row';
-    const cbx = document.createElement('input');
-    cbx.type = 'checkbox'; cbx.className = 'kata-checkbox'; cbx.value = cat;
-    cbx.onchange = updateKatakanaCount;
-    const nm = document.createElement('span'); nm.className = 'pos-check-label'; nm.textContent = cat;
-    const ct = document.createElement('span'); ct.className = 'pos-check-count'; ct.textContent = count + ' words';
-    label.appendChild(cbx); label.appendChild(nm); label.appendChild(ct);
-    wrap.appendChild(label);
-  });
-  document.getElementById('kata-all').checked = false;
-  document.getElementById('kata-all-count').textContent = KATAKANA.length + ' words';
-  document.getElementById('kata-ff').checked = false;
-  document.getElementById('kata-ff-count').textContent = KATAKANA.filter(kataIsFF).length + ' words';
-  updateKatakanaCount();
-}
-
-function toggleAllKata(cb) {
-  document.querySelectorAll('.kata-checkbox').forEach(c => c.checked = cb.checked);
-  updateKatakanaCount();
-}
-
-function updateKatakanaCount() {
-  const checked = [...document.querySelectorAll('.kata-checkbox:checked')].map(c => c.value);
-  const ff = document.getElementById('kata-ff').checked;
-  const set = new Set();
-  KATAKANA.forEach(w => { if (checked.includes(w.category) || (ff && kataIsFF(w))) set.add(w.word); });
-  const any = checked.length > 0 || ff;
-  document.getElementById('katakana-total-count').textContent = any ? set.size + ' words' : '';
-  document.getElementById('katakana-go-btn').disabled = !any;
-  const allCats = document.querySelectorAll('.kata-checkbox').length;
-  document.getElementById('kata-all').checked = allCats > 0 && checked.length === allCats;
-}
-
-function startKatakanaReview() {
-  const checked = [...document.querySelectorAll('.kata-checkbox:checked')].map(c => c.value);
-  const ff = document.getElementById('kata-ff').checked;
-  if (!checked.length && !ff) return;
-  queue = KATAKANA.filter(w => checked.includes(w.category) || (ff && kataIsFF(w)))
-                  .map(w => ({ type: 'katakana', word: w.word, meaning: w.meaning, note: w.note, romaji: w.romaji }));
-  shuffle(queue);
-  queueIndex = 0;
-  mPass = 0; mFail = 0; rPass = 0; rFail = 0;
-  itemFailed = {};
-  currentMode = 'review-katakana';
-  document.getElementById('score-r-pass').style.display = 'none';
-  document.getElementById('score-r-fail').style.display = 'none';
-  document.querySelector('.score-sep').style.display = 'none';
-  document.getElementById('score-m-pass').style.display = '';
-  document.getElementById('score-m-fail').style.display = '';
-  document.getElementById('score-m-pass').textContent = 'M✓ 0';
-  document.getElementById('score-m-fail').textContent = 'M✗ 0';
-  showScreen('review');
-  loadItem();
-}
-
-function checkKatakana(val) {
-  const inp = document.getElementById('review-input');
-  const reveal = document.getElementById('answer-reveal');
-  const correct = currentItem.meaning;
-  const display = correct.replace(/\|/g, ' / ');
-  const ok = meaningMatches(val, correct);
-  const note = currentItem.note ? kataNoteHTML(currentItem.note, true) : '';
-  if (ok) {
-    inp.className = 'review-input correct';
-    document.getElementById('submit-btn').disabled = true;
-    mPass++; updateScoreDisplay();
-    document.getElementById('known-meaning').innerHTML = '<span style="font-style:italic;">' + currentItem.romaji + '</span>';
-    if (note) {
-      reveal.innerHTML = `<span style="color:var(--text-dim);">${display}</span>${note}`;
-      reveal.className = 'answer-reveal show';
-    }
-    armNext(nextItem);
-  } else {
-    inp.className = 'review-input wrong';
-    reveal.innerHTML = `Correct: <strong>${display}</strong>${note}`;
-    reveal.className = 'answer-reveal show';
-    if (!itemFailed[itemKey]) itemFailed[itemKey] = {};
-    if (!itemFailed[itemKey].meaning) { mFail++; itemFailed[itemKey].meaning = true; updateScoreDisplay(); }
-    setTimeout(() => { inp.value = ''; inp.className = 'review-input'; inp.placeholder = 'retype the correct meaning…'; }, 400);
-  }
 }
 
 // ── SAME-MEANING (different kanji) ───────────────────────────────────────────
@@ -40283,10 +39810,10 @@ function renderSKGGrid() {
     const countText = isKanjiMode
       ? skg.kanji.length + ' kanji'
       : skg.kanji.length + ' kanji · ' + totalVocab + ' vocab';
-    const card = document.createElement('div');
+    const card = document.createElement('button');
     card.className = 'skg-card';
     card.innerHTML = '<div class="skg-card-id">'+String(skg.id).replace(/SKG\s*/i,'')+'</div>'
-      +'<div class="skg-card-kanji">'+skg.kanji.slice(0,3).join('')+'</div>'
+      +'<div class="skg-card-kanji" lang="ja">'+skg.kanji.join('')+'</div>'
       +'<div class="skg-card-count">'+countText+'</div>';
     card.addEventListener('click', () => selectSKG(skg));
     grid.appendChild(card);
@@ -40854,9 +40381,44 @@ function stepZoom(dir) {
 if (wideMQ.addEventListener) wideMQ.addEventListener('change', applyZoom);
 applyZoom();
 
+/* ---- theme (home ⚙ → Theme): html[data-theme] swaps only the red (CSS :root[data-theme=…]); saved per
+   device in localStorage 'jpnapp-theme' and applied by the tiny script in <head> before first paint ---- */
+var THEMES = ['red', 'blue', 'violet', 'pink', 'orange', 'silver'];
+function setTheme(t) {
+  if (THEMES.indexOf(t) < 0) t = 'red';
+  if (t === 'red') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme', t);
+  try { localStorage.setItem('jpnapp-theme', t); } catch (e) {}
+  renderThemeRow();
+}
+function renderThemeRow() {
+  var cur = document.documentElement.getAttribute('data-theme') || 'red';
+  document.querySelectorAll('.th-btn').forEach(function(b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-theme') === cur)); });
+}
+renderThemeRow();
+
+/* ---- touch screens: hover frames are mouse-only (CSS @media (hover:hover)), so touching or scrolling
+   never leaves a red frame; a real tap (click — never fired by a scroll) gives a short flash instead ---- */
+(function() {
+  var touch = window.matchMedia('(hover:none)');
+  var SEL = '.nr-card,.nr-chip,.nr-pop-x,.skg-card,.study-drill,.pos-check-row,.kata-cat-card > .svk-header,.th-btn,'
+    + '.home-cog,.as-done,.ts-btn,.screen-header .back-btn,#search-fab,#grammar .chapter-btn,#grammar .guide-btn,'
+    + '#grammar .guide-ref,#grammar .settings-cog,#grammar .settings-close,#grammar .grammar-home-btn,'
+    + '#grammar .chapter-header .back-btn,#gr-top-btn';
+  document.addEventListener('click', function(e) {
+    if (!touch.matches || !e.target || !e.target.closest) return;
+    var el = e.target.closest(SEL);
+    if (!el) return;
+    if (el.classList.contains('svk-header')) el = el.parentNode;     // katakana category: flash the whole card
+    el.classList.add('tap-flash');
+    setTimeout(function() { el.classList.remove('tap-flash'); }, 300);
+  }, true);
+})();
+
 /* ---- app settings sheet (home ⚙) ---- */
 function openAppSettings() {
   applyZoom();
+  renderThemeRow();
   JPStore.render();
   document.getElementById('app-settings').classList.add('open');
 }
@@ -41587,19 +41149,33 @@ const NR = (function() {
     long:   { name: 'Long words', desc: 'Words with 3+ kanji — pick the reading one kanji at a time.', pool: () => data().LONG, how: 'Piece by piece', chooseOnly: true },
     same:   { name: 'Same meaning', desc: 'Same meaning, different kanji — type the reading, then choose the meaning.', pool: () => data().SAME.reduce((a, g) => a.concat(g[1].map(x => g[0] + '|' + x[0])), []), how: 'Type + choose' },
     single: { name: '1 kanji – 1 vocab', desc: 'Every kanji that has only one word — all of them, reading then meaning.', pool: () => data().SINGLE, how: 'Type only', typeOnly: true, all: true },
-    kmean:  { name: 'Kanji meaning', desc: 'See the kanji → choose its meaning (15), then see the meaning → choose the kanji (15). The wrong options are look-alike kanji.', pool: () => data().KJ_ALL, size: 30, how: 'Tap to choose', chooseOnly: true, unit: 'kanji right', tough: 'kmean', noun: 'kanji' },
-    kread:  { name: 'Kanji readings', desc: 'Tap every reading of the kanji (6–12 tiles), then Confirm.', pool: () => data().KR_KANJI, size: 30, how: 'Tap every reading', chooseOnly: true, unit: 'kanji right', tough: 'kread', noun: 'kanji' },
+    kmean:  { name: 'Kanji meaning', desc: 'See the kanji → choose its meaning (15), then see the meaning → choose the kanji (15). The wrong options are look-alike kanji.', pool: () => data().KJ_ALL, size: 30, how: 'Tap to choose', tapOnly: true, unit: 'kanji right', tough: 'kmean', noun: 'kanji' },
+    kread:  { name: 'Kanji readings', desc: 'Tap every reading of the kanji (6–12 tiles), then Confirm.', pool: () => data().KR_KANJI, size: 30, how: 'Tap every reading', tapOnly: true, unit: 'kanji right', tough: 'kread', noun: 'kanji' },
   };
+  // tapOnly = the kanji modes: answered by tapping only, so the Choose / Type setting doesn't apply to them
+  // (Review Kanji has no "How you answer" switch; they're never greyed out)
   const SESSION = 25;
 
-  let section = 'vocab';                          // which home button opened Review: vocab · kanji · conj
-  function hub() { if (section === 'conj') return conjSetup(); if (section === 'kanji') return kanjiHub(); vocabHub(); }
+  let section = 'vocab';                          // which home button opened Review: vocab · kanji · conj · kana · kata
+  function hub() {
+    if (section === 'conj') return conjSetup(); if (section === 'kanji') return kanjiHub();
+    if (section === 'kana') return kanaSetup(); if (section === 'kata') return kataSetup();
+    vocabHub();
+  }
   // a mode that can't be answered the selected way is greyed out: choose-only in Type, type-only in Choose
   function modeCard(key, f) {
     const m = MODES[key], n = m.pool().length, off = (m.chooseOnly && f === 'type') || (m.typeOnly && f === 'choose');
     return `<button class="nr-card" data-mode="${key}"${off ? ' disabled' : ''}><b>${m.name}</b><span class="nr-d">${esc(m.desc)}</span>
       <span class="nr-t">${n} ${m.noun || 'words'} · ${m.all ? 'all' : (m.size || SESSION)} per session · ${m.how || 'Choose or Type'}${m.chooseOnly ? ' · Choose only' : ''}</span></button>`;
   }
+  // "Progress & mistakes" — the last section of every hub: boxes like the mode cards, each opens a pop-up
+  const plural = (n, one, many) => n + ' ' + (n === 1 ? one : many);
+  function progressCard(attr, name, desc, tag) {
+    return `<button class="nr-card" ${attr}><b>${esc(name)}</b><span class="nr-d">${esc(desc)}</span><span class="nr-t">${esc(tag)}</span></button>`;
+  }
+  const progressSection = cards => `<div class="nr-section">Progress &amp; mistakes</div><div class="nr-modes">${cards.join('')}</div>`;
+  const toughCard = (list, name, what, unitOne, unitMany) => progressCard(`data-tough="${list}"`, name,
+    `${what} A${unitOne === 'kanji' ? ' kanji' : ' word'} leaves the list after 2 right answers in a row.`, plural(toughCount(list), unitOne, unitMany));
   function fmtSwitch(f, hint) {
     return `<div class="nr-label">How you answer</div>
       <div class="nr-seg" role="group" aria-label="How you answer">
@@ -41615,7 +41191,7 @@ const NR = (function() {
     $$('[data-tough]').forEach(b => b.onclick = () => toughView(b.dataset.tough));
   }
   function vocabHub() {
-    S = null; view = 'hub'; setReviewing(false);
+    closePop(true); S = null; view = 'hub'; setReviewing(false);
     const f = fmt(), r = ensureRound(), pieces = pieceList(r), done = pieces.filter(p => r.done[p.id]).length;
     const next = pieces.find(p => !r.done[p.id]), plan = srsPlan();
     root.innerHTML = `<div class="nr-wrap">
@@ -41639,32 +41215,33 @@ const NR = (function() {
       <div class="nr-modes">${['many', 'tricky', 'long', 'same', 'single'].map(k => modeCard(k, f)).join('')}
         <button class="nr-card" id="nr-pos-card"${f === 'choose' ? ' disabled' : ''}><b>Part of speech</b><span class="nr-d">Pick word types with tiles — nouns, verbs by group, adjectives…</span><span class="nr-t">30+ per session · Type only</span></button>
       </div>
-      <div class="nr-links">
-        <button class="nr-link" data-tough="srs">Tough words · SRS (${toughCount('srs')})</button>
-        <button class="nr-link" data-tough="tricky">Tough words · Tricky readings (${toughCount('tricky')})</button>
-      </div>
+      ${progressSection([
+        toughCard('srs', 'Tough words · SRS', 'Words you answered wrong in the SRS, worst at the top.', 'word', 'words'),
+        toughCard('tricky', 'Tough words · Tricky readings', 'Words you answered wrong in Tricky readings, worst at the top.', 'word', 'words'),
+        progressCard('data-guide="srs"', 'How the SRS works', 'The 10 stages, when a word comes back, and what moves it up or down.', 'Guide'),
+      ])}
     </div>`;
     bindHub(vocabHub);
+    $('[data-guide="srs"]').onclick = srsGuide;
     $('#nr-srs').onclick = startSrs;
     $('#nr-continue').onclick = () => { if (next) startPiece(next, true); };
     $('#nr-select').onclick = selectView;
     $('#nr-random').onclick = () => startPiece(pieces[rnd(pieces.length)], false);
     $('#nr-pos-card').onclick = posSetup;
   }
-  function kanjiHub() {
-    S = null; view = 'hub'; setReviewing(false);
-    const f = fmt();
+  function kanjiHub() {                         // no "How you answer": both kanji modes are tap-only
+    closePop(true); S = null; view = 'hub'; setReviewing(false);
     root.innerHTML = `<div class="nr-wrap">
       <h1 class="nr-h1">Review Kanji</h1>
-      ${fmtSwitch(f, 'Both kanji modes are answered by tapping, so they are greyed out while Type is selected.')}
       <div class="nr-section">Kanji modes</div>
-      <div class="nr-modes">${['kmean', 'kread'].map(k => modeCard(k, f)).join('')}</div>
-      <div class="nr-links">
-        <button class="nr-link" data-tough="kmean">Tough kanji · Kanji meaning (${toughCount('kmean')})</button>
-        <button class="nr-link" data-tough="kread">Tough kanji · Kanji readings (${toughCount('kread')})</button>
-      </div>
+      <div class="nr-modes">${['kmean', 'kread'].map(k => modeCard(k, 'choose')).join('')}</div>
+      ${progressSection([
+        toughCard('kmean', 'Tough kanji · Kanji meaning', 'Kanji you answered wrong in Kanji meaning, worst at the top.', 'kanji', 'kanji'),
+        toughCard('kread', 'Tough kanji · Kanji readings', 'Kanji you answered wrong in Kanji readings, worst at the top.', 'kanji', 'kanji'),
+      ])}
     </div>`;
-    bindHub(kanjiHub);
+    $$('[data-mode]').forEach(b => b.onclick = () => startMode(b.dataset.mode));
+    $$('[data-tough]').forEach(b => b.onclick = () => toughView(b.dataset.tough));
   }
 
   // ───────── tough lists (§5.1 vocab: Tricky readings; §6b: one per kanji mode): an item joins the
@@ -41677,42 +41254,74 @@ const NR = (function() {
     sset(key, t);
   }
   const toughCount = list => Object.keys(sget('tough:' + list, {})).length;
+  // ───────── pop-ups over a hub (One SKG Select, tough lists, How the SRS works) — one behaviour for all:
+  // the hub stays underneath; tap the background, ✕, Escape or ← to close; the list scrolls in its own box
+  let pop = null, syncLater = false;
+  function popup(kind, title, subHtml, bodyHtml, extraHtml) {
+    closePop(true);
+    const el = document.createElement('div');
+    el.className = 'nr-pop'; el.id = 'nr-pop';
+    el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', title);
+    el.innerHTML = `<div class="nr-pop-panel">
+      <div class="nr-pop-head"><h2 class="nr-h1">${esc(title)}</h2><button class="nr-pop-x" id="nr-pop-x" aria-label="Close">✕</button></div>
+      ${subHtml ? `<p class="nr-sub">${subHtml}</p>` : ''}${extraHtml || ''}
+      <div class="nr-sets-wrap"><div class="nr-sets" id="nr-pop-box">${bodyHtml}</div>
+        <div class="nr-vtrack" id="nr-vtrack" aria-hidden="true"><div class="nr-vthumb" id="nr-vthumb"></div></div></div>
+    </div>`;
+    el.onclick = e => { if (e.target === el) closePop(); };
+    root.appendChild(el);
+    pop = kind;
+    $('#nr-pop-x').onclick = () => closePop();
+    document.getElementById('nrev').classList.add('nr-popped');
+    attachVTrack($('#nr-pop-box'), $('#nr-vtrack'), $('#nr-vthumb'));
+  }
+  function closePop(quiet) {
+    const el = root && root.querySelector('#nr-pop');
+    if (el) el.remove();
+    pop = null;
+    const scr = document.getElementById('nrev'); if (scr) scr.classList.remove('nr-popped');
+    if (!quiet && syncLater && view === 'hub') { syncLater = false; hub(); }   // the other device's progress arrived meanwhile
+  }
+
   function toughView(list) {
-    S = null; view = 'tough'; setReviewing(false);
     const t = sget('tough:' + list, {}), ids = Object.keys(t).sort((a, b) => t[b].x - t[a].x), { W, K, KJ_BY } = data();
     const title = { srs: 'Tough words · SRS', tricky: 'Tough words · Tricky readings', kmean: 'Tough kanji · Kanji meaning', kread: 'Tough kanji · Kanji readings' }[list];
     const sub = id => (list === 'tricky' || list === 'srs') ? (W[id] ? W[id].r[0] + ' · ' + showMeaning(W[id].m) : '')
       : list === 'kread' ? (K[id] || []).map(x => x[0]).join(' · ') : (KJ_BY[id] ? KJ_BY[id].m : '');
-    root.innerHTML = `<div class="nr-wrap">
-      <h1 class="nr-h1">${esc(title)}</h1>
-      <p class="nr-sub">Joins the list the moment it's answered wrong, leaves after 2 right answers in a row. Worst at the top.</p>
-      <div class="nr-tough">${ids.length ? ids.map(id => `<div class="nr-tough-row"><span class="nr-tough-w" lang="ja">${esc(id)}</span><span class="nr-tough-m" lang="ja">${esc(sub(id))}</span><span class="nr-tough-x">✗${t[id].x}</span></div>`).join('') : '<p class="nr-empty">Nothing here yet.</p>'}</div>
-    </div>`;
-    scrollTop();
+    popup('tough', title, 'Joins the list the moment it\'s answered wrong, leaves after 2 right answers in a row. Worst at the top.',
+      `<div class="nr-tough">${ids.length ? ids.map(id => `<div class="nr-tough-row"><span class="nr-tough-w" lang="ja">${esc(id)}</span><span class="nr-tough-m" lang="ja">${esc(sub(id))}</span><span class="nr-tough-x">✗${t[id].x}</span></div>`).join('') : '<p class="nr-empty">Nothing here yet.</p>'}</div>`);
+  }
+
+  // How the SRS works (§5.1) — the stage table is built from SRS_DAYS, so it can't drift from the real numbers
+  function srsGuide() {
+    const DAY = { 1: '1 day (tomorrow)', 2: '2 days', 4: '4 days', 7: '1 week', 10: '10 days', 14: '2 weeks', 30: '1 month', 60: '2 months', 90: '3 months' };
+    const rows = SRS_DAYS.slice(1).map((d, i) => { const st = i + 1;
+      return `<tr class="${st === CHOOSE_LIMIT ? 'nr-limit' : ''}"><td>${st}</td><td>${st === 10 ? 'every 3 months, forever' : DAY[d] || d + ' days'}${st === CHOOSE_LIMIT ? ' · Choose limit' : ''}</td></tr>`; }).join('');
+    popup('guide', 'How the SRS works', '', `<div class="nr-guide">
+      <p>Every word climbs a ladder of 10 stages. The higher the stage, the longer until the word comes back. Nothing is ever retired — stage 10 still comes back every 3 months.</p>
+      <table class="nr-stages"><thead><tr><th>Stage</th><th>Comes back after</th></tr></thead><tbody>${rows}</tbody></table>
+      <p><b>Right</b> → up one stage. <b>Wrong</b> → down two stages (never below 1). A new word's first answer puts it on stage 2 if right, stage 1 if wrong.</p>
+      <p><b>Choose</b> can lift a word only up to stage ${CHOOSE_LIMIT}. To go higher, answer with <b>Type</b> — reading and meaning both right. A wrong Choose answer still counts.</p>
+      <p>Every session is ${SESSION} words: the most overdue first, then the other due words, then new words, one look-alike set at a time. A word you get wrong comes back at the end of the session until you get it right — those repeats don't move it again.</p>
+      <p>Days are calendar days: "1 day" means tomorrow, any time of day.</p>
+    </div>`);
   }
 
   function selectView() {
-    S = null; view = 'select'; setReviewing(false);
     const r = ensureRound(), pieces = pieceList(r);
     const rows = data().SETS.map(st => {
       const ps = pieces.filter(p => p.set === st.id);
       return `<div class="nr-set"><div class="nr-set-id">${st.id}</div><div class="nr-set-kanji" lang="ja">${esc(st.kanji.join(''))}</div>
         <div class="nr-chips">${ps.map(p => `<button class="nr-chip${r.done[p.id] ? ' done' : ''}" data-piece="${p.id}"><b>${r.done[p.id] ? '✓ ' : ''}${p.id}</b><span>${r.done[p.id] ? esc(r.done[p.id]) : p.words.length + ' words'}</span></button>`).join('')}</div></div>`;
     }).join('');
-    root.innerHTML = `<div class="nr-wrap">
-      <h1 class="nr-h1">One SKG</h1>
-      <p class="nr-sub">Round ${r.n} · ${pieces.filter(p => r.done[p.id]).length} / ${pieces.length} done. Picking an item here counts it, and Continue skips it later.</p>
-      <div class="nr-sets-wrap"><div class="nr-sets" id="nr-sets">${rows}</div>
-        <div class="nr-vtrack" id="nr-vtrack" aria-hidden="true"><div class="nr-vthumb" id="nr-vthumb"></div></div></div>
-    </div>`;
-    $$('[data-piece]').forEach(b => b.onclick = () => startPiece(pieces.find(p => p.id === b.dataset.piece), true));
-    attachVTrack($('#nr-sets'), $('#nr-vtrack'), $('#nr-vthumb'));
-    scrollTop();
+    popup('select', 'One SKG', `Round ${r.n} · ${pieces.filter(p => r.done[p.id]).length} / ${pieces.length} done. Picking an item here counts it, and Continue skips it later.`, rows);
+    $$('#nr-pop [data-piece]').forEach(b => b.onclick = () => { closePop(true); startPiece(pieces.find(p => p.id === b.dataset.piece), true); });
   }
   // permanent scroll bar for the set list on phones (§3b): drag the thumb or tap the track
   function attachVTrack(box, track, thumb) {
     const update = () => {
       const h = Math.max(32, track.clientHeight * box.clientHeight / Math.max(1, box.scrollHeight)), max = box.scrollHeight - box.clientHeight;
+      track.style.visibility = max > 1 ? '' : 'hidden';             // nothing to scroll → no bar
       thumb.style.height = h + 'px';
       thumb.style.transform = 'translateY(' + (max > 0 ? box.scrollTop / max * (track.clientHeight - h) : 0) + 'px)';
     };
@@ -41727,6 +41336,7 @@ const NR = (function() {
   }
 
   function begin(s) {
+    closePop(true);
     S = Object.assign({ i: 0, right: 0, keys: null, unit: 'words right' }, s);
     view = 'session'; setReviewing(true); scrollTop();
     question();
@@ -41748,7 +41358,7 @@ const NR = (function() {
         .map(c => ({ k: c.slice(0, -1), dir: c.slice(-1) === '>' ? 'km' : 'mk' }));
     } else { deck = dealDeck(key, pool, m.size || SESSION); queue = shuffle(deck.items.slice()); }
     if (key === 'same') { const map = {}; data().SAME.forEach((g, gi) => g[1].forEach((x, wi) => { map[g[0] + '|' + x[0]] = { g: gi, w: wi }; })); queue = queue.map(id => map[id]).filter(Boolean); }
-    const format = m.typeOnly ? 'type' : f;
+    const format = m.typeOnly ? 'type' : m.tapOnly ? 'choose' : f;
     begin({ mode: key, label: m.name, format, how: (m.how || format).toUpperCase(), queue, opts: m.opts, unit: m.unit || 'words right', tough: m.tough,
       onDone: () => { if (deck) deck.commit(); } });
   }
@@ -41768,6 +41378,8 @@ const NR = (function() {
     if (S.mode === 'conj') return S.format === 'choose' ? askConjChoose(item) : askConjType(item);
     if (S.mode === 'long') return askLong(item);
     if (S.mode === 'same') return askSame(item);
+    if (S.mode === 'kana') return askKana(item);
+    if (S.mode === 'kata') return askKata(item);
     if (S.format === 'choose') return askChoose(item);
     askReading(item);
   }
@@ -41826,8 +41438,10 @@ const NR = (function() {
         <input id="nr-ans" class="nr-answer" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="enter">
         <button class="nr-btn nr-btn-primary nr-check" id="nr-go" onmousedown="event.preventDefault()">Check</button>
         <div class="nr-opts" id="nr-topts" hidden></div>
-        <div class="nr-nudge" id="nr-nudge"></div>`);
+        <div class="nr-nudge" id="nr-nudge"></div>
+        <div class="nr-tnote" id="nr-tnote"></div>`);
     }
+    $('#nr-tnote').innerHTML = '';                 // Katakana words: the word's note, under the box so the box never moves
     $('.nr-qcount').innerHTML = `Question <b>${S.i + 1}</b> / ${S.queue.length}`;
     $('.nr-bar i').style.width = Math.round(S.i / S.queue.length * 100) + '%';
     $('#nr-tword').textContent = word;
@@ -42160,7 +41774,7 @@ const NR = (function() {
 
   // setup screen: three rows of tiles (remembered); 30 questions, + / − unlock once any row has 2+ tiles
   function conjSetup() {
-    S = null; view = 'hub'; setReviewing(false);
+    closePop(true); S = null; view = 'hub'; setReviewing(false);
     const f = fmt(), sel = conjSel();
     if (!conjMulti(sel)) sel.size = 30;
     const ok = sel.types.length && sel.forms.length && sel.regs.length;
@@ -42175,7 +41789,8 @@ const NR = (function() {
       <div class="nr-label">Questions</div>
       <div class="nr-sizer"><button class="nr-btn" id="nr-minus"${conjMulti(sel) && sel.size > 30 ? '' : ' disabled'} aria-label="5 fewer">−</button><span class="nr-size">${sel.size}</span><button class="nr-btn" id="nr-plus"${conjMulti(sel) ? '' : ' disabled'} aria-label="5 more">+</button></div>
       <button class="nr-btn nr-btn-primary" id="nr-start"${ok ? '' : ' disabled'}>Start</button>
-      <div class="nr-links"><button class="nr-link" id="nr-tough-conj">Toughest conjugations (${conjToughList().length})</button></div>
+      ${progressSection([progressCard('id="nr-tough-conj"', 'Toughest conjugations',
+        'Combinations below 80% right over their last 20 answers, worst first or by word type.', plural(conjToughList().length, 'combination', 'combinations'))])}
     </div>`;
     $('#nr-fmt-choose').onclick = () => { setFmt('choose'); conjSetup(); };
     $('#nr-fmt-type').onclick = () => { setFmt('type'); conjSetup(); };
@@ -42351,22 +41966,17 @@ const NR = (function() {
     return out.sort((a, b) => a.pct - b.pct);
   }
   function conjToughView() {
-    S = null; view = 'tough'; setReviewing(false);
     const mode = JPStore.get('conj:toughView', 'worst'), list = conjToughList();
     const row = e => { const p = e.k.split('|'); return `<div class="nr-tough-row"><span class="nr-tough-w2">${esc(CT_LABEL[p[0]] || p[0])}</span><span class="nr-tough-m">${esc(CF_LABEL[p[1]] || p[1])}${p[2] ? ' · ' + p[2] : ''}</span><span class="nr-tough-x">${e.pct}%</span></div>`; };
     const isAdj = e => /adj/.test(e.k.split('|')[0]);
     const body = !list.length ? '<p class="nr-empty">Nothing here yet — a combination shows up after 5 answers if it is below 80% right.</p>'
       : mode === 'type' ? [['Verbs', list.filter(e => !isAdj(e))], ['Adjectives', list.filter(isAdj)]].filter(g => g[1].length).map(g => `<div class="nr-section">${g[0]}</div>` + g[1].map(row).join('')).join('')
       : list.map(row).join('');
-    root.innerHTML = `<div class="nr-wrap">
-      <h1 class="nr-h1">Toughest conjugations</h1>
-      <p class="nr-sub">Each combination keeps its last 20 answers. It shows up once it has 5+ answers and is below 80% right, and leaves when it climbs back to 80%.</p>
-      <div class="nr-seg" role="group" aria-label="Order"><button id="nr-tv-worst" aria-pressed="${mode !== 'type'}">Worst first</button><button id="nr-tv-type" aria-pressed="${mode === 'type'}">By word type</button></div>
-      <div class="nr-tough">${body}</div>
-    </div>`;
+    popup('tough', 'Toughest conjugations', 'Each combination keeps its last 20 answers. It shows up once it has 5+ answers and is below 80% right, and leaves when it climbs back to 80%.',
+      `<div class="nr-tough">${body}</div>`,
+      `<div class="nr-seg" role="group" aria-label="Order"><button id="nr-tv-worst" aria-pressed="${mode !== 'type'}">Worst first</button><button id="nr-tv-type" aria-pressed="${mode === 'type'}">By word type</button></div>`);
     $('#nr-tv-worst').onclick = () => { sset('conj:toughView', 'worst'); conjToughView(); };
     $('#nr-tv-type').onclick = () => { sset('conj:toughView', 'type'); conjToughView(); };
-    scrollTop();
   }
 
 
@@ -42420,11 +42030,124 @@ const NR = (function() {
     scrollTop();
   }
 
+  // ───────── Review Kana + Review Katakana Words (moved from the old engine; same questions, new look) ─────────
+  // setup like Review Conjugation (tile rows, remembered selection); every kana / word of the picked sets,
+  // random order; typed answer with the §3b screen rules (forced retype after a mistake, as before)
+  const KANA_ROWS = [['Hiragana', ['hiragana_basic', 'hiragana_dakuon', 'hiragana_yoon']], ['Katakana', ['katakana_basic', 'katakana_dakuon', 'katakana_yoon']]];
+  const KANA_NAME = { basic: 'Gojūon', dakuon: 'Dakuon & Handakuon', yoon: 'Yōon' };
+  const kanaSel = () => sget('kana:sel', []).filter(k => KANA_SETS[k]);
+  function kanaSetup() {
+    closePop(true); S = null; view = 'hub'; setReviewing(false);
+    const sel = kanaSel(), n = sel.reduce((a, k) => a + KANA_SETS[k].items.length, 0);
+    root.innerHTML = `<div class="nr-wrap">
+      <h1 class="nr-h1">Review Kana</h1>
+      <p class="nr-sub">See a kana, type its romaji. Every kana of the sets you pick, in random order.</p>
+      ${KANA_ROWS.map(([label, keys]) => `<div class="nr-label">${label}</div><div class="nr-tiles">${keys.map(k => `<button class="nr-tile" data-k="${k}" aria-pressed="${sel.includes(k)}">${esc(KANA_NAME[k.split('_')[1]])}<small>${KANA_SETS[k].items.length}</small></button>`).join('')}</div>`).join('')}
+      <p class="nr-hint">Choose at least 1.</p>
+      <div class="nr-label">Questions</div>
+      <div class="nr-sizer"><span class="nr-size">${n}</span></div>
+      <button class="nr-btn nr-btn-primary" id="nr-start"${n ? '' : ' disabled'}>Start</button>
+    </div>`;
+    $$('.nr-tile').forEach(b => b.onclick = () => { const i = sel.indexOf(b.dataset.k); if (i >= 0) sel.splice(i, 1); else sel.push(b.dataset.k); sset('kana:sel', sel); kanaSetup(); });
+    $('#nr-start').onclick = startKana;
+    scrollTop();
+  }
+  function startKana() {
+    const sel = kanaSel();
+    if (!sel.length) return kanaSetup();
+    const queue = shuffle([].concat.apply([], sel.map(k => KANA_SETS[k].items.map(x => ({ kana: x.kana, romaji: x.romaji })))));
+    begin({ mode: 'kana', label: 'Kana', format: 'type', how: 'TYPE', queue, unit: 'kana right' });
+  }
+  function askKana(item) {
+    const inp = typeScreen(item.kana, 'Romaji', '', false, 'type the romaji');
+    const ok = v => v.toLowerCase().replace(/\s+/g, '') === item.romaji;
+    let phase = 'answer', wrongLine = '';
+    inp.oninput = () => { $('#nr-nudge').textContent = ''; };
+    const submit = () => {
+      if (phase === 'done') return next();
+      const val = inp.value.trim();
+      if (!val) return;
+      $('#nr-nudge').textContent = '';
+      if (/[぀-ヿ々㐀-鿿]/.test(val)) { $('#nr-nudge').textContent = 'Type the romaji in Latin letters.'; return; }
+      if (phase === 'answer') {
+        if (ok(val)) { $('#nr-reveal').innerHTML = `<div class="nr-rd ok">${esc(item.romaji)}</div>`; $('#nr-go').textContent = 'Next →'; phase = 'done'; markRight(inp, val); }
+        else {
+          S.wordOk = false; phase = 'retype';
+          wrongLine = `<div class="nr-rd"><span class="bad">${esc(val)}</span> → <span class="ok fix">${esc(item.romaji)}</span></div>`;
+          $('#nr-reveal').innerHTML = wrongLine;
+          inp.value = ''; inp.placeholder = 'type it once: ' + item.romaji;
+        }
+      } else if (ok(val)) { $('#nr-go').textContent = 'Next →'; phase = 'done'; markRight(inp, val); }
+      else { $('#nr-nudge').textContent = 'Type it exactly as shown: ' + item.romaji; inp.select(); }
+    };
+    inp.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); submit(); } };
+    tapButton($('#nr-go'), submit);
+  }
+
+  const kataSel = () => { const s = sget('kata:sel', null) || {}; return { cats: (s.cats || []).filter(c => KATA_CAT_ORDER.includes(c)), ff: !!s.ff }; };
+  const kataWords = sel => KATAKANA.filter(w => sel.cats.includes(w.category) || (sel.ff && kataIsFF(w)));
+  function kataSetup() {
+    closePop(true); S = null; view = 'hub'; setReviewing(false);
+    const sel = kataSel(), cats = KATA_CAT_ORDER.filter(c => KATAKANA.some(w => w.category === c)), n = kataWords(sel).length;
+    const all = cats.length && cats.every(c => sel.cats.includes(c));
+    root.innerHTML = `<div class="nr-wrap">
+      <h1 class="nr-h1">Review Katakana Words</h1>
+      <p class="nr-sub">See a katakana word, type its meaning. The romaji shows after you answer.</p>
+      <div class="nr-label">Categories</div>
+      <div class="nr-tiles"><button class="nr-tile" data-all="1" aria-pressed="${!!all}">All categories<small>${KATAKANA.length}</small></button>${cats.map(c => `<button class="nr-tile" data-c="${esc(c)}" aria-pressed="${sel.cats.includes(c)}">${esc(c)}<small>${KATAKANA.filter(w => w.category === c).length}</small></button>`).join('')}</div>
+      <div class="nr-label">Extra</div>
+      <div class="nr-tiles"><button class="nr-tile" data-ff="1" aria-pressed="${sel.ff}">False Friends only<small>${KATAKANA.filter(kataIsFF).length}</small></button></div>
+      <p class="nr-hint">Choose at least 1.</p>
+      <div class="nr-label">Questions</div>
+      <div class="nr-sizer"><span class="nr-size">${n}</span></div>
+      <button class="nr-btn nr-btn-primary" id="nr-start"${n ? '' : ' disabled'}>Start</button>
+    </div>`;
+    const save = () => { sset('kata:sel', sel); kataSetup(); };
+    $$('[data-c]').forEach(b => b.onclick = () => { const i = sel.cats.indexOf(b.dataset.c); if (i >= 0) sel.cats.splice(i, 1); else sel.cats.push(b.dataset.c); save(); });
+    $('[data-all]').onclick = () => { sel.cats = all ? [] : cats.slice(); save(); };
+    $('[data-ff]').onclick = () => { sel.ff = !sel.ff; save(); };
+    $('#nr-start').onclick = startKata;
+    scrollTop();
+  }
+  function startKata() {
+    const words = kataWords(kataSel());
+    if (!words.length) return kataSetup();
+    begin({ mode: 'kata', label: 'Katakana words', format: 'type', how: 'TYPE', queue: shuffle(words.slice()), unit: 'words right' });
+  }
+  function askKata(w) {
+    const meanings = [w.meaning];
+    const inp = typeScreen(w.word, 'Meaning', '', false, 'type the meaning');
+    const rom = `<div class="nr-rd">${esc(w.romaji)}</div>`, note = w.note ? kataNoteHTML(w.note, true) : '';
+    let phase = 'answer', wrongLine = '';
+    inp.oninput = () => { $('#nr-nudge').textContent = ''; };
+    const done = html => { $('#nr-reveal').innerHTML = rom + html; $('#nr-tnote').innerHTML = note; $('#nr-go').textContent = 'Next →'; phase = 'done'; };
+    const submit = () => {
+      if (phase === 'done') return next();
+      const val = inp.value.trim();
+      if (!val) return;
+      $('#nr-nudge').textContent = '';
+      if (/[぀-ヿ々㐀-鿿]/.test(val)) { $('#nr-nudge').textContent = 'Type the meaning in English.'; return; }
+      const g = gradeMeaning(val, meanings);
+      if (phase === 'answer') {
+        if (g.ok) { done(`<div class="nr-mn ok">${esc(showMeaning(meanings))}</div>` + (g.typo ? `<div class="nr-note">Accepted, check spelling: ${esc(g.typo)}</div>` : '')); markRight(inp, val); }
+        else {
+          S.wordOk = false; phase = 'retype';
+          wrongLine = `<div class="nr-mn"><span class="bad">${esc(val)}</span> → <span class="ok fix">${esc(showMeaning(meanings))}</span></div>`;
+          $('#nr-reveal').innerHTML = rom + wrongLine; $('#nr-tnote').innerHTML = note;
+          inp.value = ''; inp.placeholder = 'type it once: ' + meanings[0].split('|')[0].trim();
+        }
+      } else if (g.ok) { done(wrongLine); markRight(inp, val); }
+      else { $('#nr-nudge').textContent = 'Type the meaning as shown to continue.'; inp.select(); }
+    };
+    inp.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); submit(); } };
+    tapButton($('#nr-go'), submit);
+  }
+
   function end() {
     const s = S;
     if (s.onDone) s.onDone(s);
     S = null; view = 'end'; setReviewing(false);
-    const again = s.mode === 'skg' ? 'Same item again' : (s.mode === 'pos' || s.mode === 'conj') ? 'Same selection again' : 'New session';
+    const again = s.mode === 'skg' ? 'Same item again' : ['pos', 'conj', 'kana', 'kata'].includes(s.mode) ? 'Same selection again' : 'New session';
     let extra = '';
     if (s.mode === 'skg' && s.counts) { const r = ensureRound(), ps = pieceList(r); extra = `<p>One SKG · Round ${r.n} · ${ps.filter(p => r.done[p.id]).length} / ${ps.length}</p>`; }
     root.innerHTML = `<div class="nr-wrap nr-end">
@@ -42439,6 +42162,8 @@ const NR = (function() {
       if (s.mode === 'skg') startPiece(s.piece, s.counts);
       else if (s.mode === 'pos') { posSetup(); $('#nr-start').click(); }
       else if (s.mode === 'conj') startConj();
+      else if (s.mode === 'kana') startKana();
+      else if (s.mode === 'kata') startKata();
       else if (s.mode === 'srs') startSrs();
       else startMode(s.mode);
     };
@@ -42448,18 +42173,20 @@ const NR = (function() {
 
   document.addEventListener('keydown', e => {
     const scr = document.getElementById('nrev');
-    if (scr && scr.classList.contains('active') && S && S.keys) S.keys(e);
+    if (!scr || !scr.classList.contains('active')) return;
+    if (pop) { if (e.key === 'Escape') closePop(); return; }
+    if (S && S.keys) S.keys(e);
   });
   JPStore.onSync(() => {                     // the other device's progress arrived → refresh the hub
     const scr = document.getElementById('nrev');
-    if (scr && scr.classList.contains('active') && view === 'hub') hub();
+    if (scr && scr.classList.contains('active') && view === 'hub') { if (pop) syncLater = true; else hub(); }
   });
 
   function open(sec) { root = document.getElementById('nrev-app'); if (sec) section = sec; hub(); }
   return {
     open,
-    go(sec) { open(sec); showScreen('nrev'); },          // the home buttons: 'vocab' · 'kanji' · 'conj'
-    back() { if (view === 'hub') goHome(); else hub(); },
+    go(sec) { open(sec); showScreen('nrev'); },          // the home buttons: 'vocab' · 'kanji' · 'conj' · 'kana' · 'kata'
+    back() { if (pop) closePop(); else if (view === 'hub') goHome(); else hub(); },
     _test: { data, buildOptions, manyOptions, trickyOptions, gradeMeaning, kana, cleanNote, dealDeck, dealKanjiMeaning, ensureRound, pieceList, posWords,
       lookAlikes, conjOptions, conjAccepted, conjShown, conjSession, conjToughList, toughMark, srsPlan, srsAnswer, today,
       setDayShift: n => { dayShift = n; }, state: () => ({ S, view, section }) },
