@@ -424,13 +424,6 @@ thead th{text-align:center !important;}
 .sm-note{font-size:13px;color:#7888b8;line-height:1.6;}
 .vocab-pill.sr-flash{border-color:#3dd6c8;box-shadow:0 0 0 1px #3dd6c8;}
 .study-kanji-card.sr-flash,.svk-card.sr-flash{border-color:#3dd6c8;box-shadow:0 0 0 1px #3dd6c8;}
-.pos-check-row{display:flex;align-items:center;gap:12px;padding:12px 14px;
-  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
-  cursor:pointer;transition:border-color 0.15s;}
-@media (hover:hover){.pos-check-row:hover{border-color:var(--accent);}}
-.pos-check-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
-.pos-check-label{flex:1;font-family:var(--font-ui);font-size:13px;font-weight:500;letter-spacing:0.05em;}
-.pos-check-count{font-family:var(--font-num);font-size:11px;color:var(--text-dim);}
 
 /* study vocab: kanji list then vocab */
 .study-vocab-kanji-list{display:flex;flex-direction:column;gap:8px;width:100%;
@@ -1814,7 +1807,7 @@ body.gr-reading #gr-top-btn{display:flex;}
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-10-08 23:26 · v138</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-10-09 23:31 · v139</div>
 </div>
 
 <!-- NEW REVIEWS (REVIEW_DESIGN.md): hub, setup screens, questions and end screen all render into #nrev-app -->
@@ -38300,24 +38293,25 @@ function buildPOSPicker() {
 
   if (currentMode === 'study-pos') {
     if (title) title.textContent = 'Study by Part of Speech';
-    // Render simple browse buttons — click goes straight to word list
-    const wrap = document.createElement('div');
-    wrap.style.cssText = 'display:flex;flex-direction:column;gap:8px;padding-top:8px;';
-    POS_META.forEach(({p, label, color, subs}) => {
+    // One box per part of speech, like the other Study pickers (.study-drill — no tick-box squares);
+    // the name keeps its word-type colour; a tap goes straight to the word list
+    const NAME = { 'noun':'Noun', 'i-adj':'い-adjective', 'na-adj':'な-adjective', 'u-verb-all':'う-verb',
+                   'ru-verb':'る-verb', 'suru-verb':'する-verb', 'adverb':'Adverb', 'expression':'Expression' };
+    body.style.width = '100%';
+    const head = document.createElement('div');
+    head.className = 'picker-label'; head.textContent = 'Choose a part of speech';
+    body.appendChild(head);
+    POS_META.forEach(({p, label, color}) => {
       const count = getPOSWords([p]).length;
-      const btn = document.createElement('div');
-      btn.className = 'pos-check-row';
-      btn.style.cursor = 'pointer';
-      btn.innerHTML = `<span class="pos-check-dot" style="background:${color}"></span>`
-        + `<span class="pos-check-label">${label}</span>`
-        + `<span class="pos-check-count">${count} words</span>`;
+      const btn = document.createElement('button');
+      btn.className = 'study-drill';
+      btn.innerHTML = `<b style="color:${color}">${NAME[p] || label}</b><span>${count.toLocaleString('en')} words</span>`;
       btn.addEventListener('click', () => {
         selectedPOS = [p];
         goTo('study-pos');
       });
-      wrap.appendChild(btn);
+      body.appendChild(btn);
     });
-    body.appendChild(wrap);
 
   }
 }
@@ -40417,7 +40411,7 @@ renderThemeRow();
    never leaves a red frame; a real tap (click — never fired by a scroll) gives a short flash instead ---- */
 (function() {
   var touch = window.matchMedia('(hover:none)');
-  var SEL = '.nr-card,.nr-prow,.nr-chip,.nr-pop-x,.skg-card,.study-drill,.pos-check-row,.kata-cat-card > .svk-header,.th-btn,'
+  var SEL = '.nr-card,.nr-prow,.nr-chip,.nr-pop-x,.skg-card,.study-drill,.kata-cat-card > .svk-header,.th-btn,'
     + '.home-cog,.as-done,.ts-btn,.screen-header .back-btn,#search-fab,#grammar .chapter-btn,#grammar .guide-btn,'
     + '#grammar .guide-ref,#grammar .settings-cog,#grammar .settings-close,#grammar .grammar-home-btn,'
     + '#grammar .chapter-header .back-btn,#gr-top-btn';
