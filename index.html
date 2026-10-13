@@ -1807,7 +1807,7 @@ body.gr-reading #gr-top-btn{display:flex;}
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-10-09 23:31 · v139</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-10-14 00:18 · v141</div>
 </div>
 
 <!-- NEW REVIEWS (REVIEW_DESIGN.md): hub, setup screens, questions and end screen all render into #nrev-app -->
@@ -38978,7 +38978,10 @@ let searchKBMode = 'en';
 function openSearch() {
   document.body.classList.add('search-open');
   const inp = document.getElementById('search-input');
-  if (inp) setTimeout(() => inp.focus(), 60);
+  // focus INSIDE the tap: iPhone opens the keyboard only for a focus made during the tap itself
+  // (a delayed focus shows the cursor but no keyboard). The bar is only moved off-screen with a
+  // transform, so it can take focus while it slides in.
+  if (inp) { inp.focus({ preventScroll: true }); setTimeout(() => { if (document.activeElement !== inp) inp.focus({ preventScroll: true }); }, 60); }
 }
 function closeSearch() {
   document.body.classList.remove('search-open');
@@ -39035,7 +39038,20 @@ function setSearchKB(mode) {
   document.getElementById('kb-kata').classList.toggle('active', mode === 'kata');
   const inp = document.getElementById('search-input');
   inp.placeholder = (mode === 'kana' || mode === 'kata') ? 'ローマ字で入力…' : 'Search kanji, vocab…';
+  searchKeyboardTraits(inp);
+  // the iPhone reads these settings when the box gets focus → refocus inside the tap so the keyboard
+  // comes back with the new mode's settings (suggestions on in EN, off in かな / カナ)
+  if (document.body.classList.contains('search-open')) { inp.blur(); inp.focus({ preventScroll: true }); }
 }
+// iPhone word suggestions (the strip above the keyboard) in EN mode only (v141). They come with the
+// iPhone's autocorrect, which would turn romaji typed in かな / カナ mode into English words — so off there.
+// spellcheck only on touch screens: on desktop it would just underline words like "kanji" in red.
+function searchKeyboardTraits(inp) {
+  const en = searchKBMode === 'en';
+  inp.setAttribute('autocorrect', en ? 'on' : 'off');
+  inp.setAttribute('spellcheck', en && window.matchMedia('(hover:none)').matches ? 'true' : 'false');
+}
+searchKeyboardTraits(document.getElementById('search-input'));
 
 function onSearchInput(val) {
   const inp      = document.getElementById('search-input');
