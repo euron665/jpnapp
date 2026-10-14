@@ -629,6 +629,14 @@ body.search-open.home-active #search-fab{top:97px;}
 .vc-title{font-family:var(--font-jp);font-size:17px;font-weight:400;color:var(--text);margin-bottom:2px;}
 .vc-title-sub{font-size:13px;font-weight:300;color:var(--text-dim);}
 .vc-desc{font-size:11px;color:var(--text-dim);letter-spacing:0.04em;margin-bottom:10px;}
+/* other-example drop-down: top-right above the table (over the POLITE column); sticky, so on a phone
+   where the table scrolls sideways it stays at the right edge of what you see */
+.vc-pick{position:sticky;left:0;display:flex;justify-content:flex-end;margin:-4px 0 6px;}
+.vc-pick select{-webkit-appearance:none;appearance:none;max-width:100%;cursor:pointer;color:var(--text);
+  font-family:var(--font-ui);font-size:13px;padding:6px 28px 6px 10px;border:1px solid var(--border);border-radius:var(--r);
+  background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%238a8aa3' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 10px center;}
+.vc-pick select:focus{outline:none;border-color:var(--accent);}
+@media (hover:hover){.vc-pick select:hover{border-color:var(--accent);}}
 .vc-table{width:max-content;min-width:100%;border-collapse:collapse;}
 .vc-table th,.vc-table td{padding:8px 10px;border:1px solid var(--border);vertical-align:middle;}
 .vc-table thead th{font-size:11px;font-weight:500;color:var(--text-dim);text-transform:uppercase;
@@ -1807,7 +1815,7 @@ body.gr-reading #gr-top-btn{display:flex;}
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-10-14 00:18 · v141</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-10-14 22:51 · v142</div>
 </div>
 
 <!-- NEW REVIEWS (REVIEW_DESIGN.md): hub, setup screens, questions and end screen all render into #nrev-app -->
@@ -39674,7 +39682,103 @@ const TAG_ROM = {
   '〜ではありませんでした':'de wa arimasen deshita','〜で':'de',
 };
 
-function makeVerbTableHTML(verb) {
+/* ---- Study Conjugation: other example words (v142) ----
+   Every regular table (not the irregulars) gets a drop-down, top-right above the POLITE column: the
+   table's own example first, then up to 9 of the most common words of that type from the app's
+   vocabulary (chosen by hand). ぐ has only 7 words in the vocab, ぶ 8 (+ 遊ぶ, which isn't in it), ぬ only
+   死ぬ — so no drop-down there. Readings and meanings come from VOCAB at runtime; every form and romaji
+   is built from the table's own example (same endings, tags and colours), so a word that doesn't fit
+   the pattern is simply left out. The pick is kept in memory only, like the pinch zoom. */
+const VERB_CONJ_ALT = {
+  '〜る(ichidan)':      ['見る','出る','考える','入れる','始める','見える','続ける','決める','教える'],
+  '〜う(godan)':        ['言う','思う','使う','会う','違う','笑う','払う','習う','歌う'],
+  '〜つ(godan)':        ['持つ','立つ','勝つ','打つ','育つ','経つ','建つ','役に立つ','保つ'],
+  '〜る(godan)':        ['分かる','知る','入る','作る','取る','終わる','乗る','走る','座る'],
+  '〜む(godan)':        ['読む','住む','休む','楽しむ','進む','済む','望む','混む','生む'],
+  '〜ぶ(godan)':        ['呼ぶ','選ぶ','飛ぶ','運ぶ','学ぶ','喜ぶ','結ぶ','転ぶ'],
+  '〜く(godan)':        ['聞く','歩く','働く','置く','着く','動く','続く','引く','泣く'],
+  '〜ぐ(godan)':        ['急ぐ','脱ぐ','防ぐ','注ぐ','繋ぐ','担ぐ'],
+  '〜す(godan)':        ['出す','思い出す','返す','消す','渡す','直す','起こす','落とす','過ごす'],
+  '〜い(い-adjective)': ['大きい','小さい','新しい','古い','多い','長い','安い','難しい','楽しい'],
+  '〜な(な-adjective)': ['好き','嫌い','元気','大切','有名','便利','上手','必要','大事'],
+};
+const vcPick = {};                                   // table key → chosen index (memory only)
+const vcKey = t => t.title + String(t.titleSub || '').replace(/<[^>]+>/g, '').replace(/\s+/g, '');
+// Hepburn romaji for a reading: っ doubles the next consonant (っち → tchi), づ/ぢ → zu/ji
+function vcRomaji(kana) {
+  let out = '', gem = false;
+  for (let i = 0; i < kana.length; ) {
+    if (kana[i] === 'っ') { gem = true; i++; continue; }
+    const two = kana.slice(i, i + 2);
+    let r = two.length === 2 && KANA_TO_ROMAJI[two], n = 2;
+    if (!r) { r = { 'づ': 'zu', 'ぢ': 'ji' }[kana[i]] || KANA_TO_ROMAJI[kana[i]] || kana[i]; n = 1; }
+    if (gem) { r = (r.startsWith('ch') ? 't' : r[0]) + r; gem = false; }
+    out += r; i += n;
+  }
+  return out;
+}
+// the table's example + its other words, each a complete table object (same shape as VERB_CONJ)
+function vcVariants(t) {
+  const alts = VERB_CONJ_ALT[vcKey(t)];
+  if (!alts) return [t];
+  ensureVocabWordIndex();
+  const base = t.rows.find(r => r.tense === 'present' && r.pol === 'aff').plain;
+  const end = base.tag.replace(/[＋〜]/g, ''), endRom = TAG_ROM[base.tag] || '';
+  const na = !!t.naAdj, adj = !/^example:/.test(t.desc);
+  const tStem = base.form.slice(0, base.form.length - end.length);
+  const tRomStem = base.rom.slice(0, base.rom.length - endRom.length).trim();
+  const meaningOf = w => { const e = VOCAB_WORD_INDEX[w]; return e ? String(e.meaning).split('|')[0].trim().toLowerCase() : ''; };
+  const exampleLine = (word, rom, stem) => 'example: ' + word + ' (<em>' + rom + '</em>' + (meaningOf(word) ? ', <em>' + meaningOf(word) + '</em>' : '') + ')'
+    + (adj ? ' · ' + t.desc : ' · stem: ' + stem);
+  const tWord = na ? tStem : base.form, tRom = na ? tRomStem : tRomStem + endRom;
+  const out = [Object.assign({}, t, { pickWord: tWord, pickRom: tRom, desc: adj ? exampleLine(tWord, tRom) : t.desc })];
+  alts.forEach(word => {
+    const e = VOCAB_WORD_INDEX[word];
+    if (!e) return;
+    const reading = String(e.reading).split('|')[0].trim();
+    if (!na && (!word.endsWith(end) || !reading.endsWith(end))) return;
+    const wStem = na ? word : word.slice(0, -end.length), rStem = na ? reading : reading.slice(0, -end.length);
+    const romStem = vcRomaji(rStem);
+    const cell = c => {
+      if (c.entries) return Object.assign({}, c, { entries: c.entries.map(cell) });
+      if (!c.form.startsWith(tStem) || !c.rom.startsWith(tRomStem)) throw new Error('pattern');
+      return Object.assign({}, c, { form: wStem + c.form.slice(tStem.length), rom: romStem + c.rom.slice(tRomStem.length) });
+    };
+    try {
+      const rom = na ? romStem : romStem + endRom;
+      out.push(Object.assign({}, t, {
+        rows: t.rows.map(r => Object.assign({}, r, { plain: cell(r.plain), polite: cell(r.polite) })),
+        te: t.te ? cell(t.te) : t.te, pickWord: word, pickRom: rom, desc: exampleLine(word, rom, wStem) }));
+    } catch (err) { /* doesn't fit this table's pattern — leave it out */ }
+  });
+  return out;
+}
+function vcTableHTML(t) {
+  const vs = vcVariants(t), key = vcKey(t);
+  const i = vcPick[key] < vs.length ? vcPick[key] : 0;
+  const pick = vs.length < 2 ? '' : '<div class="vc-pick"><select aria-label="Example word" data-key="' + key + '">'
+    + vs.map((v, n) => '<option value="' + n + '"' + (n === i ? ' selected' : '') + '>' + v.pickWord + ' (' + v.pickRom + ')</option>').join('')
+    + '</select></div>';
+  return makeVerbTableHTML(vs[i], pick);
+}
+function vcOnPick(e) {
+  const sel = e.target, key = sel.dataset.key;
+  const t = [].concat(VERB_CONJ.ru, VERB_CONJ.u.u_tsu_ru, VERB_CONJ.u.mu_bu_nu, VERB_CONJ.u.ku, VERB_CONJ.u.gu, VERB_CONJ.u.su,
+    VERB_CONJ.adj.i, VERB_CONJ.adj.na).find(x => vcKey(x) === key);
+  if (!t) return;
+  vcPick[key] = +sel.value;
+  const block = sel.closest('.vc-block'), next = block.nextElementSibling;
+  if (next && next.classList.contains('xscroll-track')) next.remove();      // its scroll bar is rebuilt below
+  const tmp = document.createElement('div');
+  tmp.innerHTML = vcTableHTML(t);
+  const nb = tmp.firstElementChild;
+  block.replaceWith(nb);
+  nb.querySelector('.vc-pick select').addEventListener('change', vcOnPick);
+  const container = document.getElementById('verb-conj-container');
+  requestAnimationFrame(function() { refreshVcTracks(container); });
+}
+
+function makeVerbTableHTML(verb, pick) {
   const TC = {present:'#0e1535', past:'#1e0e18'};
   const TT = {present:'#4060e0', past:'#e09080'};
   const qW = verb.widePolite ? 'vc-et-adj-q' : 'vc-et-q';
@@ -39735,6 +39839,7 @@ function makeVerbTableHTML(verb) {
   return '<div class="vc-block">'
     +'<div class="vc-title">'+verb.title+' <span class="vc-title-sub">'+(verb.titleSub||'')+'</span></div>'
     +'<div class="vc-desc">'+verb.desc+'</div>'
+    +(pick || '')
     +'<table class="vc-table'+(verb.widePolite?' vc-adj':'')+(verb.naAdj?' vc-na-adj':'')+'"><colgroup><col class="vc-col-l"><col><col></colgroup>'
     +'<thead><tr><th></th><th style="color:#c060c0;letter-spacing:0.08em;">PLAIN REGISTER</th><th style="color:#a0a0a0;letter-spacing:0.08em;">POLITE REGISTER</th></tr></thead>'
     +'<tbody>'+rows+teRow+'</tbody></table></div>';
@@ -39760,7 +39865,8 @@ function renderVerbTables() {
       else if (s==='su')       verbs = VERB_CONJ.u.su;
     }
   }
-  container.innerHTML = verbs.map(makeVerbTableHTML).join('');
+  container.innerHTML = verbs.map(vcTableHTML).join('');
+  container.querySelectorAll('.vc-pick select').forEach(function(s) { s.addEventListener('change', vcOnPick); });
   requestAnimationFrame(function() { refreshVcTracks(container); });
 }
 
