@@ -105,7 +105,9 @@ thead th{text-align:center !important;}
 #nrev .nr-skg{display:grid;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;}
 #nrev .nr-skg-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;}
 #nrev .nr-skg-top b{font-size:17px;font-weight:500;}
-#nrev .nr-round{font-family:var(--font-num);font-size:13px;color:var(--text-dim);}
+/* counters top-right of the boxes (SRS, One SKG, deck modes): 11px so "Round 1 · 100 / 813" still fits
+   beside "Multiple readings" on a 375px phone (at 13px it dropped under the name from 100 on) */
+#nrev .nr-round{font-family:var(--font-num);font-size:11px;color:var(--text-dim);white-space:nowrap;}
 #nrev .nr-skg .nr-btn-primary{margin-top:6px;}
 #nrev .nr-modes{display:flex;flex-direction:column;gap:8px;}
 #nrev .nr-card{display:grid;gap:3px;text-align:left;background:var(--surface);border:1px solid var(--border);
@@ -1816,7 +1818,7 @@ body.gr-reading #gr-top-btn{display:flex;}
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-10-15 15:28 · v143</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-10-15 18:38 · v145</div>
 </div>
 
 <!-- NEW REVIEWS (REVIEW_DESIGN.md): hub, setup screens, questions and end screen all render into #nrev-app -->
@@ -40953,7 +40955,7 @@ const NR = (function() {
       SETS.push({ id, kanji: st.kanji, words: ws });
     }
     const ALL_READINGS = Array.from(new Set([].concat.apply([], Object.keys(K).map(k => K[k].map(x => x[0])))));
-    // Many-reading: kanji with 4+ reading groups (§5.3)
+    // Multiple readings (key 'many'; was "Many-reading"): kanji with 4+ reading groups (§5.3)
     const HARD = new Set(Object.keys(K).filter(k => K[k].length >= 4));
     const MANY = [];
     HARD.forEach(k => VOCAB[k].rgs.forEach(g => g.vocab.forEach(x => { if (W[x.word] && !MANY.includes(x.word)) MANY.push(x.word); })));
@@ -41280,14 +41282,25 @@ const NR = (function() {
   function setReviewing(on) { document.body.classList.toggle('review-active', !!on); }
 
   const MODES = {
-    many:   { name: 'Many-reading', desc: 'The right reading of the hardest kanji — the ones with 4+ readings.', pool: () => data().MANY, opts: w => manyOptions(w) },
+    many:   { name: 'Multiple readings', desc: 'The right reading of the hardest kanji, the ones with 4+ readings (日, 生, 下…).', pool: () => data().MANY, opts: w => manyOptions(w) },
     tricky: { name: 'Tricky readings', desc: 'Sound changes (花火 はなび, 学校 がっこう) and irregular words (今日, 大人).', pool: () => Object.keys(data().TRICKY), opts: w => trickyOptions(w), tough: 'tricky' },
-    long:   { name: 'Long words', desc: 'Words with 3+ kanji — pick the reading one kanji at a time.', pool: () => data().LONG, how: 'Piece by piece', chooseOnly: true },
-    same:   { name: 'Same meaning', desc: 'Same meaning, different kanji — type the reading, then choose the meaning.', pool: () => data().SAME.reduce((a, g) => a.concat(g[1].map(x => g[0] + '|' + x[0])), []), how: 'Type + choose' },
-    single: { name: '1 kanji – 1 vocab', desc: 'Every kanji that has only one word — all of them, reading then meaning.', pool: () => data().SINGLE, how: 'Type only', typeOnly: true, all: true },
-    kmean:  { name: 'Kanji meaning', desc: 'See the kanji → choose its meaning (15), then see the meaning → choose the kanji (15). The wrong options are look-alike kanji.', pool: () => data().KJ_ALL, size: 30, how: 'Tap to choose', tapOnly: true, unit: 'kanji right', tough: 'kmean', noun: 'kanji' },
+    long:   { name: 'Long words', desc: 'Words with 3+ kanji: pick the reading one kanji at a time.', pool: () => data().LONG, how: 'Piece by piece', chooseOnly: true },
+    same:   { name: 'Same meaning', desc: 'Same meaning, different kanji: type the reading, then choose the meaning.', pool: () => data().SAME.reduce((a, g) => a.concat(g[1].map(x => g[0] + '|' + x[0])), []), how: 'Type + choose' },
+    single: { name: '1 kanji – 1 vocab', desc: 'Every kanji that has only one word: type the reading, then the meaning.', pool: () => data().SINGLE, how: 'Type only', typeOnly: true, all: true },
+    kmean:  { name: 'Kanji meaning', desc: 'See the kanji → choose its meaning (15), then the meaning → choose the kanji (15); the wrong options are look-alike kanji.', pool: () => data().KJ_ALL, size: 30, how: 'Tap to choose', tapOnly: true, unit: 'kanji right', tough: 'kmean', noun: 'kanji' },
     kread:  { name: 'Kanji readings', desc: 'Tap every reading of the kanji (6–12 tiles), then Confirm.', pool: () => data().KR_KANJI, size: 30, how: 'Tap every reading', tapOnly: true, unit: 'kanji right', tough: 'kread', noun: 'kanji' },
   };
+  // how each box behaves (REVIEW_DESIGN §12c): ONE wording per behaviour, appended to the box's own line
+  const ROUND_TAIL = n => `Each session you finish moves the counter (top right) ${n} further; one you leave half-way comes back unchanged.`;
+  const deckSentence = (unit, n) => `One round = every ${unit} once, shuffled. ` + ROUND_TAIL(n);
+  const SKG_SENTENCE = unit => `One round = every ${unit} once; the counter (top right) shows how many are done. Continue and Select tick the ${unit} ✓ when you finish it; Random is extra practice and never counts.`;
+  function behaviour(key) {
+    const m = MODES[key];
+    if (key === 'kmean') return `One round = every kanji once each way (${(m.pool().length * 2).toLocaleString('en')} cards), shuffled. ` + ROUND_TAIL(m.size);
+    if (DECK_MODES.includes(key)) return deckSentence(m.noun === 'kanji' ? 'kanji' : 'word', m.size || SESSION);
+    if (key === 'single') return `No rounds: all ${m.pool().length} every session, in a new random order.`;
+    return '';
+  }
   // tapOnly = the kanji modes: answered by tapping only, so the Choose / Type setting doesn't apply to them
   // (Review Kanji has no "How you answer" switch; they're never greyed out)
   const SESSION = 25;
@@ -41319,8 +41332,8 @@ const NR = (function() {
   function modeCard(key, f) {
     const m = MODES[key], n = m.pool().length, off = (m.chooseOnly && f === 'type') || (m.typeOnly && f === 'choose');
     const round = DECK_MODES.includes(key) ? `<span class="nr-round">${deckLine(key)}</span>` : '';
-    return `<button class="nr-card" data-mode="${key}"${off ? ' disabled' : ''}><span class="nr-card-top"><b>${m.name}</b>${round}</span><span class="nr-d">${esc(m.desc)}</span>
-      <span class="nr-t">${n} ${m.noun || 'words'} · ${m.all ? 'all' : (m.size || SESSION)} per session · ${m.how || 'Choose or Type'}${m.chooseOnly ? ' · Choose only' : ''}</span></button>`;
+    return `<button class="nr-card" data-mode="${key}"${off ? ' disabled' : ''}><span class="nr-card-top"><b>${m.name}</b>${round}</span><span class="nr-d">${esc(m.desc + ' ' + behaviour(key))}</span>
+      <span class="nr-t">${n.toLocaleString('en')} ${m.noun || 'words'} · ${m.all ? 'all' : (m.size || SESSION)} per session · ${m.how || 'Choose or Type'}${m.chooseOnly ? ' · Choose only' : ''}</span></button>`;
   }
   // "Progress & mistakes" — the last section of the vocab, kanji and conj hubs: a compact list (name ·
   // count · ›), deliberately NOT like the mode boxes; each row opens a pop-up that starts with its description
@@ -41361,21 +41374,23 @@ const NR = (function() {
       ${fmtSwitch(f, (f === 'choose' ? 'Pick the reading from 4 options. The meaning is shown after.' : 'Type the reading (romaji turns into kana), then the meaning.') + ' Applies to every mode that offers both.')}
       <div class="nr-section">SRS</div>
       <div class="nr-skg">
-        <div class="nr-skg-top"><b>SRS</b><span class="nr-round">${plan.learned} / ${plan.total} words in</span></div>
-        <span class="nr-d">Keeps every word alive: due words first (most overdue first), then new words, set by set. ${SESSION} per session, as often as you like.</span>
+        <div class="nr-skg-top"><b>SRS</b><span class="nr-round">${plan.learned.toLocaleString('en')} / ${plan.total.toLocaleString('en')} words in</span></div>
+        <span class="nr-d">Keeps every word alive. No rounds: each word comes back on its own schedule, from 1 day to every 3 months (How the SRS works, below). Due words first, then new ones, one look-alike set at a time; the counter shows how many words have started. Every answer counts at once.</span>
+        <span class="nr-t">${plan.total.toLocaleString('en')} words · ${SESSION} per session · Choose or Type</span>
         ${f === 'choose' && plan.limit ? `<p class="nr-warn">${plan.limit} of these ${plan.words.length} words won't progress with Choose. To progress them, pick Type.</p>` : ''}
         <button class="nr-btn nr-btn-primary" id="nr-srs"${plan.words.length ? '' : ' disabled'}>Review · ${plan.due} due</button>
       </div>
       <div class="nr-section">One SKG</div>
       <div class="nr-skg">
         <div class="nr-skg-top"><b>One SKG</b><span class="nr-round">Round ${r.n} · ${done} / ${pieces.length}</span></div>
-        <span class="nr-d">Practise one item of a look-alike set.</span>
+        <span class="nr-d">One item of a look-alike set (big sets are split into items: 001a, 001b…). ${SKG_SENTENCE('item')}</span>
+        <span class="nr-t">${pieces.length} items · ${Math.min.apply(null, pieces.map(p => p.words.length))}–${Math.max.apply(null, pieces.map(p => p.words.length))} words each · Choose or Type</span>
         <button class="nr-btn nr-btn-primary" id="nr-continue"${next ? '' : ' disabled'}>Continue${next ? ' · ' + next.id : ''}</button>
         <div class="nr-row"><button class="nr-btn" id="nr-select">Select</button><button class="nr-btn" id="nr-random">Random</button></div>
       </div>
       <div class="nr-section">Special modes</div>
       <div class="nr-modes">${['many', 'tricky', 'long', 'same', 'single'].map(k => modeCard(k, f)).join('')}
-        <button class="nr-card" id="nr-pos-card"${f === 'choose' ? ' disabled' : ''}><b>Part of speech</b><span class="nr-d">Pick word types with tiles — nouns, verbs by group, adjectives…</span><span class="nr-t">30+ per session · Type only</span></button>
+        <button class="nr-card" id="nr-pos-card"${f === 'choose' ? ' disabled' : ''}><b>Part of speech</b><span class="nr-d">Pick word types with tiles: nouns, verbs by group, adjectives… No rounds: a new random pick every session.</span><span class="nr-t">${Object.keys(data().W).length.toLocaleString('en')} words · 30+ per session · Type only</span></button>
       </div>
       ${progressSection([
         toughRow('srs', 'Tough words · SRS', 'word', 'words'),
@@ -41391,10 +41406,60 @@ const NR = (function() {
     $('#nr-random').onclick = () => startPiece(pieces[rnd(pieces.length)], false);
     $('#nr-pos-card').onclick = posSetup;
   }
-  function kanjiHub() {                         // no "How you answer": both kanji modes are tap-only
+  // ───────── One SKG for kanji (§12c, v144): one whole look-alike set per session — Meaning asks every
+  // kanji both ways, Readings every kanji once. Separate rounds per type (kskg:mean / kskg:read =
+  // {n, done: {setId: "right/questions"}}); Continue + Select count, Random never does (as vocab One SKG).
+  // A set whose kanji changed in the spreadsheet loses its ✓ (its question count no longer matches).
+  const KSKG_TYPES = { mean: 'Meaning', read: 'Readings' };
+  function kskgSets(type) {
+    const { SETS, KJ_BY, K } = data();
+    return SETS.map(st => ({ id: st.id, kanji: st.kanji.filter(k => type === 'read' ? (K[k] || []).length : KJ_BY[k]) })).filter(s => s.kanji.length);
+  }
+  const kskgQuestions = (set, type) => set.kanji.length * (type === 'mean' ? 2 : 1);
+  function ensureKRound(type) {
+    const key = 'kskg:' + type, sets = kskgSets(type);
+    let r = sget(key, null), changed = false;
+    if (!r || !r.done) { r = { n: 1, done: {} }; changed = true; }
+    Object.keys(r.done).forEach(id => {
+      const st = sets.find(s => s.id === id);
+      if (!st || +String(r.done[id]).split('/')[1] !== kskgQuestions(st, type)) { delete r.done[id]; changed = true; }
+    });
+    if (sets.every(s => r.done[s.id])) { r = { n: (r.n || 1) + 1, done: {} }; changed = true; }   // all done → new round
+    if (changed) sset(key, r);
+    return r;
+  }
+  function startKanjiSet(set, type, counts) {
+    const queue = type === 'mean'
+      ? shuffle(set.kanji.map(k => ({ k, dir: 'km' }))).concat(shuffle(set.kanji.map(k => ({ k, dir: 'mk' }))))
+      : shuffle(set.kanji.slice());
+    begin({ mode: type === 'mean' ? 'kskgm' : 'kskgr', label: set.id, kset: set, ktype: type, counts, format: 'choose',
+      how: type === 'mean' ? 'TAP TO CHOOSE' : 'TAP EVERY READING', queue, unit: type === 'mean' ? 'right' : 'kanji right',
+      onDone: s => { if (!counts) return; const r = ensureKRound(type); r.done[set.id] = s.right + '/' + s.queue.length; sset('kskg:' + type, r); } });
+  }
+  function kanjiSelectView() {
+    const type = sget('kskg:type', 'mean'), r = ensureKRound(type), sets = kskgSets(type);
+    const rows = sets.map(st => { const d = r.done[st.id];
+      return `<div class="nr-set"><div class="nr-set-id">${st.id}</div><div class="nr-set-kanji" lang="ja">${esc(st.kanji.join(''))}</div>
+        <div class="nr-chips"><button class="nr-chip${d ? ' done' : ''}" data-kset="${st.id}"><b>${d ? '✓ ' : ''}${st.id}</b><span>${d ? esc(d) : st.kanji.length + ' kanji'}</span></button></div></div>`; }).join('');
+    popup('select', 'One SKG · ' + KSKG_TYPES[type], `Round ${r.n} · ${sets.filter(s => r.done[s.id]).length} / ${sets.length} done. Picking a set here counts it, and Continue skips it later.`, rows);
+    $$('#nr-pop [data-kset]').forEach(b => b.onclick = () => { closePop(true); startKanjiSet(sets.find(s => s.id === b.dataset.kset), type, true); });
+  }
+
+  function kanjiHub() {                         // no "How you answer": every kanji mode is tap-only
     closePop(true); S = null; view = 'hub'; setReviewing(false);
+    const kt = sget('kskg:type', 'mean'), kr = ensureKRound(kt), ksets = kskgSets(kt), knext = ksets.find(s => !kr.done[s.id]);
+    const ksizes = ksets.map(s => s.kanji.length);
     root.innerHTML = `<div class="nr-wrap">
       <h1 class="nr-h1">Review Kanji</h1>
+      <div class="nr-section">One SKG</div>
+      <div class="nr-skg">
+        <div class="nr-skg-top"><b>One SKG</b><span class="nr-round">Round ${kr.n} · ${ksets.filter(s => kr.done[s.id]).length} / ${ksets.length}</span></div>
+        <div class="nr-seg" role="group" aria-label="What to practise"><button id="nr-kt-mean" aria-pressed="${kt === 'mean'}">Meaning</button><button id="nr-kt-read" aria-pressed="${kt === 'read'}">Readings</button></div>
+        <span class="nr-d">One look-alike set at a time, all its kanji: Meaning asks each kanji both ways, Readings asks for all its readings. ${SKG_SENTENCE('set').replace('are done. ', 'are done; Meaning and Readings each have their own round. ')}</span>
+        <span class="nr-t">${ksets.length} sets · ${Math.min.apply(null, ksizes)}–${Math.max.apply(null, ksizes)} kanji each · ${kt === 'mean' ? 'Tap to choose' : 'Tap every reading'}</span>
+        <button class="nr-btn nr-btn-primary" id="nr-kcontinue"${knext ? '' : ' disabled'}>Continue${knext ? ' · ' + knext.id : ''}</button>
+        <div class="nr-row"><button class="nr-btn" id="nr-kselect">Select</button><button class="nr-btn" id="nr-krandom">Random</button></div>
+      </div>
       <div class="nr-section">Kanji modes</div>
       <div class="nr-modes">${['kmean', 'kread'].map(k => modeCard(k, 'choose')).join('')}</div>
       ${progressSection([
@@ -41404,6 +41469,11 @@ const NR = (function() {
     </div>`;
     $$('[data-mode]').forEach(b => b.onclick = () => startMode(b.dataset.mode));
     $$('[data-tough]').forEach(b => b.onclick = () => toughView(b.dataset.tough));
+    $('#nr-kt-mean').onclick = () => { sset('kskg:type', 'mean'); kanjiHub(); };
+    $('#nr-kt-read').onclick = () => { sset('kskg:type', 'read'); kanjiHub(); };
+    $('#nr-kcontinue').onclick = () => { if (knext) startKanjiSet(knext, kt, true); };
+    $('#nr-kselect').onclick = kanjiSelectView;
+    $('#nr-krandom').onclick = () => startKanjiSet(ksets[rnd(ksets.length)], kt, false);
   }
 
   // ───────── tough lists (§5.1 vocab: Tricky readings; §6b: one per kanji mode): an item joins the
@@ -41535,8 +41605,8 @@ const NR = (function() {
     if (S.i >= S.queue.length) return end();
     const item = S.queue[S.i];
     S.word = item; S.wordOk = true; S.keys = null;
-    if (S.mode === 'kmean') return askKanjiMeaning(item);
-    if (S.mode === 'kread') return askKanjiReading(item);
+    if (S.mode === 'kmean' || S.mode === 'kskgm') return askKanjiMeaning(item);
+    if (S.mode === 'kread' || S.mode === 'kskgr') return askKanjiReading(item);
     if (S.mode === 'conj') return S.format === 'choose' ? askConjChoose(item) : askConjType(item);
     if (S.mode === 'long') return askLong(item);
     if (S.mode === 'same') return askSame(item);
@@ -42308,9 +42378,11 @@ const NR = (function() {
     const s = S;
     if (s.onDone) s.onDone(s);
     S = null; view = 'end'; setReviewing(false);
-    const again = s.mode === 'skg' ? 'Same item again' : ['pos', 'conj', 'kana', 'kata'].includes(s.mode) ? 'Same selection again' : 'New session';
+    const kskg = s.mode === 'kskgm' || s.mode === 'kskgr';
+    const again = s.mode === 'skg' ? 'Same item again' : kskg ? 'Same set again' : ['pos', 'conj', 'kana', 'kata'].includes(s.mode) ? 'Same selection again' : 'New session';
     let extra = '';
     if (s.mode === 'skg' && s.counts) { const r = ensureRound(), ps = pieceList(r); extra = `<p>One SKG · Round ${r.n} · ${ps.filter(p => r.done[p.id]).length} / ${ps.length}</p>`; }
+    if (kskg && s.counts) { const r = ensureKRound(s.ktype), ss = kskgSets(s.ktype); extra = `<p>One SKG · ${KSKG_TYPES[s.ktype]} · Round ${r.n} · ${ss.filter(x => r.done[x.id]).length} / ${ss.length}</p>`; }
     if (DECK_MODES.includes(s.mode)) extra = `<p>${esc(s.label)} · ${deckLine(s.mode)}</p>`;   // like One SKG (onDone has committed the deck)
     root.innerHTML = `<div class="nr-wrap nr-end">
       <div class="nr-label">${esc(s.label)} · done</div>
@@ -42322,6 +42394,7 @@ const NR = (function() {
       </div></div>`;
     $('#nr-again').onclick = () => {
       if (s.mode === 'skg') startPiece(s.piece, s.counts);
+      else if (kskg) startKanjiSet(s.kset, s.ktype, s.counts);
       else if (s.mode === 'pos') { posSetup(); $('#nr-start').click(); }
       else if (s.mode === 'conj') startConj();
       else if (s.mode === 'kana') startKana();
@@ -42351,7 +42424,7 @@ const NR = (function() {
     back() { if (pop) closePop(); else if (view === 'hub') goHome(); else hub(); },
     _test: { data, buildOptions, manyOptions, trickyOptions, gradeMeaning, kana, cleanNote, dealDeck, dealKanjiMeaning, ensureRound, pieceList, posWords,
       lookAlikes, conjOptions, conjAccepted, conjShown, conjSession, conjToughList, toughMark, srsPlan, srsAnswer, now, dueAt,
-      setDayShift: n => { dayShift = n; }, state: () => ({ S, view, section }) },
+      kskgSets, ensureKRound, setDayShift: n => { dayShift = n; }, state: () => ({ S, view, section }) },
   };
 })();
 
