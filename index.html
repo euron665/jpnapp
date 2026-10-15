@@ -114,6 +114,7 @@ thead th{text-align:center !important;}
 #nrev .nr-card:disabled{opacity:.35;cursor:not-allowed;}
 #nrev .nr-card:disabled:hover{border-color:var(--border);}
 #nrev .nr-card b{font-size:17px;font-weight:500;}
+#nrev .nr-card-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:2px 12px;}
 #nrev .nr-d{font-size:13px;color:var(--text-dim);line-height:1.45;}
 #nrev .nr-t{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);}
 /* One SKG set list: its own scroll box (§3b) */
@@ -1815,7 +1816,7 @@ body.gr-reading #gr-top-btn{display:flex;}
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-10-14 22:51 · v142</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-10-15 15:28 · v143</div>
 </div>
 
 <!-- NEW REVIEWS (REVIEW_DESIGN.md): hub, setup screens, questions and end screen all render into #nrev-app -->
@@ -41298,9 +41299,27 @@ const NR = (function() {
     vocabHub();
   }
   // a mode that can't be answered the selected way is greyed out: choose-only in Type, type-only in Choose
+  // deck progress (v143), shown like One SKG's scoreboard: "Round 1 · 120 / 813 words". Only fully
+  // answered sessions count — an unfinished (pending) session isn't in it. Kanji meaning counts cards
+  // (every kanji has two: kanji → meaning and meaning → kanji).
+  const DECK_MODES = ['many', 'tricky', 'long', 'same', 'kmean', 'kread'];
+  function deckProgress(key) {
+    if (key === 'kmean') {
+      const all = data().KJ_ALL, have = new Set(all), total = all.length * 2, d = sget('deck:kmean', null);
+      if (!d || !Array.isArray(d.left)) return { round: 1, done: 0, total, unit: 'cards' };
+      const known = new Set(Array.from(d.known || '')), left = d.left.filter(c => have.has(c.slice(0, -1))).length + all.filter(k => !known.has(k)).length * 2;
+      return { round: d.round || 1, done: Math.max(0, total - left), total, unit: 'cards' };
+    }
+    const m = MODES[key], pool = m.pool(), have = new Set(pool), d = sget('deck:' + key, null);
+    if (!d || !Array.isArray(d.order)) return { round: 1, done: 0, total: pool.length, unit: m.noun || 'words' };
+    return { round: d.round || 1, done: d.order.slice(0, d.pos).filter(x => have.has(x)).length, total: pool.length, unit: m.noun || 'words' };
+  }
+  // no unit word, like One SKG's "Round 1 · 87 / 252" — it then fits beside the name on a phone
+  const deckLine = key => { const p = deckProgress(key); return `Round ${p.round} · ${p.done.toLocaleString('en')} / ${p.total.toLocaleString('en')}`; };
   function modeCard(key, f) {
     const m = MODES[key], n = m.pool().length, off = (m.chooseOnly && f === 'type') || (m.typeOnly && f === 'choose');
-    return `<button class="nr-card" data-mode="${key}"${off ? ' disabled' : ''}><b>${m.name}</b><span class="nr-d">${esc(m.desc)}</span>
+    const round = DECK_MODES.includes(key) ? `<span class="nr-round">${deckLine(key)}</span>` : '';
+    return `<button class="nr-card" data-mode="${key}"${off ? ' disabled' : ''}><span class="nr-card-top"><b>${m.name}</b>${round}</span><span class="nr-d">${esc(m.desc)}</span>
       <span class="nr-t">${n} ${m.noun || 'words'} · ${m.all ? 'all' : (m.size || SESSION)} per session · ${m.how || 'Choose or Type'}${m.chooseOnly ? ' · Choose only' : ''}</span></button>`;
   }
   // "Progress & mistakes" — the last section of the vocab, kanji and conj hubs: a compact list (name ·
@@ -42292,6 +42311,7 @@ const NR = (function() {
     const again = s.mode === 'skg' ? 'Same item again' : ['pos', 'conj', 'kana', 'kata'].includes(s.mode) ? 'Same selection again' : 'New session';
     let extra = '';
     if (s.mode === 'skg' && s.counts) { const r = ensureRound(), ps = pieceList(r); extra = `<p>One SKG · Round ${r.n} · ${ps.filter(p => r.done[p.id]).length} / ${ps.length}</p>`; }
+    if (DECK_MODES.includes(s.mode)) extra = `<p>${esc(s.label)} · ${deckLine(s.mode)}</p>`;   // like One SKG (onDone has committed the deck)
     root.innerHTML = `<div class="nr-wrap nr-end">
       <div class="nr-label">${esc(s.label)} · done</div>
       <div class="nr-score">${s.right}<small> / ${s.base || s.queue.length}</small></div>
