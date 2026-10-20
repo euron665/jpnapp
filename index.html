@@ -339,7 +339,9 @@ thead th{text-align:center !important;}
 .skg-grid{display:flex;flex-direction:column;gap:6px;width:100%;max-width:600px;padding-bottom:24px;}
 .skg-card{display:grid;grid-template-columns:44px 1fr;gap:4px 12px;align-items:center;width:100%;
   background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;
-  cursor:pointer;text-align:left;color:var(--text);font-family:var(--font-ui);transition:border-color .15s;}
+  cursor:pointer;text-align:left;color:var(--text);font-family:var(--font-ui);transition:border-color .15s;
+  scroll-margin-top:6px;}   /* backToSetList(): the last set lands at the top of the list's own scroll box
+                               (which already starts below the floating ← / 🔍) */
 @media (hover:hover){.skg-card:hover{border-color:var(--accent);}}
 .skg-card-id{font-family:var(--font-num);font-size:13px;color:var(--text-dim);grid-row:span 2;}
 .skg-card-kanji{font-family:var(--font-jp);font-weight:400;font-size:17px;letter-spacing:.06em;min-width:0;
@@ -1818,7 +1820,7 @@ body.gr-reading #gr-top-btn{display:flex;}
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-10-15 18:38 · v145</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-10-20 12:06 · v146</div>
 </div>
 
 <!-- NEW REVIEWS (REVIEW_DESIGN.md): hub, setup screens, questions and end screen all render into #nrev-app -->
@@ -1876,7 +1878,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 <!-- STUDY KANJI -->
 <div id="study-kanji" class="screen">
   <div class="screen-header">
-    <button class="back-btn" onclick="goTo('skg-picker','study-kanji')">← Back</button>
+    <button class="back-btn" onclick="backToSetList('study-kanji')">← Back</button>
     <div class="screen-title" id="study-kanji-title">Study — Kanji</div>
   </div>
   <div class="scrollable" style="padding-top:56px;width:100%;">
@@ -1888,7 +1890,7 @@ body.gr-reading #gr-top-btn{display:flex;}
 <!-- STUDY VOCAB -->
 <div id="study-vocab" class="screen">
   <div class="screen-header">
-    <button class="back-btn" onclick="goTo('skg-picker','study-vocab')">← Back</button>
+    <button class="back-btn" onclick="backToSetList('study-vocab')">← Back</button>
     <div class="screen-title" id="study-vocab-title">Study — Vocab</div>
   </div>
   <div class="scrollable" style="padding-top:56px;width:100%;">
@@ -38201,6 +38203,14 @@ function buildSKGGrid() {
   renderSKGGrid();
 }
 
+// ← from a set (kanji or vocab view) → the set list opens with the set you last studied at the top
+// (v146), not back at 001; swiping / ← → keys between sets update currentSKG, so it's always the last one
+function backToSetList(mode) {
+  goTo('skg-picker', mode);
+  const row = currentSKG && document.querySelector('#skg-grid .skg-card[data-skg="' + currentSKG.id + '"]');
+  if (row) row.scrollIntoView({ block: 'start' });
+}
+
 function selectSKG(skg) {
   currentSKG = skg;
   if (currentMode === 'study-kanji') {
@@ -39947,6 +39957,7 @@ function renderSKGGrid() {
       : skg.kanji.length + ' kanji · ' + totalVocab + ' vocab';
     const card = document.createElement('button');
     card.className = 'skg-card';
+    card.dataset.skg = skg.id;
     card.innerHTML = '<div class="skg-card-id">'+String(skg.id).replace(/SKG\s*/i,'')+'</div>'
       +'<div class="skg-card-kanji" lang="ja">'+skg.kanji.join('')+'</div>'
       +'<div class="skg-card-count">'+countText+'</div>';
@@ -40097,6 +40108,18 @@ function closeKanjiVocabModal() {
     if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
     navigateSKG(dx < 0 ? 1 : -1);
   }, {passive:true});
+  // desktop: ← / → keys = previous / next set (v146), the keyboard version of the phone swipe —
+  // not while typing (search box) or while a pop-up is open
+  document.addEventListener('keydown', function(e) {
+    if ((e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+    const active = document.querySelector('.screen.active');
+    if (!active || (active.id !== 'study-kanji' && active.id !== 'study-vocab')) return;
+    const t = e.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) return;
+    if (['sm-modal-overlay', 'svj-overlay', 'app-settings'].some(function(id) { const o = document.getElementById(id); return o && o.classList.contains('open'); })) return;
+    e.preventDefault();
+    navigateSKG(e.key === 'ArrowRight' ? 1 : -1);
+  });
 })();
 
 if ('serviceWorker' in navigator)
@@ -41413,7 +41436,9 @@ const NR = (function() {
   const KSKG_TYPES = { mean: 'Meaning', read: 'Readings' };
   function kskgSets(type) {
     const { SETS, KJ_BY, K } = data();
-    return SETS.map(st => ({ id: st.id, kanji: st.kanji.filter(k => type === 'read' ? (K[k] || []).length : KJ_BY[k]) })).filter(s => s.kanji.length);
+    // 々 (set 104, alone) is left out of both: it has no reading, and as a set of its own its meaning
+    // would be two trivial questions (user, v146) → Meaning and Readings both have 103 sets
+    return SETS.map(st => ({ id: st.id, kanji: st.kanji.filter(k => k !== '々' && (type === 'read' ? (K[k] || []).length : KJ_BY[k])) })).filter(s => s.kanji.length);
   }
   const kskgQuestions = (set, type) => set.kanji.length * (type === 'mean' ? 2 : 1);
   function ensureKRound(type) {
