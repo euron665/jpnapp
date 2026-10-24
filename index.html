@@ -235,6 +235,10 @@ thead th{text-align:center !important;}
 #nrev .nr-tough-w2{font-size:13px;}
 #nrev .nr-tough-m{font-size:13px;color:var(--text-dim);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 #nrev .nr-tough-x{font-family:var(--font-num);font-size:13px;color:var(--fail-text);}
+/* My SRS words: "in 3 days" over "stage 4" on the right; due words in the theme colour (v157) */
+#nrev .nr-srs-when{display:flex;flex-direction:column;align-items:flex-end;font-size:13px;color:var(--text);white-space:nowrap;}
+#nrev .nr-srs-when small{font-size:11px;color:var(--text-dim);}
+#nrev .nr-srs-when.due{color:var(--accent);}
 #nrev .nr-empty{font-size:13px;color:var(--text-dim);margin:0;}
 #nrev .nr-warn{font-size:13px;line-height:1.5;color:#e8a33a;margin:4px 0 0;}
 #nrev .nr-tnote{text-align:center;}
@@ -1861,7 +1865,7 @@ body.gr-reading #gr-top-btn{display:flex;}
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-10-24 22:22 · v156</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-10-24 22:41 · v158</div>
 </div>
 
 <!-- NEW REVIEWS (REVIEW_DESIGN.md): hub, setup screens, questions and end screen all render into #nrev-app -->
@@ -41547,13 +41551,14 @@ const NR = (function() {
     kskgr: 'Kanji you answered wrong in One SKG · Readings, worst at the top. A kanji leaves the list as soon as you get it right.',
     conj: 'Combinations below 80% right over their last 20 answers, worst first or by word type.',
     guide: 'The 10 stages, when a word comes back, and what moves it up or down.',
+    srswords: 'Every word you have started in the SRS and when it comes back, the soonest at the top. Words never leave this list: even stage 10 comes back every three months, so in the end it holds every word in the SRS.',
   };
   // alert = a "!" badge after the name: Review mistakes is open for that list (v156)
   function progressRow(attr, name, tag, alert) {
     return `<button class="nr-prow" ${attr}><span class="nr-prow-name">${esc(name)}${alert ? '<span class="nr-alert" aria-label="ready for Review mistakes">!</span>' : ''}</span>${tag ? `<span class="nr-prow-tag">${esc(tag)}</span>` : ''}<span class="nr-prow-go" aria-hidden="true">›</span></button>`;
   }
   const progressSection = rows => `<div class="nr-section">Progress &amp; mistakes</div><div class="nr-plist">${rows.join('')}</div>`;
-  const toughRow = (list, name, unitOne, unitMany) => progressRow(`data-tough="${list}"`, name, plural(toughCount(list), unitOne, unitMany), mistOpen(list));
+  const toughRow = (list, unitOne, unitMany) => progressRow(`data-tough="${list}"`, TOUGH_TITLE[list], plural(toughCount(list), unitOne, unitMany), mistOpen(list));
   function fmtSwitch(f, hint) {
     return `<div class="nr-label">How you answer</div>
       <div class="nr-seg" role="group" aria-label="How you answer">
@@ -41597,13 +41602,15 @@ const NR = (function() {
       </div>
       ${progressSection([
         progressRow('data-guide="srs"', 'How the SRS works', ''),
-        toughRow('srs', 'Tough words · SRS', 'word', 'words'),
-        toughRow('skg', 'Tough words · One SKG', 'word', 'words'),
-        toughRow('tricky', 'Tough words · Tricky readings', 'word', 'words'),
+        progressRow('data-srswords', 'My SRS words', plural(plan.learned, 'word', 'words')),
+        toughRow('srs', 'word', 'words'),
+        toughRow('skg', 'word', 'words'),
+        toughRow('tricky', 'word', 'words'),
       ])}
     </div>`;
     bindHub(vocabHub);
     $('[data-guide="srs"]').onclick = srsGuide;
+    $('[data-srswords]').onclick = srsWordsView;
     $('#nr-srs').onclick = startSrs;
     $('#nr-continue').onclick = () => { if (next) startPiece(next, true); };
     $('#nr-select').onclick = selectView;
@@ -41669,10 +41676,10 @@ const NR = (function() {
       <div class="nr-section">Kanji modes</div>
       <div class="nr-modes">${['kmean', 'kread'].map(k => modeCard(k, 'choose')).join('')}</div>
       ${progressSection([
-        toughRow('kskgm', 'Tough kanji · One SKG meaning', 'kanji', 'kanji'),
-        toughRow('kskgr', 'Tough kanji · One SKG readings', 'kanji', 'kanji'),
-        toughRow('kmean', 'Tough kanji · Kanji meaning', 'kanji', 'kanji'),
-        toughRow('kread', 'Tough kanji · Kanji readings', 'kanji', 'kanji'),
+        toughRow('kskgm', 'kanji', 'kanji'),
+        toughRow('kskgr', 'kanji', 'kanji'),
+        toughRow('kmean', 'kanji', 'kanji'),
+        toughRow('kread', 'kanji', 'kanji'),
       ])}
     </div>`;
     $$('[data-mode]').forEach(b => b.onclick = () => startMode(b.dataset.mode));
@@ -41724,9 +41731,10 @@ const NR = (function() {
     if (!quiet && syncLater && view === 'hub') { syncLater = false; hub(); }   // the other device's progress arrived meanwhile
   }
 
-  const TOUGH_TITLE = { srs: 'Tough words · SRS', skg: 'Tough words · One SKG', tricky: 'Tough words · Tricky readings',
-    kskgm: 'Tough kanji · One SKG meaning', kskgr: 'Tough kanji · One SKG readings', kmean: 'Tough kanji · Kanji meaning',
-    kread: 'Tough kanji · Kanji readings', conj: 'Toughest conjugations' };
+  // names of the tough lists — rows, pop-up titles, end screens (v158, user: "Tough kanji in [mode name] mode")
+  const TOUGH_TITLE = { srs: 'Tough words in SRS mode', skg: 'Tough words in One SKG mode', tricky: 'Tough words in Tricky readings mode',
+    kskgm: 'Tough kanji in One SKG meaning mode', kskgr: 'Tough kanji in One SKG readings mode', kmean: 'Tough kanji in Kanji meaning mode',
+    kread: 'Tough kanji in Kanji readings mode', conj: 'Toughest conjugations' };
   function toughView(list) {
     const t = sget('tough:' + list, {}), ids = Object.keys(t).sort((a, b) => t[b].x - t[a].x), { W, K, KJ_BY } = data();
     const sub = id => (list === 'tricky' || list === 'srs' || list === 'skg') ? (W[id] ? W[id].r[0] + ' · ' + showMeaning(W[id].m) : '')
@@ -41778,6 +41786,27 @@ const NR = (function() {
       return begin(Object.assign(base, { mode: list, format: 'choose', how: 'TAP EVERY READING', tough: list, unit: 'kanji right', queue: shuffle(ids) }));
     begin(Object.assign(base, { mode: 'mist', format: f, how: f.toUpperCase(), tough: list, unit: 'words right', queue: shuffle(ids),
       opts: list === 'tricky' ? w => trickyOptions(w) : w => buildOptions(w) }));
+  }
+
+  // My SRS words (v157, user): every word started in the SRS with its stage and when it's due, soonest
+  // first. Words never leave (stage 10 comes back every 3 months), so in the end it lists the whole SRS.
+  function srsWhen(ms) {
+    if (ms <= 0) return 'due now';
+    const m = Math.max(1, Math.round(ms / 60000));
+    if (m < 60) return `in ${m} min`;
+    const h = Math.round(m / 60);
+    if (h < 24) return `in ${h} ${h === 1 ? 'hour' : 'hours'}`;
+    const d = Math.round(h / 24);
+    if (d < 60) return `in ${d} ${d === 1 ? 'day' : 'days'}`;
+    return `in ${Math.round(d / 30)} months`;
+  }
+  function srsWordsView() {
+    const { W } = data(), t = now(), rows = [];
+    Object.keys(W).forEach(w => { const it = srsGet(w); if (it) rows.push({ w, s: it.s, at: dueAt(it) }); });
+    rows.sort((a, b) => a.at - b.at || (a.w < b.w ? -1 : 1));
+    popup('srswords', 'My SRS words', esc(PROGRESS_DESC.srswords),
+      `<div class="nr-tough">${rows.length ? rows.map(r => `<div class="nr-tough-row"><span class="nr-tough-w" lang="ja">${esc(r.w)}</span><span class="nr-tough-m" lang="ja">${esc(W[r.w].r[0] + ' · ' + showMeaning(W[r.w].m))}</span><span class="nr-srs-when${r.at <= t ? ' due' : ''}">${srsWhen(r.at - t)}<small>stage ${r.s}</small></span></div>`).join('')
+        : '<p class="nr-empty">Nothing here yet. A word appears as soon as you answer it in the SRS.</p>'}</div>`);
   }
 
   // How the SRS works (§5.1) — the stage table is built from SRS_DAYS, so it can't drift from the real numbers
