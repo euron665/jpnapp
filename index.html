@@ -159,6 +159,8 @@ thead th{text-align:center !important;}
 #nrev .nr-rd{font-size:19px;}
 #nrev .nr-rd.big{font-size:26px;}
 #nrev .nr-mn{font-size:17px;color:var(--text);}
+/* One SKG → Readings: the kanji's meaning under it from the start (v153), so you go straight to the readings */
+#nrev .nr-khint{font-size:15px;color:var(--text-dim);text-align:center;margin:-2px 0 0;}
 #nrev .nr-note{font-size:13px;color:#e8a33a;}
 #nrev .nr-picks{font-size:17px;color:var(--text-dim);}
 #nrev .ok{color:var(--pass-text);}
@@ -1853,7 +1855,7 @@ body.gr-reading #gr-top-btn{display:flex;}
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-10-24 13:53 · v152</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-10-24 19:46 · v153</div>
 </div>
 
 <!-- NEW REVIEWS (REVIEW_DESIGN.md): hub, setup screens, questions and end screen all render into #nrev-app -->
@@ -41651,7 +41653,7 @@ const NR = (function() {
       <div class="nr-skg">
         <div class="nr-skg-top"><b>One SKG</b><span class="nr-round">Round ${kr.n} · ${ksets.filter(s => kr.done[s.id]).length} / ${ksets.length}</span></div>
         <div class="nr-seg" role="group" aria-label="What to practise"><button id="nr-kt-mean" aria-pressed="${kt === 'mean'}">Meaning</button><button id="nr-kt-read" aria-pressed="${kt === 'read'}">Readings</button></div>
-        <span class="nr-d">One look-alike set at a time, all its kanji: Meaning asks each kanji both ways, Readings asks for all its readings. ${SKG_SENTENCE('set').replace('are done. ', 'are done; Meaning and Readings each have their own round. ')}</span>
+        <span class="nr-d">One look-alike set at a time, all its kanji: Meaning asks each kanji both ways, Readings shows each kanji with its meaning and asks for all its readings. ${SKG_SENTENCE('set').replace('are done. ', 'are done; Meaning and Readings each have their own round. ')}</span>
         <span class="nr-t">${ksets.length} sets · ${Math.min.apply(null, ksizes)}–${Math.max.apply(null, ksizes)} kanji each · ${kt === 'mean' ? 'Tap to choose' : 'Tap every reading'}</span>
         <button class="nr-btn nr-btn-primary" id="nr-kcontinue"${knext ? '' : ' disabled'}>Continue${knext ? ' · ' + knext.id : ''}</button>
         <div class="nr-row"><button class="nr-btn" id="nr-kselect">Select</button><button class="nr-btn" id="nr-krandom">Random</button></div>
@@ -42070,7 +42072,10 @@ const NR = (function() {
     const { K, KJ_BY } = data(), correct = Array.from(new Set((K[k] || []).map(x => x[0])));
     const total = Math.max(6, Math.min(12, correct.length * 2));
     const opts = shuffle(correct.concat(krDistractors(correct, total - correct.length)));
-    frame(`<div class="nr-word" lang="ja">${esc(k)}</div>
+    // One SKG → Readings shows the meaning from the start (user, v153: "I waste time thinking about the
+    // meaning instead of going straight to readings"); the Kanji readings deck stays a bare-kanji test
+    const hint = S.mode === 'kskgr' && KJ_BY[k] ? KJ_BY[k].m : '';
+    frame(`<div class="nr-word" lang="ja">${esc(k)}</div>${hint ? `<div class="nr-khint">${esc(hint)}</div>` : ''}
       <div class="nr-reveal" id="nr-reveal"></div>
       <div class="nr-step">Tap every reading</div>
       <div class="nr-krgrid">${opts.map(r => `<button class="nr-kr" data-r="${esc(r)}" lang="ja">${esc(r)}</button>`).join('')}</div>
@@ -42090,7 +42095,7 @@ const NR = (function() {
         t.classList.remove('sel'); t.disabled = true;
         if (isC && sel) t.classList.add('right'); else if (!isC && sel) t.classList.add('wrong'); else if (isC) t.classList.add('missed');
       });
-      $('#nr-reveal').innerHTML = `<div class="nr-rd ok fix" lang="ja">${esc(correct.join(' · '))}</div><div class="nr-mn">${esc(KJ_BY[k] ? KJ_BY[k].m : '')}</div>`;
+      $('#nr-reveal').innerHTML = `<div class="nr-rd ok fix" lang="ja">${esc(correct.join(' · '))}</div>` + (hint ? '' : `<div class="nr-mn">${esc(KJ_BY[k] ? KJ_BY[k].m : '')}</div>`);
       $('#nr-kr-go').textContent = 'Next →'; done = true;
     };
     $('#nr-kr-go').onclick = confirm;
