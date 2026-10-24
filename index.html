@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <link rel="manifest" href="manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#0c0c0e">
 <meta name="apple-mobile-web-app-title" content="JpnApp">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -1546,7 +1547,7 @@ body.hide-n4 #grammar .toc-item.toc-lv-n4{ opacity: 0.28; pointer-events: none; 
 body.hide-n4 #grammar .chapter-btn.lv-n4{ opacity: 0.28; pointer-events: none; }
 /* ── MOBILE ── */
 @media (max-width: 480px) {
-#grammar .chapter-section{ padding: 0 16px 80px; }
+#grammar .chapter-section{ padding: 56px 16px 80px; }   /* 56px: the first row starts below the floating ← ↑ (v159) */
 #grammar #chapter-menu{ padding: 56px 16px 80px; }
 #grammar .formula-box, #grammar .formula-row{ gap: 10px; }
 #grammar .formula-box{ padding: 24px 14px; }
@@ -1664,7 +1665,7 @@ body.hide-n4 #grammar .guide-btn.lv-n4{ opacity: .28; pointer-events: none; }
 #grammar .guide-outro{ font-family: var(--font-jp); font-size: 13px; font-weight: 300; line-height: 1.8;
   color: var(--text-dim); margin: 38px 0 0; padding-top: 22px; border-top: 1px solid var(--border); text-align: justify; }
 @media (max-width: 480px) {
-#grammar .guide-section{ padding: 0 16px 80px; }
+#grammar .guide-section{ padding: 56px 16px 80px; }   /* same as the chapters (v159) */
 #grammar .gr-coord{ min-width: 74px; }
 #grammar .guide-ref{ flex-direction: column; gap: 3px; }
 }
@@ -1865,7 +1866,7 @@ body.gr-reading #gr-top-btn{display:flex;}
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-10-24 22:41 · v158</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-10-24 23:05 · v160</div>
 </div>
 
 <!-- NEW REVIEWS (REVIEW_DESIGN.md): hub, setup screens, questions and end screen all render into #nrev-app -->
@@ -41942,6 +41943,41 @@ const NR = (function() {
     };
   }
 
+  // Typing screens on phones (v160, user): the iPhone keyboard and its ∧ ∨ ✓ bar cover the bottom of the
+  // screen, and the page could be dragged around behind them. While a typing question is on screen:
+  // - the question lifts by exactly what's needed to keep Check above the keyboard (fitTyping, measured
+  //   against the visual viewport, re-run when the keyboard opens / closes) — it then stays put;
+  // - nothing scrolls: a drag is blocked (except inside the answer box) and the page is held at the top.
+  // Conjugation needed it first (its meaning + tags + stem hint put Check 28px lower than the other modes).
+  const typingOn = () => view === 'session' && !!root && !!$('#nr-ans') && !$('#nr-ans').hidden;
+  function fitTyping() {
+    const wrap = root && root.querySelector('.nr-q'), go = $('#nr-go'), word = $('#nr-tword'), inp = $('#nr-ans'), vv = window.visualViewport;
+    if (!wrap) return;
+    const lift = +(wrap.dataset.lift || 0);                           // positions below are measured without it
+    let want = 0;
+    if (vv && typingOn() && go && document.activeElement === inp) {
+      const over = go.getBoundingClientRect().bottom + lift + 12 - (vv.offsetTop + vv.height);
+      const room = word ? word.getBoundingClientRect().top + lift - 4 : over;   // never lift the word off the screen
+      if (over > 0) want = Math.ceil(Math.min(over, Math.max(0, room)));        // keyboard closed → over ≤ 0 → 0
+    }
+    if (want !== lift) { wrap.dataset.lift = want; wrap.style.transform = want ? `translateY(${-want}px)` : ''; }
+  }
+  if (window.visualViewport) {
+    const onVV = () => {
+      if (!typingOn()) return;
+      if (window.scrollY || document.documentElement.scrollTop) window.scrollTo(0, 0);   // hold the page at the top
+      fitTyping();
+    };
+    window.visualViewport.addEventListener('resize', onVV);
+    window.visualViewport.addEventListener('scroll', onVV);
+  }
+  document.addEventListener('focusin', () => { if (typingOn()) fitTyping(); });
+  document.addEventListener('focusout', () => setTimeout(fitTyping, 50));
+  document.addEventListener('touchmove', e => {
+    if (!typingOn() || e.touches.length > 1 || (e.target.closest && e.target.closest('#nr-ans'))) return;
+    e.preventDefault();                                               // no dragging the screen while typing
+  }, { passive: false });
+
   // Type (§3, §3b): built ONCE per session and only updated — the input is never replaced, so the
   // iPhone keyboard stays up and the screen never jumps
   function tapButton(btn, fn) { btn.ontouchend = e => { e.preventDefault(); fn(); }; btn.onclick = fn; }
@@ -41975,6 +42011,7 @@ const NR = (function() {
     inp.classList.toggle('jp', jp);
     if (jp) inp.setAttribute('lang', 'ja'); else inp.removeAttribute('lang');
     if (document.activeElement !== inp) inp.focus({ preventScroll: true });
+    fitTyping();
     return inp;
   }
   function askReading(word, then, readingsOverride) {
