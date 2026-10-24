@@ -261,6 +261,9 @@ thead th{text-align:center !important;}
 @media (hover:hover){#nrev .nr-pop-x:hover{color:var(--accent);border-color:var(--accent);}}
 #nrev .nr-pop .nr-sub{margin-bottom:12px;}
 #nrev .nr-pop .nr-seg{flex:none;}
+/* Review mistakes button at the top of a tough list (v155); greyed with "12 / 30 · opens at 30" until open */
+#nrev .nr-pop .nr-mist{flex:none;margin:0 0 12px;}
+#nrev .nr-pop .nr-mist-hint{flex:none;margin:-6px 0 12px;text-align:center;}
 #nrev .nr-pop .nr-sets-wrap{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;}
 #nrev .nr-pop .nr-sets{height:auto;min-height:0;max-height:62vh;max-height:62dvh;flex:1 1 auto;}
 #nrev .nr-pop .nr-tough{margin-top:0;}
@@ -1855,7 +1858,7 @@ body.gr-reading #gr-top-btn{display:flex;}
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-10-24 19:46 · v153</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-10-24 21:31 · v155</div>
 </div>
 
 <!-- NEW REVIEWS (REVIEW_DESIGN.md): hub, setup screens, questions and end screen all render into #nrev-app -->
@@ -41531,13 +41534,13 @@ const NR = (function() {
   // count · ›), deliberately NOT like the mode boxes; each row opens a pop-up that starts with its description
   const plural = (n, one, many) => n + ' ' + (n === 1 ? one : many);
   const PROGRESS_DESC = {
-    srs: 'Words you answered wrong in the SRS, worst at the top. A word leaves the list after 2 right answers in a row.',
-    tricky: 'Words you answered wrong in Tricky readings, worst at the top. A word leaves the list after 2 right answers in a row.',
-    kmean: 'Kanji you answered wrong in Kanji meaning, worst at the top. A kanji leaves the list after 2 right answers in a row.',
-    kread: 'Kanji you answered wrong in Kanji readings, worst at the top. A kanji leaves the list after 2 right answers in a row.',
-    skg: 'Words you answered wrong in One SKG, worst at the top. A word leaves the list after 2 right answers in a row.',
-    kskgm: 'Kanji you answered wrong in One SKG · Meaning, worst at the top. A kanji leaves the list after 2 right answers in a row.',
-    kskgr: 'Kanji you answered wrong in One SKG · Readings, worst at the top. A kanji leaves the list after 2 right answers in a row.',
+    srs: 'Words you answered wrong in the SRS, worst at the top. A word leaves the list as soon as you get it right.',
+    tricky: 'Words you answered wrong in Tricky readings, worst at the top. A word leaves the list as soon as you get it right.',
+    kmean: 'Kanji you answered wrong in Kanji meaning, worst at the top. A kanji leaves the list as soon as you get it right.',
+    kread: 'Kanji you answered wrong in Kanji readings, worst at the top. A kanji leaves the list as soon as you get it right.',
+    skg: 'Words you answered wrong in One SKG, worst at the top. A word leaves the list as soon as you get it right.',
+    kskgm: 'Kanji you answered wrong in One SKG · Meaning, worst at the top. A kanji leaves the list as soon as you get it right.',
+    kskgr: 'Kanji you answered wrong in One SKG · Readings, worst at the top. A kanji leaves the list as soon as you get it right.',
     conj: 'Combinations below 80% right over their last 20 answers, worst first or by word type.',
     guide: 'The 10 stages, when a word comes back, and what moves it up or down.',
   };
@@ -41653,7 +41656,7 @@ const NR = (function() {
       <div class="nr-skg">
         <div class="nr-skg-top"><b>One SKG</b><span class="nr-round">Round ${kr.n} · ${ksets.filter(s => kr.done[s.id]).length} / ${ksets.length}</span></div>
         <div class="nr-seg" role="group" aria-label="What to practise"><button id="nr-kt-mean" aria-pressed="${kt === 'mean'}">Meaning</button><button id="nr-kt-read" aria-pressed="${kt === 'read'}">Readings</button></div>
-        <span class="nr-d">One look-alike set at a time, all its kanji: Meaning asks each kanji both ways, Readings shows each kanji with its meaning and asks for all its readings. ${SKG_SENTENCE('set').replace('are done. ', 'are done; Meaning and Readings each have their own round. ')}</span>
+        <span class="nr-d">One look-alike set at a time, all its kanji: Meaning asks each kanji both ways, Readings shows each kanji with its meaning and how many readings it has, and asks for all of them. ${SKG_SENTENCE('set').replace('are done. ', 'are done; Meaning and Readings each have their own round. ')}</span>
         <span class="nr-t">${ksets.length} sets · ${Math.min.apply(null, ksizes)}–${Math.max.apply(null, ksizes)} kanji each · ${kt === 'mean' ? 'Tap to choose' : 'Tap every reading'}</span>
         <button class="nr-btn nr-btn-primary" id="nr-kcontinue"${knext ? '' : ' disabled'}>Continue${knext ? ' · ' + knext.id : ''}</button>
         <div class="nr-row"><button class="nr-btn" id="nr-kselect">Select</button><button class="nr-btn" id="nr-krandom">Random</button></div>
@@ -41678,12 +41681,12 @@ const NR = (function() {
 
   // ───────── tough lists (§5.1 vocab: Tricky readings; §6b: one per kanji mode; v148: one per One SKG —
   // every One SKG session feeds it, Random too: Random only skips the round, not the mistakes): an item joins the
-  // moment it's answered wrong, worst at the top with its ✗ count, and leaves after 2 right answers in
-  // a row (its count resets) ─────────
+  // moment it's answered wrong, worst at the top with its ✗ count, and leaves as soon as it's answered
+  // right (v155, user — it used to need 2 right in a row) ─────────
   function toughMark(list, id, ok) {
     const key = 'tough:' + list, t = sget(key, {});
-    if (ok) { if (!t[id]) return; t[id].s = (t[id].s || 0) + 1; if (t[id].s >= 2) delete t[id]; }
-    else t[id] = { x: ((t[id] && t[id].x) || 0) + 1, s: 0 };
+    if (ok) { if (!t[id]) return; delete t[id]; }
+    else t[id] = { x: ((t[id] && t[id].x) || 0) + 1 };
     sset(key, t);
   }
   const toughCount = list => Object.keys(sget('tough:' + list, {})).length;
@@ -41716,14 +41719,59 @@ const NR = (function() {
     if (!quiet && syncLater && view === 'hub') { syncLater = false; hub(); }   // the other device's progress arrived meanwhile
   }
 
+  const TOUGH_TITLE = { srs: 'Tough words · SRS', skg: 'Tough words · One SKG', tricky: 'Tough words · Tricky readings',
+    kskgm: 'Tough kanji · One SKG meaning', kskgr: 'Tough kanji · One SKG readings', kmean: 'Tough kanji · Kanji meaning',
+    kread: 'Tough kanji · Kanji readings', conj: 'Toughest conjugations' };
   function toughView(list) {
     const t = sget('tough:' + list, {}), ids = Object.keys(t).sort((a, b) => t[b].x - t[a].x), { W, K, KJ_BY } = data();
-    const title = { srs: 'Tough words · SRS', skg: 'Tough words · One SKG', tricky: 'Tough words · Tricky readings',
-      kskgm: 'Tough kanji · One SKG meaning', kskgr: 'Tough kanji · One SKG readings', kmean: 'Tough kanji · Kanji meaning', kread: 'Tough kanji · Kanji readings' }[list];
     const sub = id => (list === 'tricky' || list === 'srs' || list === 'skg') ? (W[id] ? W[id].r[0] + ' · ' + showMeaning(W[id].m) : '')
       : (list === 'kread' || list === 'kskgr') ? (K[id] || []).map(x => x[0]).join(' · ') : (KJ_BY[id] ? KJ_BY[id].m : '');
-    popup('tough', title, esc(PROGRESS_DESC[list]),
-      `<div class="nr-tough">${ids.length ? ids.map(id => `<div class="nr-tough-row"><span class="nr-tough-w" lang="ja">${esc(id)}</span><span class="nr-tough-m" lang="ja">${esc(sub(id))}</span><span class="nr-tough-x">✗${t[id].x}</span></div>`).join('') : '<p class="nr-empty">Nothing here yet.</p>'}</div>`);
+    popup('tough', TOUGH_TITLE[list], esc(PROGRESS_DESC[list]),
+      `<div class="nr-tough">${ids.length ? ids.map(id => `<div class="nr-tough-row"><span class="nr-tough-w" lang="ja">${esc(id)}</span><span class="nr-tough-m" lang="ja">${esc(sub(id))}</span><span class="nr-tough-x">✗${t[id].x}</span></div>`).join('') : '<p class="nr-empty">Nothing here yet.</p>'}</div>`,
+      mistButton(list));
+    $('#nr-mist').onclick = () => startMistakes(list);
+  }
+
+  // ───────── Review mistakes (REVIEW_DESIGN §12e, v155) — the big button at the top of a tough list's
+  // pop-up. Opens while the list has 30+ items (rule A: below 30 it locks again; the leftovers still come up
+  // in their own mode). A session = the 30 worst, shuffled, asked like the list's own mode; a right answer
+  // takes the item off the list. Extra practice only: no SRS stage, deck or One SKG round moves.
+  // Toughest conjugations holds combinations (90 possible), so it opens from 1 listed combination and the
+  // session is 30 questions spread over the listed ones (worst first), random words of each type.
+  const MIST_MIN = 30, MIST_SIZE = 30;
+  function mistItems(list) {
+    const t = sget('tough:' + list, {}), { W, K, KJ_BY, TRICKY } = data();
+    const ok = id => list === 'tricky' ? !!(W[id] && TRICKY[id]) : (list === 'srs' || list === 'skg') ? !!W[id]
+      : (list === 'kread' || list === 'kskgr') ? !!(K[id] && K[id].length) : !!KJ_BY[id];
+    return shuffle(Object.keys(t).filter(ok)).sort((a, b) => t[b].x - t[a].x);   // worst first, ties in random order
+  }
+  const mistOpen = list => list === 'conj' ? conjToughList().length > 0 : mistItems(list).length >= MIST_MIN;
+  function mistButton(list) {
+    const on = mistOpen(list);
+    return `<button class="nr-btn nr-btn-primary nr-mist" id="nr-mist"${on ? '' : ' disabled'}>Review mistakes · ${MIST_SIZE}</button>`
+      + (on ? '' : `<p class="nr-hint nr-mist-hint">${list === 'conj' ? 'Opens as soon as a combination is listed.'
+        : `${mistItems(list).length} / ${MIST_MIN} · opens at ${MIST_MIN}`}</p>`);
+  }
+  function startMistakes(list) {
+    if (!mistOpen(list)) return;
+    const base = { mist: list, label: 'Review mistakes' }, f = fmt();
+    if (list === 'conj') {
+      const combos = conjToughList().map(e => e.k.split('|')).filter(c => conjPool(c[0]).length), pools = combos.map(() => []), items = [];
+      for (let i = 0; combos.length && i < MIST_SIZE; i++) {
+        const j = i % combos.length, c = combos[j];
+        if (!pools[j].length) pools[j] = shuffle(conjPool(c[0]).slice());
+        items.push({ w: pools[j].shift(), t: c[0], f: c[1], r: c[2] || null });
+      }
+      return begin(Object.assign(base, { mode: 'conj', format: f, how: f.toUpperCase(), queue: shuffle(items), unit: 'right' }));
+    }
+    const ids = mistItems(list).slice(0, MIST_SIZE);
+    if (list === 'kmean' || list === 'kskgm')        // each kanji once, a random direction
+      return begin(Object.assign(base, { mode: 'kmean', format: 'choose', how: 'TAP TO CHOOSE', tough: list, unit: 'kanji right',
+        queue: shuffle(ids.map(k => ({ k, dir: Math.random() < 0.5 ? 'km' : 'mk' }))) }));
+    if (list === 'kread' || list === 'kskgr')        // One SKG readings keeps its meaning + "tap all N" help
+      return begin(Object.assign(base, { mode: list, format: 'choose', how: 'TAP EVERY READING', tough: list, unit: 'kanji right', queue: shuffle(ids) }));
+    begin(Object.assign(base, { mode: 'mist', format: f, how: f.toUpperCase(), tough: list, unit: 'words right', queue: shuffle(ids),
+      opts: list === 'tricky' ? w => trickyOptions(w) : w => buildOptions(w) }));
   }
 
   // How the SRS works (§5.1) — the stage table is built from SRS_DAYS, so it can't drift from the real numbers
@@ -42073,11 +42121,12 @@ const NR = (function() {
     const total = Math.max(6, Math.min(12, correct.length * 2));
     const opts = shuffle(correct.concat(krDistractors(correct, total - correct.length)));
     // One SKG → Readings shows the meaning from the start (user, v153: "I waste time thinking about the
-    // meaning instead of going straight to readings"); the Kanji readings deck stays a bare-kanji test
+    // meaning instead of going straight to readings") and how many readings to tap (v154, "TAP ALL 3
+    // READINGS" — it's the learning mode); the Kanji readings deck stays a bare-kanji test
     const hint = S.mode === 'kskgr' && KJ_BY[k] ? KJ_BY[k].m : '';
     frame(`<div class="nr-word" lang="ja">${esc(k)}</div>${hint ? `<div class="nr-khint">${esc(hint)}</div>` : ''}
       <div class="nr-reveal" id="nr-reveal"></div>
-      <div class="nr-step">Tap every reading</div>
+      <div class="nr-step">${S.mode === 'kskgr' ? (correct.length === 1 ? 'Tap 1 reading' : `Tap all ${correct.length} readings`) : 'Tap every reading'}</div>
       <div class="nr-krgrid">${opts.map(r => `<button class="nr-kr" data-r="${esc(r)}" lang="ja">${esc(r)}</button>`).join('')}</div>
       <button class="nr-btn nr-btn-primary nr-check" id="nr-kr-go">Confirm</button>
       <div class="nr-nudge" id="nr-nudge"></div>`);
@@ -42412,7 +42461,8 @@ const NR = (function() {
       : list.map(row).join('');
     popup('tough', 'Toughest conjugations', esc(PROGRESS_DESC.conj),
       `<div class="nr-tough">${body}</div>`,
-      `<div class="nr-seg" role="group" aria-label="Order"><button id="nr-tv-worst" aria-pressed="${mode !== 'type'}">Worst first</button><button id="nr-tv-type" aria-pressed="${mode === 'type'}">By word type</button></div>`);
+      mistButton('conj') + `<div class="nr-seg" role="group" aria-label="Order"><button id="nr-tv-worst" aria-pressed="${mode !== 'type'}">Worst first</button><button id="nr-tv-type" aria-pressed="${mode === 'type'}">By word type</button></div>`);
+    $('#nr-mist').onclick = () => startMistakes('conj');
     $('#nr-tv-worst').onclick = () => { sset('conj:toughView', 'worst'); conjToughView(); };
     $('#nr-tv-type').onclick = () => { sset('conj:toughView', 'type'); conjToughView(); };
   }
@@ -42585,22 +42635,26 @@ const NR = (function() {
     const s = S;
     if (s.onDone) s.onDone(s);
     S = null; view = 'end'; setReviewing(false);
-    const kskg = s.mode === 'kskgm' || s.mode === 'kskgr';
-    const again = s.mode === 'skg' ? 'Same item again' : kskg ? 'Same set again' : ['pos', 'conj', 'kana', 'kata'].includes(s.mode) ? 'Same selection again' : 'New session';
+    const kskg = !s.mist && (s.mode === 'kskgm' || s.mode === 'kskgr');
+    const again = s.mist ? 'Review mistakes again' : s.mode === 'skg' ? 'Same item again' : kskg ? 'Same set again' : ['pos', 'conj', 'kana', 'kata'].includes(s.mode) ? 'Same selection again' : 'New session';
     let extra = '';
     if (s.mode === 'skg' && s.counts) { const r = ensureRound(), ps = pieceList(r); extra = `<p>One SKG · Round ${r.n} · ${ps.filter(p => r.done[p.id]).length} / ${ps.length}</p>`; }
     if (kskg && s.counts) { const r = ensureKRound(s.ktype), ss = kskgSets(s.ktype); extra = `<p>One SKG · ${KSKG_TYPES[s.ktype]} · Round ${r.n} · ${ss.filter(x => r.done[x.id]).length} / ${ss.length}</p>`; }
-    if (DECK_MODES.includes(s.mode)) extra = `<p>${esc(s.label)} · ${deckLine(s.mode)}</p>`;   // like One SKG (onDone has committed the deck)
+    if (!s.mist && DECK_MODES.includes(s.mode)) extra = `<p>${esc(s.label)} · ${deckLine(s.mode)}</p>`;   // like One SKG (onDone has committed the deck)
+    // Review mistakes: what's left on the list; "again" only while the list is still open (30+ / 1+ combination)
+    if (s.mist) extra = `<p>${esc(TOUGH_TITLE[s.mist])} · ${s.mist === 'conj' ? plural(conjToughList().length, 'combination', 'combinations') + ' listed'
+      : toughCount(s.mist) + ' left'}</p>` + (mistOpen(s.mist) ? '' : `<p>Review mistakes opens again at ${s.mist === 'conj' ? '1 listed combination' : MIST_MIN}.</p>`);
     root.innerHTML = `<div class="nr-wrap nr-end">
       <div class="nr-label">${esc(s.label)} · done</div>
       <div class="nr-score">${s.right}<small> / ${s.base || s.queue.length}</small></div>
       <p>${esc(s.unit)}</p>${extra}
       <div class="nr-btns">
-        <button class="nr-btn nr-btn-primary" id="nr-again">${again}</button>
+        <button class="nr-btn nr-btn-primary" id="nr-again"${s.mist && !mistOpen(s.mist) ? ' disabled' : ''}>${again}</button>
         <button class="nr-btn" id="nr-back">Back to selection menu</button>
       </div></div>`;
     $('#nr-again').onclick = () => {
-      if (s.mode === 'skg') startPiece(s.piece, s.counts);
+      if (s.mist) startMistakes(s.mist);
+      else if (s.mode === 'skg') startPiece(s.piece, s.counts);
       else if (kskg) startKanjiSet(s.kset, s.ktype, s.counts);
       else if (s.mode === 'pos') { posSetup(); $('#nr-start').click(); }
       else if (s.mode === 'conj') startConj();
