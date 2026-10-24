@@ -207,7 +207,9 @@ thead th{text-align:center !important;}
 #nrev .nr-krgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
 #nrev .nr-kr{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:13px 6px;text-align:center;
   cursor:pointer;font-family:var(--font-ui);font-size:17px;color:var(--text);}
-#nrev .nr-kr.sel{border-color:var(--text);background:var(--surface2);}
+/* picked (before Confirm): 2px frame in the theme colour (v152 — the thin white frame was hard to see);
+   the inset shadow adds the 2nd px so the tile doesn't shift */
+#nrev .nr-kr.sel{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);background:var(--surface2);}
 #nrev .nr-kr.right{border-color:var(--pass-text);color:var(--pass-text);background:rgba(74,240,128,0.08);}
 #nrev .nr-kr.wrong{border-color:var(--fail-text);color:var(--fail-text);background:rgba(240,74,74,0.08);}
 #nrev .nr-kr.missed{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,0.08);}
@@ -1851,7 +1853,7 @@ body.gr-reading #gr-top-btn{display:flex;}
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-10-24 01:33 · v151</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-10-24 13:53 · v152</div>
 </div>
 
 <!-- NEW REVIEWS (REVIEW_DESIGN.md): hub, setup screens, questions and end screen all render into #nrev-app -->
