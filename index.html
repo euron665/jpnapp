@@ -163,15 +163,15 @@ thead th{text-align:center !important;}
 /* One SKG → Readings: the kanji's meaning under it from the start (v153), so you go straight to the readings */
 #nrev .nr-khint{font-size:15px;color:var(--text-dim);text-align:center;margin:-2px 0 0;}
 /* kanji readings questions (v161): the instruction in the middle of the space under the kanji, number in
-   bold; after Confirm, examples under Next — reading → word (hiragana), "1!" = the only word */
+   bold; after Confirm, examples under Next — reading → word (hiragana) translation, "!" = the only word */
 #nrev .nr-kstep{margin:0;}
 #nrev .nr-kr.off{opacity:.35;}   /* One SKG → Readings: the shown number is picked, the rest grey out (v162) */
 #nrev .nr-kstep b{color:var(--text);font-weight:700;}
 #nrev .nr-kex{margin-top:20px;padding-bottom:8px;}
 #nrev .nr-kex:empty{display:none;}
 #nrev .nr-kex-label{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);text-align:center;margin-bottom:10px;}
-#nrev .nr-kex-list{display:grid;grid-template-columns:auto auto minmax(0,auto);justify-content:center;column-gap:10px;row-gap:6px;align-items:baseline;font-size:17px;}
-#nrev .nr-kex-r{text-align:right;color:var(--text);}
+#nrev .nr-kex-list{display:grid;grid-template-columns:auto auto minmax(0,1fr);justify-content:start;column-gap:10px;row-gap:6px;align-items:baseline;font-size:17px;}
+#nrev .nr-kex-r{text-align:left;color:var(--text);}   /* left-aligned list, word + (hiragana) + translation (v163) */
 #nrev .nr-kex-a{color:var(--text-dim);}
 #nrev .nr-kex-w{color:var(--text);}
 #nrev .nr-kex-k{color:var(--text-dim);}
@@ -1881,7 +1881,7 @@ body.gr-reading #gr-top-btn{display:flex;}
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-10-25 13:58 · v162</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-10-25 14:11 · v163</div>
 </div>
 
 <!-- NEW REVIEWS (REVIEW_DESIGN.md): hub, setup screens, questions and end screen all render into #nrev-app -->
@@ -42205,7 +42205,8 @@ const NR = (function() {
       .sort((a, b) => a.sc - b.sc).slice(0, want).map(x => x.r);
   }
   // examples after Confirm (v161, user): one word per right reading, picked at random each time from that
-  // reading's words — "もく → 木星 (もくせい)"; "1!" marks a reading with only one word (650 of 1,697)
+  // reading's words — "もく → 木星 (もくせい) Jupiter" (translation added v163); "!" (was "1!" in v161–162)
+  // marks a reading with only one word (650 of 1,697)
   function krExamples(k, correct) {
     const words = {};
     (VOCAB[k] ? VOCAB[k].rgs : []).forEach(g => {
@@ -42218,11 +42219,11 @@ const NR = (function() {
       const ws = words[r], x = ws[rnd(ws.length)], one = ws.length === 1;
       if (one) single = true;
       return `<span class="nr-kex-r" lang="ja">${esc(r)}</span><span class="nr-kex-a" aria-hidden="true">→</span>`
-        + `<span class="nr-kex-w" lang="ja">${esc(x.word)} <span class="nr-kex-k">(${esc(String(x.reading).split('|')[0].trim())})</span>${one ? '<span class="nr-kex-one">1!</span>' : ''}</span>`;
+        + `<span class="nr-kex-w" lang="ja">${esc(x.word)} <span class="nr-kex-k">(${esc(String(x.reading).split('|')[0].trim())})</span> ${esc(String(x.meaning).split('|')[0].trim())}${one ? '<span class="nr-kex-one">!</span>' : ''}</span>`;
     });
     if (!cells.length) return '';
     return `<div class="nr-kex-label">Examples</div><div class="nr-kex-list">${cells.join('')}</div>`
-      + (single ? '<p class="nr-kex-note">1! this reading has only one word</p>' : '');
+      + (single ? '<p class="nr-kex-note">! this reading has only one word</p>' : '');
   }
   function askKanjiReading(k) {
     const { K, KJ_BY } = data(), correct = Array.from(new Set((K[k] || []).map(x => x[0])));
