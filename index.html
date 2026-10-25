@@ -162,6 +162,20 @@ thead th{text-align:center !important;}
 #nrev .nr-mn{font-size:17px;color:var(--text);}
 /* One SKG → Readings: the kanji's meaning under it from the start (v153), so you go straight to the readings */
 #nrev .nr-khint{font-size:15px;color:var(--text-dim);text-align:center;margin:-2px 0 0;}
+/* kanji readings questions (v161): the instruction in the middle of the space under the kanji, number in
+   bold; after Confirm, examples under Next — reading → word (hiragana), "1!" = the only word */
+#nrev .nr-kstep{margin:0;}
+#nrev .nr-kstep b{color:var(--text);font-weight:700;}
+#nrev .nr-kex{margin-top:20px;padding-bottom:8px;}
+#nrev .nr-kex:empty{display:none;}
+#nrev .nr-kex-label{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);text-align:center;margin-bottom:10px;}
+#nrev .nr-kex-list{display:grid;grid-template-columns:auto auto minmax(0,auto);justify-content:center;column-gap:10px;row-gap:6px;align-items:baseline;font-size:17px;}
+#nrev .nr-kex-r{text-align:right;color:var(--text);}
+#nrev .nr-kex-a{color:var(--text-dim);}
+#nrev .nr-kex-w{color:var(--text);}
+#nrev .nr-kex-k{color:var(--text-dim);}
+#nrev .nr-kex-one{margin-left:8px;font-size:13px;font-weight:700;color:var(--text-dim);}
+#nrev .nr-kex-note{font-size:11px;color:var(--text-dim);text-align:center;margin:18px 0 0;}
 #nrev .nr-note{font-size:13px;color:#e8a33a;}
 #nrev .nr-picks{font-size:17px;color:var(--text-dim);}
 #nrev .ok{color:var(--pass-text);}
@@ -1866,7 +1880,7 @@ body.gr-reading #gr-top-btn{display:flex;}
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-10-24 23:05 · v160</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-10-25 13:42 · v161</div>
 </div>
 
 <!-- NEW REVIEWS (REVIEW_DESIGN.md): hub, setup screens, questions and end screen all render into #nrev-app -->
@@ -41481,7 +41495,8 @@ const NR = (function() {
   let S = null, view = 'hub';
   const fmt = () => JPStore.get('set:format', 'choose');
   function setFmt(f) { sset('set:format', f); }
-  function scrollTop() { const el = document.getElementById('nrev'); if (el) el.scrollTop = 0; }
+  // the box that actually scrolls is #nrev-app (.scrollable); #nrev kept for safety (v161)
+  function scrollTop() { ['nrev', 'nrev-app'].forEach(id => { const el = document.getElementById(id); if (el) el.scrollTop = 0; }); }
   function setReviewing(on) { document.body.classList.toggle('review-active', !!on); }
 
   const MODES = {
@@ -42188,6 +42203,26 @@ const NR = (function() {
     return data().ALL_READINGS.filter(r => !bad.has(r)).map(r => ({ r, sc: score(r) + Math.random() * 3 }))
       .sort((a, b) => a.sc - b.sc).slice(0, want).map(x => x.r);
   }
+  // examples after Confirm (v161, user): one word per right reading, picked at random each time from that
+  // reading's words — "もく → 木星 (もくせい)"; "1!" marks a reading with only one word (650 of 1,697)
+  function krExamples(k, correct) {
+    const words = {};
+    (VOCAB[k] ? VOCAB[k].rgs : []).forEach(g => {
+      if (!g.rg_reading || g.rg_reading === '々') return;
+      const lab = hira(g.rg_reading);
+      (words[lab] = words[lab] || []).push(...g.vocab);
+    });
+    let single = false;
+    const cells = correct.filter(r => words[r] && words[r].length).map(r => {
+      const ws = words[r], x = ws[rnd(ws.length)], one = ws.length === 1;
+      if (one) single = true;
+      return `<span class="nr-kex-r" lang="ja">${esc(r)}</span><span class="nr-kex-a" aria-hidden="true">→</span>`
+        + `<span class="nr-kex-w" lang="ja">${esc(x.word)} <span class="nr-kex-k">(${esc(String(x.reading).split('|')[0].trim())})</span>${one ? '<span class="nr-kex-one">1!</span>' : ''}</span>`;
+    });
+    if (!cells.length) return '';
+    return `<div class="nr-kex-label">Examples</div><div class="nr-kex-list">${cells.join('')}</div>`
+      + (single ? '<p class="nr-kex-note">1! this reading has only one word</p>' : '');
+  }
   function askKanjiReading(k) {
     const { K, KJ_BY } = data(), correct = Array.from(new Set((K[k] || []).map(x => x[0])));
     const total = Math.max(6, Math.min(12, correct.length * 2));
@@ -42196,12 +42231,16 @@ const NR = (function() {
     // meaning instead of going straight to readings") and how many readings to tap (v154, "TAP ALL 3
     // READINGS" — it's the learning mode); the Kanji readings deck stays a bare-kanji test
     const hint = S.mode === 'kskgr' && KJ_BY[k] ? KJ_BY[k].m : '';
+    // the instruction sits in the middle of the space under the kanji, number in bold (v161); after
+    // Confirm that space shows the right readings instead
+    const step = S.mode === 'kskgr' ? (correct.length === 1 ? 'Tap <b>1</b> reading' : `Tap all <b>${correct.length}</b> readings`) : 'Tap every reading';
     frame(`<div class="nr-word" lang="ja">${esc(k)}</div>${hint ? `<div class="nr-khint">${esc(hint)}</div>` : ''}
-      <div class="nr-reveal" id="nr-reveal"></div>
-      <div class="nr-step">${S.mode === 'kskgr' ? (correct.length === 1 ? 'Tap 1 reading' : `Tap all ${correct.length} readings`) : 'Tap every reading'}</div>
+      <div class="nr-reveal" id="nr-reveal"><div class="nr-step nr-kstep">${step}</div></div>
       <div class="nr-krgrid">${opts.map(r => `<button class="nr-kr" data-r="${esc(r)}" lang="ja">${esc(r)}</button>`).join('')}</div>
       <button class="nr-btn nr-btn-primary nr-check" id="nr-kr-go">Confirm</button>
-      <div class="nr-nudge" id="nr-nudge"></div>`);
+      <div class="nr-nudge" id="nr-nudge"></div>
+      <div class="nr-kex" id="nr-kex"></div>`);
+    scrollTop();                                   // a long example list may have scrolled the last question
     const tiles = $$('.nr-kr');
     let done = false;
     tiles.forEach(t => t.onclick = () => { if (!done) { t.classList.toggle('sel'); $('#nr-nudge').textContent = ''; } });
@@ -42217,6 +42256,7 @@ const NR = (function() {
         if (isC && sel) t.classList.add('right'); else if (!isC && sel) t.classList.add('wrong'); else if (isC) t.classList.add('missed');
       });
       $('#nr-reveal').innerHTML = `<div class="nr-rd ok fix" lang="ja">${esc(correct.join(' · '))}</div>` + (hint ? '' : `<div class="nr-mn">${esc(KJ_BY[k] ? KJ_BY[k].m : '')}</div>`);
+      $('#nr-kex').innerHTML = krExamples(k, correct);       // right or wrong, under Next
       $('#nr-kr-go').textContent = 'Next →'; done = true;
     };
     $('#nr-kr-go').onclick = confirm;
