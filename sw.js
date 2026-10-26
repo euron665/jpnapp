@@ -1,4 +1,4 @@
-const CACHE = 'koku-v163';
+const CACHE = 'koku-v164';
 const ASSETS = [
   '/jpnapp/',
   '/jpnapp/index.html',

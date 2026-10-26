@@ -1881,7 +1881,7 @@ body.gr-reading #gr-top-btn{display:flex;}
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-10-25 14:11 · v163</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-10-26 23:27 · v164</div>
 </div>
 
 <!-- NEW REVIEWS (REVIEW_DESIGN.md): hub, setup screens, questions and end screen all render into #nrev-app -->
@@ -42766,14 +42766,21 @@ const NR = (function() {
     // Review mistakes: what's left on the list; "again" only while the list is still open (30+ / 1+ combination)
     if (s.mist) extra = `<p>${esc(TOUGH_TITLE[s.mist])} · ${s.mist === 'conj' ? plural(conjToughList().length, 'combination', 'combinations') + ' listed'
       : toughCount(s.mist) + ' left'}</p>` + (mistOpen(s.mist) ? '' : `<p>Review mistakes opens again at ${s.mist === 'conj' ? '1 listed combination' : MIST_MIN}.</p>`);
+    // One SKG (vocab + kanji): "Continue · 004" — the hub's Continue, i.e. the next item / set not done in
+    // this round (a finished round starts the next one); it counts, like the hub's (v164, user)
+    let cont = null;
+    if (s.mode === 'skg' && !s.mist) { const r = ensureRound(), nx = pieceList(r).find(p => !r.done[p.id]); if (nx) cont = { id: nx.id, go: () => startPiece(nx, true) }; }
+    if (kskg) { const r = ensureKRound(s.ktype), nx = kskgSets(s.ktype).find(x => !r.done[x.id]); if (nx) cont = { id: nx.id, go: () => startKanjiSet(nx, s.ktype, true) }; }
     root.innerHTML = `<div class="nr-wrap nr-end">
       <div class="nr-label">${esc(s.label)} · done</div>
       <div class="nr-score">${s.right}<small> / ${s.base || s.queue.length}</small></div>
       <p>${esc(s.unit)}</p>${extra}
       <div class="nr-btns">
-        <button class="nr-btn nr-btn-primary" id="nr-again"${s.mist && !mistOpen(s.mist) ? ' disabled' : ''}>${again}</button>
+        ${cont ? `<button class="nr-btn nr-btn-primary" id="nr-cont">Continue · ${esc(cont.id)}</button>` : ''}
+        <button class="nr-btn${cont ? '' : ' nr-btn-primary'}" id="nr-again"${s.mist && !mistOpen(s.mist) ? ' disabled' : ''}>${again}</button>
         <button class="nr-btn" id="nr-back">Back to selection menu</button>
       </div></div>`;
+    if (cont) $('#nr-cont').onclick = cont.go;
     $('#nr-again').onclick = () => {
       if (s.mist) startMistakes(s.mist);
       else if (s.mode === 'skg') startPiece(s.piece, s.counts);
