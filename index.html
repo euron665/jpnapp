@@ -181,6 +181,8 @@ thead th{text-align:center !important;}
 #nrev .nr-picks{font-size:17px;color:var(--text-dim);}
 #nrev .ok{color:var(--pass-text);}
 #nrev .bad{color:var(--fail-text);}
+#nrev .miss{color:var(--gold);}   /* a right reading you didn't pick: gold like its tile (v165) */
+#nrev .nr-krsep{color:var(--text-dim);}
 #nrev .fix{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px;}
 #nrev .nr-step{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);text-align:center;margin-bottom:8px;}
 #nrev .nr-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
@@ -1881,7 +1883,7 @@ body.gr-reading #gr-top-btn{display:flex;}
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-10-26 23:27 · v164</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-10-27 21:03 · v165</div>
 </div>
 
 <!-- NEW REVIEWS (REVIEW_DESIGN.md): hub, setup screens, questions and end screen all render into #nrev-app -->
@@ -42206,8 +42208,9 @@ const NR = (function() {
   }
   // examples after Confirm (v161, user): one word per right reading, picked at random each time from that
   // reading's words — "もく → 木星 (もくせい) Jupiter" (translation added v163); "!" (was "1!" in v161–162)
-  // marks a reading with only one word (650 of 1,697)
-  function krExamples(k, correct) {
+  // marks a reading with only one word (650 of 1,697); the reading is green if you picked it, gold if you
+  // missed it, like its tile (v165)
+  function krExamples(k, correct, got) {
     const words = {};
     (VOCAB[k] ? VOCAB[k].rgs : []).forEach(g => {
       if (!g.rg_reading || g.rg_reading === '々') return;
@@ -42218,7 +42221,7 @@ const NR = (function() {
     const cells = correct.filter(r => words[r] && words[r].length).map(r => {
       const ws = words[r], x = ws[rnd(ws.length)], one = ws.length === 1;
       if (one) single = true;
-      return `<span class="nr-kex-r" lang="ja">${esc(r)}</span><span class="nr-kex-a" aria-hidden="true">→</span>`
+      return `<span class="nr-kex-r ${got.has(r) ? 'ok' : 'miss'}" lang="ja">${esc(r)}</span><span class="nr-kex-a" aria-hidden="true">→</span>`
         + `<span class="nr-kex-w" lang="ja">${esc(x.word)} <span class="nr-kex-k">(${esc(String(x.reading).split('|')[0].trim())})</span> ${esc(String(x.meaning).split('|')[0].trim())}${one ? '<span class="nr-kex-one">!</span>' : ''}</span>`;
     });
     if (!cells.length) return '';
@@ -42265,8 +42268,10 @@ const NR = (function() {
         t.classList.remove('sel', 'off'); t.disabled = true;
         if (isC && sel) t.classList.add('right'); else if (!isC && sel) t.classList.add('wrong'); else if (isC) t.classList.add('missed');
       });
-      $('#nr-reveal').innerHTML = `<div class="nr-rd ok fix" lang="ja">${esc(correct.join(' · '))}</div>` + (hint ? '' : `<div class="nr-mn">${esc(KJ_BY[k] ? KJ_BY[k].m : '')}</div>`);
-      $('#nr-kex').innerHTML = krExamples(k, correct);       // right or wrong, under Next
+      // each right reading green if picked, gold if missed — same colours as the tiles (v165, user)
+      const got = new Set(picked);
+      $('#nr-reveal').innerHTML = `<div class="nr-rd" lang="ja">${correct.map(r => `<span class="${got.has(r) ? 'ok' : 'miss'} fix">${esc(r)}</span>`).join(' <span class="nr-krsep">·</span> ')}</div>` + (hint ? '' : `<div class="nr-mn">${esc(KJ_BY[k] ? KJ_BY[k].m : '')}</div>`);
+      $('#nr-kex').innerHTML = krExamples(k, correct, got);  // right or wrong, under Next
       $('#nr-kr-go').textContent = 'Next →'; done = true;
     };
     $('#nr-kr-go').onclick = confirm;
