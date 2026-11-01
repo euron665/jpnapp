@@ -696,7 +696,7 @@ body.search-open.home-active #search-fab{top:97px;}
 .vcf-item{display:block;width:100%;text-align:left;background:var(--bg);
   border:1px solid var(--border);border-radius:var(--r);padding:9px 12px;color:var(--text);cursor:pointer;}
 .vcf-line{display:flex;align-items:baseline;gap:10px;}
-.vcf-f{display:block;font-size:13px;color:var(--text-dim);margin-top:2px;}   /* found by a conjugated form (v166) */
+.vcf-f{display:flex;flex-wrap:wrap;column-gap:10px;font-size:13px;color:var(--text-dim);margin-top:2px;}   /* found by a conjugated form (v166) */
 .vcf-fr{color:var(--text);}
 .vc-table td.vc-hit{box-shadow:inset 0 0 0 2px var(--accent);}
 #vc-find-out .vc-title,#vc-find-out .vc-desc{position:sticky;left:0;}   /* stay in view when the table jumps to the framed cell */
@@ -1898,7 +1898,7 @@ body.gr-reading #gr-top-btn{display:flex;}
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-11-01 19:50 · v170</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-11-01 23:16 · v172</div>
 </div>
 
 <!-- NEW REVIEWS (REVIEW_DESIGN.md): hub, setup screens, questions and end screen all render into #nrev-app -->
@@ -39204,20 +39204,54 @@ function clearSearch() {
   // It closes only via the icon, an outside tap, Escape, or a screen change.
 }
 
+// Romaji in the EN box (v172, user): each reading's romaji, built once. Comparing romaji, not kana, is what
+// finds 本屋 from "honya" (toHiragana makes that ほにゃ) and counts "tab" before the word is finished; the kana
+// are for spellings the romaji doesn't use ("honnya", "tu"). ー (ī in the katakana words' stored romaji, which
+// are passed in as they are) counts doubled or dropped: kanbiiru, kanbiru
+const srRomCache = new Map();
+function srReadingKeys(reading) {
+  let k = srRomCache.get(reading);
+  if (k) return k;
+  k = { rom: [], kana: [] };
+  String(reading).split('|').map(r => vcfHira(r.trim())).filter(Boolean).forEach(r => {
+    const rom = vcRomaji(r).normalize('NFKC').toLowerCase().replace(/[\s'-]/g, '');   // NFKC: the wide Ｔ of Ｔシャツ
+    k.kana.push(vcfNorm(r));
+    k.rom.push(rom.replace(/([aiueo])ー/g, '$1$1').replace(/[āīūēō]/g, c => normRomaji(c).repeat(2)), normRomaji(rom.replace(/ー/g, '')));
+  });
+  srRomCache.set(reading, k);
+  return k;
+}
+function srRomajiQuery(q) {                  // null unless we're in the EN box and it could be romaji
+  if (searchKBMode !== 'en' || !/^[a-z' -]+$/i.test(q)) return null;
+  const rom = normRomaji(q).replace(/[\s'-]/g, ''), kana = vcfNorm(toHiragana(rom, true).replace(/n$/, 'ん'));
+  return rom ? { rom, kana: /^[ぁ-ゖー]+$/.test(kana) ? kana : '' } : null;
+}
+function srRomajiRank(reading, rq) {         // 2 = this exact reading, 1 = a reading that starts so, 0 = neither
+  const k = srReadingKeys(reading);
+  if (k.rom.includes(rq.rom) || k.kana.includes(rq.kana)) return 2;
+  return k.rom.some(r => r.startsWith(rq.rom)) || (rq.kana && k.kana.some(r => r.startsWith(rq.kana))) ? 1 : 0;
+}
+
 function runSearch(q) {
   const ql = q.toLowerCase();
   const skgResults   = [];
   const kanjiResults = [];
   const vocabResults = [];
 
+  // order: exact romaji, then what matched as before, then readings that start with the romaji
+  const rq = srRomajiQuery(q);
+  const place = (reading, hit) => {
+    const r = rq ? srRomajiRank(reading, rq) : 0;
+    return r === 2 ? 0 : hit ? 1 : r === 1 ? 2 : -1;
+  };
+  const inOrder = list => list.sort((a, b) => a[0] - b[0]).map(x => x[1]);
 
   // Kanji match
   KANJI.forEach(km => {
-    if (km.kanji === q
+    const p = place(km.reading, km.kanji === q
       || km.meaning.toLowerCase().includes(ql)
-      || km.reading.toLowerCase().includes(ql)) {
-      kanjiResults.push(km);
-    }
+      || km.reading.toLowerCase().includes(ql));
+    if (p >= 0) kanjiResults.push([p, km]);
   });
 
   // Vocab match — deduplicate by word
@@ -39225,12 +39259,13 @@ function runSearch(q) {
   Object.values(VOCAB).forEach(data => {
     data.rgs.forEach(rg => {
       rg.vocab.forEach(v => {
-        if (!seenWords.has(v.word) && (
-          v.word.includes(q)
+        if (seenWords.has(v.word)) return;
+        const p = place(v.reading, v.word.includes(q)
           || v.reading.toLowerCase().includes(ql)
-          || v.meaning.toLowerCase().includes(ql))) {
+          || v.meaning.toLowerCase().includes(ql));
+        if (p >= 0) {
           seenWords.add(v.word);
-          vocabResults.push({ kanji: data.kanji, ...v });
+          vocabResults.push([p, { kanji: data.kanji, ...v }]);
         }
       });
     });
@@ -39239,14 +39274,13 @@ function runSearch(q) {
   // Katakana match (word, romaji, or meaning)
   const kataResults = [];
   KATAKANA.forEach(w => {
-    if (w.word.includes(q)
+    const p = place(w.romaji, w.word.includes(q)
       || w.meaning.toLowerCase().includes(ql)
-      || normRomaji(w.romaji).includes(ql)) {
-      kataResults.push(w);
-    }
+      || normRomaji(w.romaji).includes(ql));
+    if (p >= 0) kataResults.push([p, w]);
   });
 
-  renderSearchResults(skgResults, kanjiResults, vocabResults, kataResults);
+  renderSearchResults(skgResults, inOrder(kanjiResults), inOrder(vocabResults), inOrder(kataResults));
 }
 
 function renderSearchResults(skgs, kanjis, vocabs, katas) {
@@ -39920,8 +39954,8 @@ function vcfForms() {
     const list = [];
     const add = (c, lab) => (c.entries || [c]).forEach(e => {
       const form = String(e.form).replace(/<[^>]+>/g, '');
-      const kana = irr ? toHiragana(String(e.rom).replace(/\s+/g, '')) : form.startsWith(wHead) ? rHead + form.slice(wHead.length) : form;
-      list.push({ form, kana: vcfNorm(vcfHira(kana)), rom: e.rom, lab });
+      const hira = vcfHira(irr ? toHiragana(String(e.rom).replace(/\s+/g, '')) : form.startsWith(wHead) ? rHead + form.slice(wHead.length) : form);
+      list.push({ form, hira, kana: vcfNorm(hira), rom: e.rom, lab });
     });
     t.rows.forEach(r => {
       const tp = r.tense + ' ' + (r.pol === 'aff' ? 'affirmative' : 'negative');
@@ -40001,7 +40035,8 @@ function vcFindInput(val) {
       + '<span class="vcf-w" lang="ja">' + x.w + '</span><span class="vcf-r" lang="ja">' + x.r + '</span>'
       + '<span class="vcf-m">' + x.m + '</span>'
       + '<span class="vcf-t" style="color:' + (VCF_COLOR[x.t] || '#c9a84c') + ';">' + VCF_TYPE[x.t][0].toUpperCase() + '</span></span>'
-      + (x.f ? '<span class="vcf-f"><span class="vcf-fr">' + x.f.rom + '</span> · ' + x.f.lab + '</span>' : '') + '</button>').join('')
+      + (x.f ? '<span class="vcf-f"><span class="vcf-fr">' + x.f.rom + '</span><span class="vcf-fr" lang="ja">' + x.f.form + '</span>'
+        + (x.f.hira !== x.f.form ? '<span lang="ja">' + x.f.hira + '</span>' : '') + '<span>' + x.f.lab + '</span></span>' : '') + '</button>').join('')
     : '<div class="vcf-none">No verb or adjective in your vocab matches that.</div>';
   list.querySelectorAll('.vcf-item').forEach(b => b.onclick = () => vcFindPick(vcfHits[+b.dataset.i]));
 }
