@@ -253,6 +253,15 @@ thead th{text-align:center !important;}
 #nrev .nr-tough-w2{font-size:13px;}
 #nrev .nr-tough-m{font-size:13px;color:var(--text-dim);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 #nrev .nr-tough-x{font-family:var(--font-num);font-size:13px;color:var(--fail-text);}
+/* tough kanji lists: tap a row for one example word per reading, under it in the same pop-up (v170) */
+#nrev .nr-tough-open{grid-template-columns:auto 1fr auto auto;width:100%;text-align:left;color:var(--text);cursor:pointer;}
+@media (hover:hover){#nrev .nr-tough-open:hover{border-color:var(--accent);}}
+#nrev .nr-tough-open.open{border-radius:var(--r) var(--r) 0 0;}
+#nrev .nr-tough-c{color:var(--text-dim);font-size:19px;line-height:1;transition:transform .15s;}
+#nrev .nr-tough-open.open .nr-tough-c{transform:rotate(90deg);}
+#nrev .nr-tough-ex{background:var(--surface);border:1px solid var(--border);border-top:0;border-radius:0 0 var(--r) var(--r);padding:12px 14px;}
+#nrev .nr-tough-ex .nr-kex-list{font-size:15px;}
+#nrev .nr-tough-ex .nr-kex-k{display:inline-block;}   /* the pop-up is narrow: (しょうがくせい) drops to its own line whole */
 /* My SRS words: "in 3 days" over "stage 4" on the right; due words in the theme colour (v157) */
 #nrev .nr-srs-when{display:flex;flex-direction:column;align-items:flex-end;font-size:13px;color:var(--text);white-space:nowrap;}
 #nrev .nr-srs-when small{font-size:11px;color:var(--text-dim);}
@@ -1889,7 +1898,7 @@ body.gr-reading #gr-top-btn{display:flex;}
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-10-28 23:34 · v169</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-11-01 19:50 · v170</div>
 </div>
 
 <!-- NEW REVIEWS (REVIEW_DESIGN.md): hub, setup screens, questions and end screen all render into #nrev-app -->
@@ -40819,7 +40828,7 @@ renderThemeRow();
    never leaves a red frame; a real tap (click — never fired by a scroll) gives a short flash instead ---- */
 (function() {
   var touch = window.matchMedia('(hover:none)');
-  var SEL = '.nr-card,.nr-prow,.nr-chip,.nr-pop-x,.skg-card,.study-drill,.kata-cat-card > .svk-header,.th-btn,'
+  var SEL = '.nr-card,.nr-prow,.nr-tough-open,.nr-chip,.nr-pop-x,.skg-card,.study-drill,.kata-cat-card > .svk-header,.th-btn,'
     + '.home-cog,.as-done,.ts-btn,.screen-header .back-btn,#search-fab,#grammar .chapter-btn,#grammar .guide-btn,'
     + '#grammar .guide-ref,#grammar .settings-cog,#grammar .settings-close,#grammar .grammar-home-btn,'
     + '#grammar .chapter-header .back-btn,#gr-top-btn,.vcf-item';
@@ -41821,10 +41830,29 @@ const NR = (function() {
     const t = sget('tough:' + list, {}), ids = Object.keys(t).sort((a, b) => t[b].x - t[a].x), { W, K, KJ_BY } = data();
     const sub = id => (list === 'tricky' || list === 'srs' || list === 'skg') ? (W[id] ? W[id].r[0] + ' · ' + showMeaning(W[id].m) : '')
       : (list === 'kread' || list === 'kskgr') ? (K[id] || []).map(x => x[0]).join(' · ') : (KJ_BY[id] ? KJ_BY[id].m : '');
-    popup('tough', TOUGH_TITLE[list], esc(PROGRESS_DESC[list]),
-      `<div class="nr-tough">${ids.length ? ids.map(id => `<div class="nr-tough-row"><span class="nr-tough-w" lang="ja">${esc(id)}</span><span class="nr-tough-m" lang="ja">${esc(sub(id))}</span><span class="nr-tough-x">✗${t[id].x}</span></div>`).join('') : '<p class="nr-empty">Nothing here yet.</p>'}</div>`,
+    // the four kanji lists (v170, user): tap a kanji and, under its row, every reading shows one example
+    // word, a new random pick each time it opens (a reading with one word always shows that word)
+    const kanjiList = ['kskgm', 'kskgr', 'kmean', 'kread'].includes(list);
+    const readings = id => Array.from(new Set((K[id] || []).map(x => x[0])));
+    const cells = id => `<span class="nr-tough-w" lang="ja">${esc(id)}</span><span class="nr-tough-m" lang="ja">${esc(sub(id))}</span><span class="nr-tough-x">✗${t[id].x}</span>`;
+    const row = id => kanjiList && readings(id).length       // 々 has no readings, so nothing to open
+      ? `<div class="nr-tough-item"><button class="nr-tough-row nr-tough-open" data-kj="${esc(id)}" aria-expanded="false">${cells(id)}<span class="nr-tough-c" aria-hidden="true">›</span></button></div>`
+      : `<div class="nr-tough-row">${cells(id)}</div>`;
+    popup('tough', TOUGH_TITLE[list], esc(PROGRESS_DESC[list] + (kanjiList && ids.length ? ' Tap a kanji to see an example word for each of its readings.' : '')),
+      `<div class="nr-tough">${ids.length ? ids.map(row).join('') : '<p class="nr-empty">Nothing here yet.</p>'}</div>`,
       list === 'srs' ? '' : mistButton(list));            // SRS mistakes come back on the SRS schedule (user, v156)
     if (list !== 'srs') $('#nr-mist').onclick = () => startMistakes(list);
+    $$('#nr-pop .nr-tough-open').forEach(b => b.onclick = () => {
+      const item = b.parentNode, ex = item.querySelector('.nr-tough-ex'), box = $('#nr-pop-box');
+      b.classList.toggle('open', !ex); b.setAttribute('aria-expanded', String(!ex));
+      if (ex) ex.remove();
+      else {
+        item.insertAdjacentHTML('beforeend', `<div class="nr-tough-ex">${krExamples(b.dataset.kj, readings(b.dataset.kj))}</div>`);
+        const r = item.getBoundingClientRect(), bx = box.getBoundingClientRect(), over = Math.min(r.bottom - bx.bottom, r.top - bx.top);
+        if (over > 0) box.scrollTop += over;              // show what just opened, never past the kanji's own row
+      }
+      box.dispatchEvent(new Event('scroll'));             // the scroll bar measures the new height
+    });
   }
 
   // ───────── Review mistakes (REVIEW_DESIGN §12e, v155) — the big button at the top of a tough list's
@@ -42271,8 +42299,8 @@ const NR = (function() {
   }
   // examples after Confirm (v161, user): one word per right reading, picked at random each time from that
   // reading's words — "もく → 木星 (もくせい) Jupiter" (translation added v163); "!" (was "1!" in v161–162)
-  // marks a reading with only one word (650 of 1,697); the reading is green if you picked it, gold if you
-  // missed it, like its tile (v165)
+  // marks a reading with only one word (650 of 1,697); after a question (got = the picks) the reading is
+  // green if you picked it, gold if you missed it, like its tile (v165). The tough kanji lists use it too.
   function krExamples(k, correct, got) {
     const words = {};
     (VOCAB[k] ? VOCAB[k].rgs : []).forEach(g => {
@@ -42284,7 +42312,7 @@ const NR = (function() {
     const cells = correct.filter(r => words[r] && words[r].length).map(r => {
       const ws = words[r], x = ws[rnd(ws.length)], one = ws.length === 1;
       if (one) single = true;
-      return `<span class="nr-kex-r ${got.has(r) ? 'ok' : 'miss'}" lang="ja">${esc(r)}</span><span class="nr-kex-a" aria-hidden="true">→</span>`
+      return `<span class="nr-kex-r${got ? (got.has(r) ? ' ok' : ' miss') : ''}" lang="ja">${esc(r)}</span><span class="nr-kex-a" aria-hidden="true">→</span>`
         + `<span class="nr-kex-w" lang="ja">${esc(x.word)} <span class="nr-kex-k">(${esc(String(x.reading).split('|')[0].trim())})</span> ${esc(String(x.meaning).split('|')[0].trim())}${one ? '<span class="nr-kex-one">!</span>' : ''}</span>`;
     });
     if (!cells.length) return '';
