@@ -169,6 +169,7 @@ thead th{text-align:center !important;}
 #nrev .nr-kstep b{color:var(--text);font-weight:700;}
 #nrev .nr-kex{margin-top:20px;padding-bottom:8px;}
 #nrev .nr-kex:empty{display:none;}
+#nrev .nr-tnote + .nr-kex{margin-top:-14px;}   /* typing screens: past the empty nudge line, the same 20px under Next as Choose */
 #nrev .nr-kex-label{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);text-align:center;margin-bottom:10px;}
 #nrev .nr-kex-list{display:grid;grid-template-columns:auto auto minmax(0,1fr);justify-content:start;column-gap:10px;row-gap:6px;align-items:baseline;font-size:17px;}
 #nrev .nr-kex-r{text-align:left;color:var(--text);}   /* left-aligned list, word + (hiragana) + translation (v163) */
@@ -407,8 +408,8 @@ thead th{text-align:center !important;}
 .vki-count{font-size:11px;color:var(--text);white-space:nowrap;text-align:right;}
 
 /* ── STUDY SCREENS ── */
-#study-kanji,#study-vocab{justify-content:flex-start;padding-top:56px;}
-/* "Set 001" above the kanji tiles / vocab cards (same size as the review hub titles) */
+#study-vocab{justify-content:flex-start;padding-top:56px;}
+/* "Set 001" above the kanji rows (same size as the review hub titles) */
 .study-set-head{width:100%;font-size:26px;font-weight:500;margin:4px 0 14px;}
 
 .study-kanji-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
@@ -420,7 +421,6 @@ thead th{text-align:center !important;}
 .skh-kanji{font-family:var(--font-jp);font-weight:300;font-size:64px;line-height:1;}
 .skh-reading{font-size:13px;color:var(--text-dim);font-family:var(--font-jp);}
 .skh-meaning{font-size:13px;color:var(--text);font-family:var(--font-ui);}
-.skh-count{font-size:11px;color:var(--text-dim);font-family:var(--font-mono);margin-top:2px;}
 .kv-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:200;overflow-y:auto;}
 .kv-modal-overlay.open{display:block;}
 .kv-modal{background:var(--bg);margin:60px 16px 32px;border-radius:var(--r);border:1px solid var(--border);padding:20px 16px;}
@@ -474,7 +474,7 @@ thead th{text-align:center !important;}
 .sm-r{font-size:11px;color:var(--text-dim);font-family:var(--font-mono);margin-top:4px;}
 .sm-note{font-size:13px;color:#7888b8;line-height:1.6;}
 .vocab-pill.sr-flash{border-color:#3dd6c8;box-shadow:0 0 0 1px #3dd6c8;}
-.study-kanji-card.sr-flash,.svk-card.sr-flash{border-color:#3dd6c8;box-shadow:0 0 0 1px #3dd6c8;}
+.svk-card.sr-flash{border-color:#3dd6c8;box-shadow:0 0 0 1px #3dd6c8;}
 
 /* study vocab: kanji list then vocab */
 .study-vocab-kanji-list{display:flex;flex-direction:column;gap:8px;width:100%;
@@ -491,6 +491,16 @@ thead th{text-align:center !important;}
 .svk-meaning{font-size:13px;}
 .svk-body{margin-top:10px;border-top:1px solid var(--border);padding-top:10px;display:none;}
 .svk-body.open{display:block;}
+/* Study Kanji & Vocab, the one view of a set (v175): big kanji to tell look-alikes apart; an open kanji's
+   row stays pinned at the top of the list, so closing it is always one tap */
+#study-vocab.screen:not(#grammar) .scrollable{padding-top:0 !important;}   /* browsers pin inside a scroller's padding: the space moved onto the heading */
+#study-vocab .study-set-head{margin-top:20px;}
+@media (max-width:480px){#study-vocab .study-set-head{margin-top:54px;}}
+#study-vocab-list .svk-card{padding:0 16px;scroll-margin-top:0;}
+#study-vocab-list .svk-header{position:sticky;top:0;z-index:2;background:var(--surface);padding:12px 0;box-shadow:0 1px 0 var(--border);}
+#study-vocab-list .svk-kanji{font-size:52px;}
+#study-vocab-list .svk-reading{font-size:13px;}
+#study-vocab-list .svk-body{margin-top:0;padding-bottom:14px;}
 
 .scrollable{overflow-y:auto;width:100%;display:flex;flex-direction:column;align-items:center;}
 
@@ -1884,7 +1894,7 @@ body.gr-reading #gr-top-btn{display:flex;}
     <div class="home-divider">Study</div>
     <button class="btn-secondary" onclick="goTo('study-kana')">Study Kana</button>
     <button class="btn-secondary" onclick="goTo('study-katakana')">Study Katakana Words</button>
-    <button class="btn-secondary" onclick="goTo('skg-picker','study-kanji')">Study Kanji &amp; Vocab</button>
+    <button class="btn-secondary" onclick="goTo('skg-picker','study-vocab')">Study Kanji &amp; Vocab</button>
     <button class="btn-secondary" onclick="goTo('pos-picker','study-pos')">Study by Part of Speech</button>
     <button class="btn-secondary" onclick="goTo('study-verbs')">Study Conjugation</button>
     <button class="btn-secondary" onclick="goTo('grammar')">Study Grammar</button>
@@ -1898,7 +1908,7 @@ body.gr-reading #gr-top-btn{display:flex;}
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-11-01 23:16 · v172</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-11-02 22:02 · v175</div>
 </div>
 
 <!-- NEW REVIEWS (REVIEW_DESIGN.md): hub, setup screens, questions and end screen all render into #nrev-app -->
@@ -1953,22 +1963,10 @@ body.gr-reading #gr-top-btn{display:flex;}
   </div>
 </div>
 
-<!-- STUDY KANJI -->
-<div id="study-kanji" class="screen">
-  <div class="screen-header">
-    <button class="back-btn" onclick="backToSetList('study-kanji')">← Back</button>
-    <div class="screen-title" id="study-kanji-title">Study — Kanji</div>
-  </div>
-  <div class="scrollable" style="padding-top:56px;width:100%;">
-    <h1 class="study-set-head" id="study-kanji-set" style="max-width:600px;"></h1>
-    <div class="study-kanji-list" id="study-kanji-list"></div>
-  </div>
-</div>
-
-<!-- STUDY VOCAB -->
+<!-- STUDY KANJI & VOCAB -->
 <div id="study-vocab" class="screen">
   <div class="screen-header">
-    <button class="back-btn" onclick="backToSetList('study-kanji')">← Back</button>
+    <button class="back-btn" onclick="backToSetList('study-vocab')">← Back</button>
     <div class="screen-title" id="study-vocab-title">Study — Vocab</div>
   </div>
   <div class="scrollable" style="padding-top:56px;width:100%;">
@@ -38220,7 +38218,7 @@ const POS_TAGS = {"青い":["i-adj"],"赤い":["i-adj"],"明るい":["i-adj"],"�
 KANJI.forEach(k => KANJI_MAP[k.kanji] = k);
 
 // ── STATE ──────────────────────────────────────────────────────────────
-let currentMode = 'study-kanji'; // 'study-kanji'|'study-vocab'|'study-pos'
+let currentMode = 'study-vocab'; // 'study-vocab'|'study-pos'
 let selectedPOS = [];
 let currentSKG  = null;
 // ── NAVIGATION ─────────────────────────────────────────────────────────
@@ -38229,7 +38227,6 @@ function goHome() { skgSortMode = 'num'; showScreen('home'); }
 function goTo(id, mode) {
   if (mode) currentMode = mode;
   if (id === 'skg-picker')         buildSKGGrid();
-  if (id === 'study-kanji')        buildStudyKanji();
   if (id === 'study-vocab')        buildStudyVocab();
   if (id === 'pos-picker')         buildPOSPicker();
   if (id === 'study-pos')          buildStudyPOS();
@@ -38258,10 +38255,7 @@ function showScreen(id) {
 
 // ── SET (SKG) PICKER ───────────────────────────────────────────────────
 const SORT_LABELS = {'num':'Set #','kanji-asc':'Kanji ↑','kanji-desc':'Kanji ↓','vocab-desc':'Vocab ↓','vocab-asc':'Vocab ↑'};
-function sortOrderForMode() {
-  const kanjiOnly = currentMode === 'study-kanji';
-  return kanjiOnly ? ['num','kanji-asc','kanji-desc'] : ['num','kanji-asc','kanji-desc','vocab-desc','vocab-asc'];
-}
+function sortOrderForMode() { return ['num','kanji-asc','kanji-desc']; }
 function updateSortLabel() {
   const b = document.getElementById('sort-cycle');
   if (b) b.textContent = '⇅ ' + (SORT_LABELS[skgSortMode] || 'Set #');
@@ -38276,12 +38270,8 @@ function buildSKGGrid() {
   // reset to a valid sort if the current one doesn't apply to this mode
   if (sortOrderForMode().indexOf(skgSortMode) === -1) skgSortMode = 'num';
   updateSortLabel();
-  const labels = {
-    'study-kanji':'Study Kanji — Choose a Set',
-    'study-vocab':'Study Vocab — Choose a Set'
-  };
-  document.getElementById('skg-picker-title').textContent = labels[currentMode] || 'Choose a Set';
-  const isStudy = (currentMode === 'study-kanji' || currentMode === 'study-vocab');
+  document.getElementById('skg-picker-title').textContent = 'Study Kanji & Vocab — Choose a Set';
+  const isStudy = currentMode === 'study-vocab';
   // Study drills: browse the 1 kanji – 1 vocab and same-meaning subsets
   const _ssb = document.getElementById('study-single-btn');
   if (_ssb) { _ssb.style.display = isStudy ? '' : 'none'; if (isStudy) document.getElementById('study-single-count').textContent = getSingleVocabItems().length; }
@@ -38293,11 +38283,8 @@ function buildSKGGrid() {
   renderSKGGrid();
 }
 
-// ← from a set (kanji or vocab view) → the set list opens with the set you last studied at the top
-// (v146), not back at 001; swiping / ← → keys between sets update currentSKG, so it's always the last one.
-// Always in KANJI mode (v147): the vocab view is only reached by a jump (search result, 1 Kanji – 1 Vocab
-// "Go to set", a kanji in a word's breakdown); going back from it used to leave the list in vocab mode, so
-// every set opened afterwards showed vocab bars instead of kanji tiles until you went Home.
+// ← from a set → the set list opens with the set you last studied at the top (v146), not back at 001;
+// swiping / ← → keys between sets update currentSKG, so it's always the last one.
 function backToSetList(mode) {
   goTo('skg-picker', mode);
   const row = currentSKG && document.querySelector('#skg-grid .skg-card[data-skg="' + currentSKG.id + '"]');
@@ -38306,16 +38293,9 @@ function backToSetList(mode) {
 
 function selectSKG(skg) {
   currentSKG = skg;
-  if (currentMode === 'study-kanji') {
-    buildStudyKanji();
-    showScreen('study-kanji');
-  } else if (currentMode === 'study-vocab') {
-    buildStudyVocab();
-    showScreen('study-vocab');
-  }
+  buildStudyVocab();
+  showScreen('study-vocab');
 }
-
-// ── STUDY: KANJI ───────────────────────────────────────────────────────
 
 function buildPOSTags(word) {
   const tags = POS_TAGS[word];
@@ -38554,28 +38534,7 @@ function kanjiCountText(k) {
   return (n ? n + (n === 1 ? ' reading' : ' readings') + '<br>' : '') + vocab + ' vocab';
 }
 
-function buildStudyKanji() {
-  if (!currentSKG) return;
-  document.getElementById('study-kanji-title').textContent = String(currentSKG.id).replace(/SKG\s*/i,'') + ' — Kanji';
-  document.getElementById('study-kanji-set').textContent = 'Set ' + String(currentSKG.id).replace(/SKG\s*/i,'');
-  const list = document.getElementById('study-kanji-list');
-  list.innerHTML = '';
-  currentSKG.kanji.forEach(k => {
-    const km = KANJI_MAP[k];
-    if (!km) return;
-    const card = document.createElement('div');
-    card.className = 'study-kanji-card';
-    card.dataset.kanji = k;
-    card.innerHTML = '<div class="skh-kanji">'+k+'</div>'
-      +'<div class="skh-reading">'+km.reading+'</div>'
-      +'<div class="skh-meaning">'+km.meaning+'</div>'
-      +'<div class="skh-count">'+kanjiCountText(k)+'</div>';
-    card.onclick = () => openKanjiVocabModal(k);
-    list.appendChild(card);
-  });
-}
-
-// ── STUDY: VOCAB ───────────────────────────────────────────────────────
+// ── STUDY: KANJI & VOCAB ───────────────────────────────────────────────
 function buildStudyVocab() {
   if (!currentSKG) return;
   document.getElementById('study-vocab-title').textContent = String(currentSKG.id).replace(/SKG\s*/i,'') + ' — Vocab';
@@ -38629,7 +38588,12 @@ function buildStudyVocab() {
       body.innerHTML = '<div style="color:var(--text-muted);font-size:11px;padding-top:8px;">No vocab</div>';
     }
 
-    header.onclick = () => body.classList.toggle('open');
+    header.onclick = () => {
+      const sc = card.closest('.scrollable'), top = () => card.getBoundingClientRect().top - sc.getBoundingClientRect().top;
+      const pinned = top() < 0;
+      body.classList.toggle('open');
+      if (pinned) sc.scrollTop += top();             // a pinned row closes where it sits, not somewhere further down
+    };
     card.appendChild(header);
     card.appendChild(body);
     list.appendChild(card);
@@ -38974,11 +38938,10 @@ function ensureVocabWordIndex() {
   });
 }
 
-function openSameMeaning(word) {
-  const groups = smGroups(word);
-  if (!groups.length) return;
+// the ⇄ note: the pop-up in Study, and under Next in One SKG (v173)
+function smNoteHTML(word) {
   let html = '';
-  groups.forEach(g => {
+  smGroups(word).forEach(g => {
     html += `<div class="sm-meaning">${g.m}</div><div class="sm-words">`;
     g.words.forEach(wd => {
       const cur = wd.w === word ? ' sm-cur' : '';
@@ -38987,7 +38950,11 @@ function openSameMeaning(word) {
     html += '</div>';
     if (g.note) html += `<div class="sm-note">${g.note.replace(/\n/g, '<br>')}</div>`;
   });
-  document.getElementById('sm-modal-body').innerHTML = html;
+  return html;
+}
+function openSameMeaning(word) {
+  if (!smGroups(word).length) return;
+  document.getElementById('sm-modal-body').innerHTML = smNoteHTML(word);
   document.getElementById('sm-modal-overlay').classList.add('open');
 }
 function closeSameMeaning() { document.getElementById('sm-modal-overlay').classList.remove('open'); }
@@ -39302,7 +39269,6 @@ function renderSearchResults(skgs, kanjis, vocabs, katas) {
   kanjis.slice(0,8).forEach(km => {
     const v = VOCAB[km.kanji];
     const vc = v ? v.rgs.reduce((a,rg)=>a+rg.vocab.length,0) : 0;
-    const skg = SKGS.find(s => s.kanji.includes(km.kanji));
     const el = document.createElement('div');
     el.className = 'search-result-item';
     el.innerHTML = '<div class="sr-kanji">'+km.kanji+'</div>'
@@ -39311,24 +39277,7 @@ function renderSearchResults(skgs, kanjis, vocabs, katas) {
       +'<div class="sr-main">'+km.meaning+'</div>'
       +'</div>'
       +'<div class="sr-meta">'+String(km.skg).replace(/SKG\s*/i,'')+'<br>'+vc+' vocab</div>';
-    el.onclick = () => {
-      clearSearch();
-      if (skg) {
-        currentSKG = skg;
-        currentMode = 'study-kanji';
-        buildStudyKanji();
-        showScreen('study-kanji');
-        // jump to the kanji card after render
-        setTimeout(() => {
-          const card = document.querySelector('#study-kanji-list .study-kanji-card[data-kanji="'+km.kanji+'"]');
-          if (card) {
-            card.scrollIntoView({behavior:'instant', block:'center'});
-            card.classList.add('sr-flash');
-            setTimeout(() => card.classList.remove('sr-flash'), 1600);
-          }
-        }, 100);
-      }
-    };
+    el.onclick = () => { clearSearch(); goToKanjiVocab(km.kanji); };
     kanjiList.appendChild(el);
   });
 
@@ -40251,14 +40200,10 @@ function refreshVcTracks(root) {
 })();
 
 function renderSKGGrid() {
-  const isKanjiMode = currentMode === 'study-kanji';
   const grid = document.getElementById('skg-grid');
   grid.innerHTML = '';
   getSortedSKGs().forEach(skg => {
-    const totalVocab = skg.kanji.reduce((s,k) => s + (VOCAB[k] ? VOCAB[k].rgs.reduce((x,rg)=>x+rg.vocab.length,0) : 0), 0);
-    const countText = isKanjiMode
-      ? skg.kanji.length + ' kanji'
-      : skg.kanji.length + ' kanji · ' + totalVocab + ' vocab';
+    const countText = skg.kanji.length + ' kanji';
     const card = document.createElement('button');
     card.className = 'skg-card';
     card.dataset.skg = skg.id;
@@ -40283,10 +40228,10 @@ function navigateSKG(dir) {
   selectSKG(next);
 }
 
-// ── KANJI VOCAB MODAL ──────────────────────────────────────────────────
+// ── JUMP TO A KANJI · A WORD'S KANJI BREAKDOWN ─────────────────────────
 function goToKanjiVocab(k) {
   const skg = SKGS.find(s => s.kanji.includes(k));
-  if (!skg) { openKanjiVocabModal(k); return; }   // fallback if not in a set
+  if (!skg) return;
   closeKanjiVocabModal();
   currentSKG = skg;
   currentMode = 'study-vocab';
@@ -40308,7 +40253,7 @@ function goToKanjiVocab(k) {
 
 function pillTap(el, word) {
   if (el.classList.contains('vp-selected')) { openVocabKanjiBreakdown(word); return; }
-  const root = el.closest('.kv-modal') || el.closest('#study-vocab-list') || document;
+  const root = el.closest('#study-vocab-list') || document;
   root.querySelectorAll('.vocab-pill.vp-selected').forEach(p => p.classList.remove('vp-selected'));
   el.classList.add('vp-selected');
 }
@@ -40351,42 +40296,6 @@ function openVocabKanjiBreakdown(word) {
   document.body.style.overflow = 'hidden';
 }
 
-function openKanjiVocabModal(k) {
-  const km = KANJI_MAP[k];
-  const v  = VOCAB[k];
-  if (!km) return;
-  let html = `<div class="kv-modal">
-    <div class="kv-modal-header">
-      <div class="kv-modal-kanji">${k}</div>
-      <div class="kv-modal-info">
-        <div class="kv-modal-reading">${km.reading}</div>
-        <div class="kv-modal-meaning">${km.meaning}</div>
-      </div>
-      <button class="kv-modal-close" onclick="closeKanjiVocabModal()">✕ Close</button>
-    </div>`;
-  if (v && v.rgs.length > 0) {
-    v.rgs.forEach((rg, ri) => {
-      html += `<div class="rg-block">${buildRGLabel(ri+1, rg.rg_reading || rg.vocab[0]?.reading || '')}`;
-      html += `<div class="rg-vocab-grid">`;
-      rg.vocab.forEach(e => {
-        html += `<div class="vocab-pill" onclick="pillTap(this,'${e.word}')">
-          <span class="vp-word">${e.word}</span>
-          <span class="vp-reading">${e.reading}</span>
-          <span class="vp-meaning">${e.meaning}</span>${buildPOSTags(e.word)}${smGroups(e.word).length ? `<span class="sm-mark" onclick="event.stopPropagation();openSameMeaning('${e.word}')">⇄</span>` : ''}
-        </div>`;
-      });
-      html += `</div></div>`;
-    });
-  } else {
-    html += `<div style="color:var(--text-dim);font-size:13px;padding:16px 0;">No vocab for this kanji.</div>`;
-  }
-  html += `</div>`;
-  const overlay = document.getElementById('kv-modal-overlay');
-  overlay.innerHTML = html;
-  overlay.classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
 function closeKanjiVocabModal() {
   document.getElementById('kv-modal-overlay').classList.remove('open');
   document.body.style.overflow = '';
@@ -40394,9 +40303,7 @@ function closeKanjiVocabModal() {
 
 (function() {
   let _tx = 0, _ty = 0, _swiping = false;
-  ['study-kanji','study-vocab'].forEach(function(screenId) {
-    // We attach on document and filter by active screen to avoid stale refs
-  });
+  // We attach on document and filter by active screen to avoid stale refs
   document.addEventListener('touchstart', function(e) {
     const t = e.touches[0];
     _tx = t.clientX; _ty = t.clientY; _swiping = true;
@@ -40405,7 +40312,7 @@ function closeKanjiVocabModal() {
     if (!_swiping) return;
     _swiping = false;
     const active = document.querySelector('.screen.active');
-    if (!active || (active.id !== 'study-kanji' && active.id !== 'study-vocab')) return;
+    if (!active || active.id !== 'study-vocab') return;
     const t = e.changedTouches[0];
     const dx = t.clientX - _tx;
     const dy = t.clientY - _ty;
@@ -40417,7 +40324,7 @@ function closeKanjiVocabModal() {
   document.addEventListener('keydown', function(e) {
     if ((e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
     const active = document.querySelector('.screen.active');
-    if (!active || (active.id !== 'study-kanji' && active.id !== 'study-vocab')) return;
+    if (!active || active.id !== 'study-vocab') return;
     const t = e.target;
     if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) return;
     if (['sm-modal-overlay', 'svj-overlay', 'app-settings'].some(function(id) { const o = document.getElementById(id); return o && o.classList.contains('open'); })) return;
@@ -42032,6 +41939,7 @@ const NR = (function() {
       <div class="nr-bar"><i style="width:${Math.round(S.i / S.queue.length * 100)}%"></i></div>${inner}</div>`;
   }
   function question() {
+    if (S.noteUp) { S.noteUp = false; scrollTop(); }   // a long note may have scrolled the last question
     if (S.i >= S.queue.length) return end();
     const item = S.queue[S.i];
     S.word = item; S.wordOk = true; S.keys = null;
@@ -42063,13 +41971,28 @@ const NR = (function() {
     S.i++; question();
   }
 
+  // One SKG (v173, user), Multiple readings, Tricky readings, Long words (v174) and the Review mistakes of
+  // their lists ('mist'): once a word is answered, right or wrong, the ⇄ note from Study goes under Next,
+  // where the kanji modes show Examples. Not the SRS (user: the ultimate test) or Same meaning (it trains
+  // exactly this). A typing screen drops the phone's keyboard for it (the note would sit behind the
+  // keyboard, and typing screens don't scroll); Next brings it back.
+  const NOTE_MODES = ['skg', 'many', 'tricky', 'long', 'mist'];
+  function showSameNote(word) {
+    const box = $('#nr-kex'), html = NOTE_MODES.includes(S.mode) ? smNoteHTML(word) : '';
+    if (!box || !html) return;
+    box.innerHTML = `<div class="nr-kex-label">Same meaning</div>${html}`;
+    S.noteUp = true;
+    if ($('#nr-ans') && window.matchMedia('(hover:none)').matches) $('#nr-ans').blur();
+  }
+
   // Choose (§6.1)
   function askChoose(word) {
     const { opts, correct } = S.opts(word);
     frame(`<div class="nr-word" lang="ja">${esc(word)}</div>
       <div class="nr-reveal" id="nr-reveal"></div>
       <div class="nr-opts">${opts.map((o, n) => `<button class="nr-opt" data-o="${esc(o)}" lang="ja"><span class="nr-k">${n + 1}</span>${esc(o)}</button>`).join('')}</div>
-      <button class="nr-btn nr-btn-primary nr-next" id="nr-next" hidden>Next →</button>`);
+      <button class="nr-btn nr-btn-primary nr-next" id="nr-next" hidden>Next →</button>
+      <div class="nr-kex" id="nr-kex"></div>`);
     const buttons = $$('.nr-opt');
     let answered = false;
     const pick = b => {
@@ -42078,6 +42001,7 @@ const NR = (function() {
       buttons.forEach(x => { x.disabled = true; x.classList.add(x.dataset.o === correct ? 'is-right' : x === b ? 'is-wrong' : 'dim'); });
       $('#nr-reveal').innerHTML = `<div class="nr-mn">${esc(showMeaning(data().W[word].m))}</div>`;
       $('#nr-next').hidden = false; $('#nr-next').focus({ preventScroll: true });
+      showSameNote(word);
     };
     buttons.forEach(b => b.onclick = () => pick(b));
     $('#nr-next').onclick = next;
@@ -42093,7 +42017,7 @@ const NR = (function() {
   //   against the visual viewport, re-run when the keyboard opens / closes) — it then stays put;
   // - nothing scrolls: a drag is blocked (except inside the answer box) and the page is held at the top.
   // Conjugation needed it first (its meaning + tags + stem hint put Check 28px lower than the other modes).
-  const typingOn = () => view === 'session' && !!root && !!$('#nr-ans') && !$('#nr-ans').hidden;
+  const typingOn = () => view === 'session' && !!root && !!$('#nr-ans') && !$('#nr-ans').hidden && !S.noteUp;
   function fitTyping() {
     const wrap = root && root.querySelector('.nr-q'), go = $('#nr-go'), word = $('#nr-tword'), inp = $('#nr-ans'), vv = window.visualViewport;
     if (!wrap) return;
@@ -42136,9 +42060,11 @@ const NR = (function() {
         <button class="nr-btn nr-btn-primary nr-check" id="nr-go" onmousedown="event.preventDefault()">Check</button>
         <div class="nr-opts" id="nr-topts" hidden></div>
         <div class="nr-nudge" id="nr-nudge"></div>
-        <div class="nr-tnote" id="nr-tnote"></div>`);
+        <div class="nr-tnote" id="nr-tnote"></div>
+        <div class="nr-kex" id="nr-kex"></div>`);
     }
     $('#nr-tnote').innerHTML = '';                 // Katakana words: the word's note, under the box so the box never moves
+    $('#nr-kex').innerHTML = '';
     $('.nr-qcount').innerHTML = `Question <b>${S.i + 1}</b> / ${S.queue.length}`;
     $('.nr-bar i').style.width = Math.round(S.i / S.queue.length * 100) + '%';
     $('#nr-tword').textContent = word;
@@ -42192,7 +42118,7 @@ const NR = (function() {
     const inp = typeScreen(word, 'Meaning', readingHtml, false, 'type the meaning');
     let phase = 'answer', wrongLine = '';
     inp.oninput = () => { $('#nr-nudge').textContent = ''; };
-    const done = html => { $('#nr-reveal').innerHTML = readingHtml + html; $('#nr-go').textContent = 'Next →'; phase = 'done'; };
+    const done = html => { $('#nr-reveal').innerHTML = readingHtml + html; $('#nr-go').textContent = 'Next →'; phase = 'done'; showSameNote(word); };
     const submit = () => {
       if (phase === 'done') return next();
       const val = inp.value.trim();
@@ -42241,8 +42167,10 @@ const NR = (function() {
           <div class="nr-reveal"><div class="nr-picks" lang="ja">Your picks: ${marked}</div>
             <div class="nr-rd big ok fix" lang="ja">${esc(data().W[word].r.join(' · '))}</div>
             <div class="nr-mn">${esc(showMeaning(data().W[word].m))}</div></div>
-          <button class="nr-btn nr-btn-primary nr-next" id="nr-next">Next →</button>`);
+          <button class="nr-btn nr-btn-primary nr-next" id="nr-next">Next →</button>
+          <div class="nr-kex" id="nr-kex"></div>`);
         $('#nr-next').onclick = next;
+        showSameNote(word);
         S.keys = e => { if (e.key === 'Enter') { e.preventDefault(); next(); } };
       }
     };
