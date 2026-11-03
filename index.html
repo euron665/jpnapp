@@ -578,9 +578,12 @@ body.search-open.home-active #search-fab{top:97px;}
 }
 #global-search-bar input:focus{border-color:var(--accent);}
 #global-search-bar input::placeholder{color:var(--text-muted);font-size:13px;}
-#search-clear{background:none;border:none;color:var(--text-muted);
-  font-size:17px;cursor:pointer;padding:0 4px;display:none;line-height:1;}
-#search-clear.show{display:block;}
+/* Clear in both search boxes, the main one and the conjugator's (v176, user): theme colour, shown while
+   there's text; it never takes the focus, so you stay typing */
+.clear-btn{background:none;border:1px solid var(--accent);border-radius:var(--r);color:var(--accent);
+  font-size:13px;font-weight:500;line-height:1.2;padding:7px 12px;cursor:pointer;display:none;white-space:nowrap;}
+.clear-btn.show{display:block;}
+@media (hover:hover){.clear-btn:hover{background:var(--accent);color:var(--on-accent);}}
 #search-kb-row{display:flex;gap:6px;}
 .kb-btn{
   background:var(--surface);border:1px solid var(--border);
@@ -699,8 +702,6 @@ body.search-open.home-active #search-fab{top:97px;}
   padding:9px 14px;font-family:var(--font-jp);font-size:15px;font-weight:300;color:var(--text);outline:none;transition:border-color 0.15s;}
 #vc-find-input:focus{border-color:var(--accent);}
 #vc-find-input::placeholder{color:var(--text-dim);font-size:13px;}
-#vc-find-clear{background:none;border:none;color:var(--text-dim);font-size:17px;cursor:pointer;padding:0 4px;display:none;line-height:1;}
-#vc-find-clear.show{display:block;}
 #vc-find-list{display:flex;flex-direction:column;gap:4px;margin-top:6px;}
 #vc-find-list:empty{display:none;}
 .vcf-item{display:block;width:100%;text-align:left;background:var(--bg);
@@ -1817,7 +1818,8 @@ body.gr-reading #gr-top-btn{display:flex;}
     <input type="text" id="search-input" placeholder="Search kanji, vocab…"
            autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"
            oninput="onSearchInput(this.value)">
-    <button id="search-clear" onclick="clearSearch()">✕</button>
+    <button id="search-clear" class="clear-btn" onmousedown="event.preventDefault()"
+            ontouchend="event.preventDefault();clearSearchKeepTyping()" onclick="clearSearchKeepTyping()">Clear</button>
   </div>
   <div id="search-kb-row">
     <button id="kb-en" class="kb-btn active" onclick="setSearchKB('en')">EN</button>
@@ -1908,7 +1910,7 @@ body.gr-reading #gr-top-btn{display:flex;}
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-11-02 22:02 · v175</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-11-03 21:05 · v176</div>
 </div>
 
 <!-- NEW REVIEWS (REVIEW_DESIGN.md): hub, setup screens, questions and end screen all render into #nrev-app -->
@@ -2058,7 +2060,8 @@ body.gr-reading #gr-top-btn{display:flex;}
         <input type="text" id="vc-find-input" placeholder="Romaji, kana, kanji or English"
                autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"
                oninput="vcFindInput(this.value)" onkeydown="vcFindKey(event)">
-        <button id="vc-find-clear" onclick="vcFindClear()" aria-label="Clear">✕</button>
+        <button id="vc-find-clear" class="clear-btn" onmousedown="event.preventDefault()"
+                ontouchend="event.preventDefault();vcFindClearKeepTyping()" onclick="vcFindClearKeepTyping()">Clear</button>
       </div>
       <div id="vc-find-list"></div>
     </div>
@@ -39170,6 +39173,13 @@ function clearSearch() {
   // NOTE: do not close the bar here — emptying the field must leave it open.
   // It closes only via the icon, an outside tap, Escape, or a screen change.
 }
+// Clear (v176, user): empties the box and keeps you typing in it. The button never takes the focus
+// (mousedown / touchend stopped), and focusing here, inside the tap, brings the iPhone keyboard up if it was down.
+// The input mode (EN / かな / カナ) stays as it was.
+function clearSearchKeepTyping() {
+  clearSearch();
+  document.getElementById('search-input').focus({ preventScroll: true });
+}
 
 // Romaji in the EN box (v172, user): each reading's romaji, built once. Comparing romaji, not kana, is what
 // finds 本屋 from "honya" (toHiragana makes that ほにゃ) and counts "tab" before the word is finished; the kana
@@ -40014,6 +40024,13 @@ function vcFindClear() {
   const inp = document.getElementById('vc-find-input');
   inp.value = ''; vcFindInput('');
   document.getElementById('vc-find-out').innerHTML = '';
+}
+// the Clear button (v176, user), like the main search's: the box only, and you stay typing in it; the table
+// below stays until you pick another word (Escape still clears both)
+function vcFindClearKeepTyping() {
+  const inp = document.getElementById('vc-find-input');
+  inp.value = ''; vcFindInput('');
+  inp.focus({ preventScroll: true });
 }
 function vcTableHTML(t) {
   const vs = vcVariants(t), key = vcKey(t);
