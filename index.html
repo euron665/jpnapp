@@ -286,6 +286,56 @@ thead th{text-align:center !important;}
 #nrev .nr-stg-head .nr-label{margin:0;}
 #nrev .nr-stg-all{border:0;background:transparent;padding:4px 0;font-family:var(--font-ui);font-size:13px;color:var(--accent);cursor:pointer;white-space:nowrap;}
 #nrev .nr-srs-when small .nr-tmark{width:12px;height:9px;}
+/* Review Grammar (v181): the sentence (construct in the grammar's own red, pinned like in #grammar), the gap,
+   furigana that follows the grammar module's setting, tags + blurred hint for Type, the boxes under Next,
+   and the rows of its pop-ups (Grammar points, Grammar progress, Toughest grammar) */
+#nrev .nr-gen{font-size:15px;line-height:1.45;color:var(--text-dim);text-align:center;margin:0 0 4px;text-wrap:balance;}
+#nrev .nr-gsent{font-size:23px;font-weight:300;line-height:2;text-align:center;margin:6px 0 2px;word-break:keep-all;overflow-wrap:anywhere;}
+#nrev .nr-word.nr-gword{font-size:15px;font-weight:400;line-height:1.45;margin:0;}
+#nrev .nr-gjp{color:#e8193c;}
+#nrev .nr-gjp.ok{color:var(--pass-text);}
+#nrev .nr-gjp.nb{white-space:nowrap;}
+#nrev .nr-ggap{display:inline-block;min-width:3.6em;height:1.15em;vertical-align:-0.18em;border-bottom:2px solid var(--text-dim);margin:0 4px;}
+#nrev .nr-fw{position:relative;font-family:var(--font-noto);}
+#nrev .nr-fw::after{content:attr(data-r);position:absolute;left:50%;bottom:100%;transform:translateX(-50%);font-family:var(--font-noto);
+  font-size:clamp(9px,0.56em,13px);font-weight:300;line-height:1;white-space:nowrap;letter-spacing:.02em;color:var(--text-dim);opacity:0;
+  pointer-events:none;transition:opacity .12s ease;}
+html.furi-off #nrev .nr-fw::after{content:none;}
+html.furi-on #nrev .nr-fw::after{opacity:1;}
+html.furi-click #nrev .nr-fw{cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
+html.furi-click #nrev .nr-fw.on{color:var(--furi-hit);}
+html.furi-click #nrev .nr-fw.on::after{opacity:1;color:var(--furi-hit);}
+#nrev .nr-greveal{min-height:44px;margin-bottom:8px;}
+#nrev .nr-gstep{margin-top:14px;}
+#nrev .nr-gchips{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:8px 0 2px;}
+#nrev .nr-ghint{display:block;margin:8px auto 0;padding:0;background:none;border:0;font-family:var(--font-ui);font-size:13px;line-height:22px;color:var(--text-dim);cursor:pointer;}
+#nrev .nr-ghint b{font-weight:400;color:var(--text);filter:blur(5px);padding:0 4px;transition:filter .15s;}
+#nrev .nr-ghint.on b{filter:none;}
+#nrev .nr-gabout{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;display:grid;gap:4px;text-align:left;}
+#nrev .nr-gabout + .nr-kex-label{margin-top:18px;}
+#nrev .nr-ga-c{font-family:var(--font-num);font-size:11px;color:var(--text-dim);letter-spacing:.08em;}
+#nrev .nr-ga-n{font-size:19px;font-weight:300;}
+#nrev .nr-ga-n.red{color:#e8193c;}
+#nrev .nr-ga-m{font-size:13px;}
+#nrev .nr-ga-x{font-size:13px;color:var(--text-dim);line-height:1.5;}
+#nrev .nr-gpl{margin-bottom:10px;}
+#nrev .nr-gtwo{margin:0 0 10px;}
+#nrev .nr-glist{display:grid;gap:6px;text-align:left;margin-bottom:14px;}
+#nrev .nr-glist:last-child{margin-bottom:0;}
+#nrev .nr-end .nr-glist{width:100%;margin-bottom:8px;}
+#nrev .nr-gagain{margin:18px 0 8px;}
+#nrev .nr-grow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;align-items:center;width:100%;box-sizing:border-box;text-align:left;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;color:var(--text);font-family:var(--font-ui);}
+#nrev button.nr-grow{cursor:pointer;}
+#nrev .nr-grow[data-off]{opacity:.4;}
+@media (hover:hover){#nrev button.nr-grow:hover{border-color:var(--accent);}}
+#nrev .nr-gr-t{font-size:17px;font-weight:300;}
+#nrev .nr-gr-s{font-size:13px;color:var(--text-dim);grid-column:1;}
+#nrev .nr-gr-r{grid-row:1 / span 2;grid-column:2;font-family:var(--font-num);font-size:13px;color:var(--text-dim);white-space:nowrap;}
+#nrev .nr-gdots{display:flex;gap:4px;}
+#nrev .nr-gdot{width:10px;height:10px;border-radius:2px;border:1px solid var(--border);}
+#nrev .nr-gdot.l{background:var(--gold);border-color:var(--gold);}
+#nrev .nr-gdot.s{background:var(--pass-text);border-color:var(--pass-text);}
 /* SRS end screen (v180): moved up / down / stayed / new words */
 #nrev .nr-sum{width:100%;max-width:360px;margin:14px auto 6px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);text-align:left;}
 #nrev .nr-sum-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:11px 14px;border-top:1px solid var(--border);}
@@ -1932,11 +1982,12 @@ body.gr-reading #gr-top-btn{display:flex;}
     <button class="btn-primary" onclick="NR.go('kanji')">Review Kanji</button>
     <button class="btn-primary" onclick="NR.go('vocab')">Review Vocab</button>
     <button class="btn-primary" onclick="NR.go('conj')">Review Conjugation</button>
+    <button class="btn-primary" onclick="NR.go('gram')">Review Grammar</button>
   </div>
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-11-16 21:20 · v180</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-11-16 22:09 · v181</div>
 </div>
 
 <!-- NEW REVIEWS (REVIEW_DESIGN.md): hub, setup screens, questions and end screen all render into #nrev-app -->
@@ -40813,7 +40864,7 @@ renderThemeRow();
    never leaves a red frame; a real tap (click — never fired by a scroll) gives a short flash instead ---- */
 (function() {
   var touch = window.matchMedia('(hover:none)');
-  var SEL = '.nr-card,.nr-prow,.nr-tough-open,.nr-chip,.nr-stg-b,.nr-pop-x,.skg-card,.study-drill,.kata-cat-card > .svk-header,.th-btn,'
+  var SEL = '.nr-card,.nr-prow,.nr-tough-open,.nr-chip,.nr-stg-b,button.nr-grow,.nr-pop-x,.skg-card,.study-drill,.kata-cat-card > .svk-header,.th-btn,'
     + '.home-cog,.as-done,.ts-btn,.screen-header .back-btn,#search-fab,#grammar .chapter-btn,#grammar .guide-btn,'
     + '#grammar .guide-ref,#grammar .settings-cog,#grammar .settings-close,#grammar .grammar-home-btn,'
     + '#grammar .chapter-header .back-btn,#gr-top-btn,.vcf-item';
@@ -41039,7 +41090,7 @@ function saveGhKey() {
    {left,known,round,pending} · 'skg:round' {n,sets,done} · 'pos:sel' · 'conj:sel' · 'tough:<list>'
    ({id:{x,s}} for srs/tricky/kmean/kread, {combo:"1101…"} for conj) · 'conj:toughView' ·
    'srs:<word>' {s: stage 1–10, d: due day} — one item per word, so phone + desktop merge per word ·
-   'srs:pool' {order: set ids, i: current set}.
+   'srs:pool' {order: set ids, i: current set} · 'gram:sel' + 'gp:<title|meaning>' (Review Grammar, v181).
    A deck / One SKG item only moves on when a session is fully answered; an interrupted session
    comes back unchanged (the dealt session is stored as 'pending'). */
 const NR = (function() {
@@ -41585,10 +41636,11 @@ const NR = (function() {
   // (Review Kanji has no "How you answer" switch; they're never greyed out)
   const SESSION = 25;
 
-  let section = 'vocab';                          // which home button opened Review: vocab · kanji · conj · kana · kata
+  let section = 'vocab';                          // which home button opened Review: vocab · kanji · conj · kana · kata · gram
   function hub() {
     if (section === 'conj') return conjSetup(); if (section === 'kanji') return kanjiHub();
     if (section === 'kana') return kanaSetup(); if (section === 'kata') return kataSetup();
+    if (section === 'gram') return gramSetup();
     vocabHub();
   }
   // a mode that can't be answered the selected way is greyed out: choose-only in Type, type-only in Choose
@@ -41811,7 +41863,7 @@ const NR = (function() {
   // names of the tough lists — rows, pop-up titles, end screens (v158, user: "Tough kanji in [mode name] mode")
   const TOUGH_TITLE = { srs: 'Tough words in SRS mode', skg: 'Tough words in One SKG mode', tricky: 'Tough words in Tricky readings mode',
     kskgm: 'Tough kanji in One SKG meaning mode', kskgr: 'Tough kanji in One SKG readings mode', kmean: 'Tough kanji in Kanji meaning mode',
-    kread: 'Tough kanji in Kanji readings mode', conj: 'Toughest conjugations' };
+    kread: 'Tough kanji in Kanji readings mode', conj: 'Toughest conjugations', gram: 'Toughest grammar' };
   function toughView(list) {
     const t = sget('tough:' + list, {}), ids = Object.keys(t).sort((a, b) => t[b].x - t[a].x), { W, K, KJ_BY } = data();
     const sub = id => (list === 'tricky' || list === 'srs' || list === 'skg') ? (W[id] ? W[id].r[0] + ' · ' + showMeaning(W[id].m) : '')
@@ -41855,15 +41907,16 @@ const NR = (function() {
     return shuffle(Object.keys(t).filter(ok)).sort((a, b) => t[b].x - t[a].x);   // worst first, ties in random order
   }
   // never for the SRS list: SRS mistakes come back on the SRS schedule (user, v156: "SRS is SRS")
-  const mistOpen = list => list === 'srs' ? false : list === 'conj' ? conjToughList().length > 0 : mistItems(list).length >= MIST_MIN;
+  const mistOpen = list => list === 'srs' ? false : list === 'conj' ? conjToughList().length > 0 : list === 'gram' ? gramTough().length > 0 : mistItems(list).length >= MIST_MIN;
   function mistButton(list) {
     const on = mistOpen(list);
     return `<button class="nr-btn nr-btn-primary nr-mist" id="nr-mist"${on ? '' : ' disabled'}>Review mistakes · ${MIST_SIZE}</button>`
-      + (on ? '' : `<p class="nr-hint nr-mist-hint">${list === 'conj' ? 'Opens as soon as a combination is listed.'
+      + (on ? '' : `<p class="nr-hint nr-mist-hint">${list === 'conj' ? 'Opens as soon as a combination is listed.' : list === 'gram' ? 'Opens as soon as a grammar point is listed.'
         : `${mistItems(list).length} / ${MIST_MIN} · opens at ${MIST_MIN}`}</p>`);
   }
   function startMistakes(list) {
     if (!mistOpen(list)) return;
+    if (list === 'gram') return startGram(gramTough().map(x => x.c), MIST_SIZE, true);   // spread over the listed points, like conjugation
     const base = { mist: list, label: 'Review mistakes' }, f = fmt();
     if (list === 'conj') {
       const combos = conjToughList().map(e => e.k.split('|')).filter(c => conjPool(c[0]).length), pools = combos.map(() => []), items = [];
@@ -42037,6 +42090,7 @@ const NR = (function() {
     if (S.mode === 'same') return askSame(item);
     if (S.mode === 'kana') return askKana(item);
     if (S.mode === 'kata') return askKata(item);
+    if (S.mode === 'gram') return askGram(item);
     if (S.format === 'choose') return askChoose(item);
     askReading(item);
   }
@@ -42054,6 +42108,7 @@ const NR = (function() {
     }
     if (S.tough) toughMark(S.tough, S.mode === 'kmean' || S.mode === 'kskgm' ? S.word.k : S.word, S.wordOk);
     if (S.mode === 'conj') conjRecord(S.word, S.wordOk);
+    if (S.mode === 'gram') { gramRecord(S.word, S.wordOk); if (!S.wordOk) S.missed.set(S.word.c, (S.missed.get(S.word.c) || 0) + 1); }
     if (S.wordOk) S.right++;
     S.i++; question();
   }
@@ -42900,20 +42955,321 @@ const NR = (function() {
     tapButton($('#nr-go'), submit);
   }
 
+  // ───────── Review Grammar (REVIEW_DESIGN §13, built v181) ─────────
+  // Everything is read from the live grammar module (#grammar) the first time Review Grammar opens: every
+  // grammar point that has examples, and each example's sentence (furigana + the red construct), translation,
+  // note and tags. So a change in the grammar module is a change here; nothing is generated or copied.
+  // Three exercises: What does it mean (always tapped) · Fill the gap with Choose · Fill the gap with Type.
+  // No SRS (user): three marks per point (its last 3 answers right = solid) and "Toughest grammar" (below 80%
+  // over its last 10 answers, from 3 answers on) with Review mistakes.
+  // Progress (JPStore): 'gram:sel' {ex, lv, topics, off, size} · 'gp:<title|meaning>' {m, c, t, all: "1101…"}
+  // — one item per grammar point, keyed by its title and meaning (ids and coordinates move when cards are added).
+  const G_SHORT = ['Particles', 'Copula & existence', 'Question words', 'Comparison', 'Quantity & limits', 'Adverbs & connectors', 'て-form', 'Verb aspect',
+    'Desire & intention', 'Suggestions', 'Requests & advice', 'Obligation & permission', 'Giving & receiving', 'Ability', 'Conditionals & clauses',
+    'Quotation', 'Nominalising', 'Conjecture & appearance', 'Passive & causative', 'Sentence endings'];
+  // grammar points that can stand in for each other (by coordinate): never offered as each other's wrong option
+  const G_PAIRS = [['12.2', '12.5'], ['15.10', '15.11'], ['18.1', '18.2'], ['18.5', '18.6'], ['18.5', '18.7'], ['18.6', '18.7'], ['20.4', '20.5'],
+    ['11.4', '11.5'], ['10.1', '10.2'], ['10.1', '10.3'], ['10.2', '10.3'], ['9.7', '9.8'], ['16.2', '16.3']];
+  const G_NOEXT = 'にはがをのでともへや';
+  const G_FW = /\{([^|}]+)\|([^}]+)\}/g;                  // a sentence keeps furigana as {漢字|かんじ} and the construct as ⟦…⟧
+  const gPlain = s => s.replace(G_FW, '$1'), gKana = s => s.replace(G_FW, '$2');
+  let GD = null;
+  function gdata() {
+    if (GD) return GD;
+    const gr = document.getElementById('grammar'), txt = el => el ? el.textContent.replace(/\s+/g, ' ').trim() : '';
+    const enc = n => n.nodeType === 3 ? n.nodeValue : n.nodeType !== 1 ? '' : n.classList.contains('fw') ? '{' + n.textContent + '|' + n.getAttribute('data-r') + '}'
+      : (n.classList.contains('jp') ? '⟦' : '') + Array.prototype.map.call(n.childNodes, enc).join('') + (n.classList.contains('jp') ? '⟧' : '');
+    const full = Array.prototype.map.call(gr.querySelectorAll('.chapter-btn .btn-name'), txt), CARDS = [];
+    Array.prototype.forEach.call(gr.querySelectorAll('.card'), el => {
+      const co = (txt(el.querySelector('.card-coord')).match(/\d+/g) || []).map(Number), badge = el.querySelector('.level-badge');
+      const lv = badge ? (badge.className.match(/level-(n\d)/) || [])[1] : null;
+      if (co.length < 2 || !lv) return;                    // recap cards have no level and no examples
+      const c = { ch: co[0], cr: co[1], co: co[0] + '.' + co[1], coord: 'CH.' + co[0] + ' · CR.' + co[1], lv, t: txt(el.querySelector('.title')), m: txt(el.querySelector('.subtitle-meaning')) };
+      c.key = c.t + '|' + c.m;
+      c.x = Array.prototype.map.call(el.querySelectorAll('.example'), ex => {
+        const j = ex.querySelector('.example-jp'); if (!j) return null;
+        // a highlight that stops on a kanji takes the rest of its word with it (と思|います), unless a particle follows
+        const jp = Array.prototype.map.call(j.childNodes, enc).join('').trim().replace(/\}⟧([ぁ-ゖ]+)/g, (m, run) => G_NOEXT.includes(run[0]) ? m : '}' + run + '⟧');
+        const sp = []; jp.replace(/⟦(.*?)⟧/g, (m, a) => { sp.push(a); return m; });
+        const tags = Array.prototype.map.call(ex.querySelectorAll('.etag'), t => [txt(t), t.style.color || '#888899']);
+        return { c, jp, en: txt(ex.querySelector('.example-en')), note: txt(ex.querySelector('.example-note')), tags, tg: tags.map(t => t[0]).join('|'),
+          sp, ans: sp.map(gPlain).join(' … '), kana: sp.map(gKana).join(' … ') };
+      }).filter(e => e && e.sp.length);
+      if (c.x.length) { c.i = CARDS.length; CARDS.push(c); }
+    });
+    const BY = {}, EX = {}, CH = [];
+    CARDS.forEach(c => (BY[c.ch] = BY[c.ch] || []).push(c));
+    G_PAIRS.forEach(([a, b]) => { (EX[a] = EX[a] || new Set()).add(b); (EX[b] = EX[b] || new Set()).add(a); });
+    for (let i = 0, n = Math.max.apply(null, CARDS.map(c => c.ch)); i < n; i++) CH.push([G_SHORT[i] || full[i] || 'Chapter ' + (i + 1), full[i] || G_SHORT[i] || 'Chapter ' + (i + 1)]);
+    const LV = Array.from(new Set(CARDS.map(c => c.lv))).sort().reverse();   // n5, n4, later n3…
+    return GD = { CARDS, BY, EX, CH, LV };
+  }
+  // the sentence: mode 'show' (the construct in red, or green with cls 'ok') or 'gap'
+  const gFw = s => esc(s).replace(G_FW, '<span class="nr-fw" data-r="$2">$1</span>');
+  function gSentence(e, mode, cls) {
+    return gFw(e.jp).replace(/⟦(.*?)⟧/g, (m, a) => mode === 'gap' ? '<span class="nr-ggap"></span>'
+      : `<span class="nr-gjp${cls ? ' ' + cls : ''}${a.replace(/<[^>]+>/g, '').length <= 10 ? ' nb' : ''}">${a}</span>`);
+  }
+  // furigana in a review sentence follows the grammar module's setting (off · tap · always); one open at a time
+  function gFwTap(fw) {
+    if (!document.documentElement.classList.contains('furi-click')) return;
+    $$('.nr-fw.on').forEach(x => { if (x !== fw) x.classList.remove('on'); });
+    if (fw) fw.classList.toggle('on');
+  }
+  document.addEventListener('click', e => {
+    const scr = document.getElementById('nrev');
+    if (!root || !scr || !scr.classList.contains('active') || !root.querySelector('.nr-fw')) return;
+    gFwTap(e.target.closest ? e.target.closest('#nrev .nr-fw') : null);
+  });
+  // typed answers: spaces and punctuation don't count, katakana counts as hiragana
+  const gNorm = s => hira(kana(String(s).replace(/[\s　、。，,.!?！？・〜~…「」]+/g, ''), false));
+
+  const G_EX = ['mean', 'gap'];
+  function gSel() {
+    const d = gdata(), s = Object.assign({ ex: ['gap'], lv: d.LV.slice(), topics: [1], off: [], size: 20 }, sget('gram:sel', null) || {});
+    s.ex = s.ex.filter(x => G_EX.includes(x)); if (!s.ex.length) s.ex = ['gap'];
+    s.lv = s.lv.filter(x => d.LV.includes(x)); if (!s.lv.length) s.lv = d.LV.slice();
+    s.topics = s.topics.filter(n => n >= 1 && n <= d.CH.length);
+    s.size = Math.max(10, Math.min(100, +s.size || 20));
+    return s;
+  }
+  const G_LEVELS = [['m', 'meaning'], ['c', 'fill the gap with Choose'], ['t', 'fill the gap with Type']];
+  const gProg = c => sget('gp:' + c.key, null) || {};
+  const gSolid = (p, l) => /111$/.test(p[l] || '');
+  const gAnySolid = c => { const p = gProg(c); return G_LEVELS.some(l => gSolid(p, l[0])); };
+  function gramRecord(q, ok) {
+    const p = gProg(q.c), l = q.type === 'mean' ? 'm' : q.choose ? 'c' : 't';
+    [l, 'all'].forEach(k => { p[k] = ((p[k] || '') + (ok ? '1' : '0')).slice(-10); });
+    sset('gp:' + q.c.key, p);
+  }
+  // Toughest grammar: below 80% right over the last 10 answers, from 3 answers on; worst first
+  function gramTough() {
+    return gdata().CARDS.map(c => { const a = gProg(c).all || ''; return { c, n: a.length, pct: a.length ? Math.round(100 * (a.split('1').length - 1) / a.length) : 100 }; })
+      .filter(x => x.n >= 3 && x.pct < 80).sort((a, b) => a.pct - b.pct || b.n - a.n);
+  }
+  const gTile = (attr, label, n, on) => `<button class="nr-tile" ${attr} aria-pressed="${!!on}">${esc(label)}${n != null ? `<small>${n}</small>` : ''}</button>`;
+  const gRow = (c, right, sub, attr) => { const tag = attr ? 'button' : 'div';
+    return `<${tag} class="nr-grow"${attr ? ' ' + attr : ''}><span class="nr-gr-t" lang="ja">${esc(c.t)}</span><span class="nr-gr-s">${esc(sub || c.m)}</span><span class="nr-gr-r">${right}</span></${tag}>`; };
+
+  // setup screen, like Review Conjugation: How you answer · Exercise · Level · Topics · Grammar points · Questions
+  function gramSetup() {
+    const keep = root.querySelector('#nr-ghub') ? root.scrollTop : 0;      // a tile tap must not jump the page to the top
+    closePop(true); S = null; view = 'hub'; setReviewing(false);
+    const { CARDS, CH, LV } = gdata(), f = fmt(), sel = gSel();
+    const live = CARDS.filter(c => sel.lv.includes(c.lv)), tp = live.filter(c => sel.topics.includes(c.ch)), pl = tp.filter(c => !sel.off.includes(c.key));
+    const nEx = pl.reduce((a, c) => a + c.x.length, 0), all = CH.every((c, i) => sel.topics.includes(i + 1));
+    const gap = sel.ex.includes('gap'), mean = sel.ex.includes('mean');
+    const hint = (gap ? (f === 'choose' ? 'Fill the gap: pick the missing grammar from four options.' : 'Fill the gap: type the missing grammar in kana. Romaji turns into kana as you type.') : '')
+      + (mean ? (gap ? ' ' : '') + 'What does it mean is always answered by tapping.' : '');
+    root.innerHTML = `<div class="nr-wrap" id="nr-ghub">
+      <h1 class="nr-h1">Review Grammar</h1>
+      <p class="nr-sub">Every question is one of the example sentences from Study Grammar.</p>
+      ${fmtSwitch(f, hint)}
+      <div class="nr-label">Exercise</div><div class="nr-tiles">${gTile('data-gex="mean"', 'What does it mean', null, mean)}${gTile('data-gex="gap"', 'Fill the gap', null, gap)}</div>
+      <div class="nr-label">Level</div><div class="nr-tiles">${LV.map(k => gTile(`data-glv="${k}"`, k.toUpperCase(), CARDS.filter(c => c.lv === k).length, sel.lv.includes(k))).join('')}</div>
+      <div class="nr-label">Topics</div><div class="nr-tiles">${gTile('data-gall="1"', 'All topics', live.length, all)}${CH.map((c, i) => gTile(`data-gch="${i + 1}"`, c[0], live.filter(x => x.ch === i + 1).length, sel.topics.includes(i + 1))).join('')}</div>
+      <div class="nr-plist nr-gpl">${progressRow('id="nr-gpoints"', 'Grammar points', pl.length === tp.length ? 'all ' + tp.length : pl.length + ' of ' + tp.length)}</div>
+      <p class="nr-hint">${pl.length ? `${plural(sel.topics.length, 'topic', 'topics')}, ${plural(pl.length, 'grammar point', 'grammar points')}, ${plural(nEx, 'example sentence', 'example sentences')}.` : 'Choose at least one level, one topic and one grammar point.'}</p>
+      <div class="nr-label">Questions</div>
+      <div class="nr-sizer"><button class="nr-btn" id="nr-minus"${sel.size > 10 ? '' : ' disabled'} aria-label="5 fewer">−</button><span class="nr-size">${sel.size}</span><button class="nr-btn" id="nr-plus"${sel.size < 100 ? '' : ' disabled'} aria-label="5 more">+</button></div>
+      <button class="nr-btn nr-btn-primary" id="nr-start"${pl.length ? '' : ' disabled'}>Start</button>
+      ${progressSection([progressRow('id="nr-gprog"', 'Grammar progress', CARDS.filter(gAnySolid).length + ' / ' + CARDS.length + ' solid'),
+        progressRow('id="nr-gtough"', 'Toughest grammar', plural(gramTough().length, 'point', 'points'), mistOpen('gram'))])}
+    </div>`;
+    const save = () => { sset('gram:sel', sel); gramSetup(); };
+    const toggle = (list, v, keepOne) => { const i = list.indexOf(v); if (i >= 0) { if (keepOne && list.length < 2) return; list.splice(i, 1); } else list.push(v); save(); };
+    $('#nr-fmt-choose').onclick = () => { setFmt('choose'); gramSetup(); };
+    $('#nr-fmt-type').onclick = () => { setFmt('type'); gramSetup(); };
+    $$('[data-gex]').forEach(b => b.onclick = () => toggle(sel.ex, b.dataset.gex, true));
+    $$('[data-glv]').forEach(b => b.onclick = () => toggle(sel.lv, b.dataset.glv, true));
+    $$('[data-gch]').forEach(b => b.onclick = () => toggle(sel.topics, +b.dataset.gch));
+    $('[data-gall]').onclick = () => { sel.topics = all ? [] : CH.map((c, i) => i + 1); save(); };
+    $('#nr-minus').onclick = () => { sel.size = Math.max(10, sel.size - 5); save(); };
+    $('#nr-plus').onclick = () => { sel.size = Math.min(100, sel.size + 5); save(); };
+    $('#nr-start').onclick = () => startGram(pl, sel.size, false);
+    $('#nr-gpoints').onclick = gramPoints;
+    $('#nr-gprog').onclick = gramProgress;
+    $('#nr-gtough').onclick = gramToughView;
+    if (keep) root.scrollTop = keep; else scrollTop();
+  }
+  // Grammar points: tick single points on or off inside the chosen topics
+  function gramPoints() {
+    const { CARDS, CH } = gdata(), sel = gSel();
+    const tp = CARDS.filter(c => sel.lv.includes(c.lv) && sel.topics.includes(c.ch));
+    const body = CH.map((ch, i) => { const cs = tp.filter(c => c.ch === i + 1);
+      return cs.length ? `<div class="nr-label">${esc(ch[1])}</div><div class="nr-glist">${cs.map(c => gRow(c, sel.off.includes(c.key) ? '' : '✓', '', `data-gi="${c.i}"${sel.off.includes(c.key) ? ' data-off="1"' : ''}`)).join('')}</div>` : ''; }).join('');
+    popup('gpoints', 'Grammar points', 'Tap a grammar point to leave it out or bring it back. Leave only one ticked to drill a single construction.',
+      body || '<p class="nr-empty">Choose a topic first.</p>', `<div class="nr-row nr-gtwo"><button class="nr-btn" id="nr-gallon">Tick all</button><button class="nr-btn" id="nr-galloff">Untick all</button></div>`);
+    const redo = () => { const st = $('#nr-pop-box').scrollTop; sset('gram:sel', sel); gramSetup(); gramPoints(); $('#nr-pop-box').scrollTop = st; };
+    $$('#nr-pop [data-gi]').forEach(b => b.onclick = () => { const k = CARDS[+b.dataset.gi].key, i = sel.off.indexOf(k); if (i >= 0) sel.off.splice(i, 1); else sel.off.push(k); redo(); });
+    $('#nr-gallon').onclick = () => { const ks = new Set(tp.map(c => c.key)); sel.off = sel.off.filter(k => !ks.has(k)); redo(); };
+    $('#nr-galloff').onclick = () => { tp.forEach(c => { if (!sel.off.includes(c.key)) sel.off.push(c.key); }); redo(); };
+  }
+  function gramProgress() {
+    const { BY, CH } = gdata();
+    const dots = c => { const p = gProg(c); return G_LEVELS.map(l => `<span class="nr-gdot${gSolid(p, l[0]) ? ' s' : (p[l[0]] || '').length ? ' l' : ''}"></span>`).join(''); };
+    popup('gprog', 'Grammar progress', 'Each grammar point has three marks: meaning, fill the gap with Choose, and fill the gap with Type. Gold means you have started it. Green means your last three answers were right.',
+      CH.map((ch, i) => { const cs = BY[i + 1] || [];
+        return cs.length ? `<div class="nr-label">${esc(ch[1])} · ${cs.filter(gAnySolid).length} / ${cs.length}</div><div class="nr-glist">${cs.map(c => gRow(c, `<span class="nr-gdots">${dots(c)}</span>`)).join('')}</div>` : ''; }).join(''));
+  }
+  function gramToughView() {
+    const list = gramTough();
+    popup('tough', TOUGH_TITLE.gram, 'Grammar points below 80% right over their last ten answers, worst first. A point is listed from three answers on, and leaves when it climbs back.',
+      list.length ? `<div class="nr-glist">${list.map(x => gRow(x.c, `<span class="bad">${x.pct}%</span>`, x.c.coord + ' · ' + x.c.m)).join('')}</div>`
+        : '<p class="nr-empty">Nothing here yet. A grammar point shows up after three answers if fewer than 8 in 10 were right.</p>', mistButton('gram'));
+    $('#nr-mist').onclick = () => startMistakes('gram');
+  }
+
+  // a session: every chosen grammar point comes up once before any comes up twice; a random example each time,
+  // none twice in a session while others are left. An example with two or three red parts is asked with options
+  // even in Type.
+  function startGram(cards, n, mist) {
+    if (!cards.length) return gramSetup();
+    const sel = gSel(), f = fmt(), used = new Set(), queue = [];
+    let bag = [];
+    while (queue.length < n) {
+      if (!bag.length) bag = shuffle(cards.slice());
+      const c = bag.pop(), type = sel.ex[rnd(sel.ex.length)];
+      let exs = c.x.filter(e => !used.has(e)); if (!exs.length) exs = c.x;
+      const e = exs[rnd(exs.length)]; used.add(e);
+      queue.push({ c, e, type, choose: type === 'mean' || f === 'choose' || e.sp.length > 1 });
+    }
+    begin(Object.assign({ mode: 'gram', label: mist ? 'Review mistakes' : 'Review Grammar', format: f, how: '', queue, unit: 'questions right',
+      gcards: cards, glv: sel.lv, missed: new Map() }, mist ? { mist: 'gram' } : {}));
+  }
+  function askGram(q) {
+    S.how = q.type === 'mean' ? 'MEANING' : q.choose ? 'CHOOSE' : 'TYPE';
+    if (q.type === 'mean') gramMeaning(q); else if (q.choose) gramGapChoose(q); else gramGapType(q);
+  }
+  // wrong options: values from other grammar points — the same topic first, the chosen levels first
+  function gOthers(q, want, value) {
+    const { BY, EX, CARDS } = gdata(), bad = EX[q.c.co] || new Set(), out = [], seen = new Set([value(q.c)]), lv = S.glv || [];
+    const add = c => { if (c === q.c || bad.has(c.co)) return; const v = value(c); if (v && !seen.has(v) && out.length < want) { seen.add(v); out.push({ v, c }); } };
+    const same = shuffle(BY[q.c.ch].slice()), rest = shuffle(CARDS.filter(c => c.ch !== q.c.ch));
+    [same.filter(c => lv.includes(c.lv)), rest.filter(c => lv.includes(c.lv)), same, rest].forEach(l => l.forEach(add));
+    return out;
+  }
+  // after an answer, under Next: the right grammar point, and after a wrong pick the point you picked (user, v181)
+  const gBox = (label, c, note, red) => `<div class="nr-kex-label">${label}</div><div class="nr-gabout"><span class="nr-ga-c">${esc(c.coord)} · ${esc(gdata().CH[c.ch - 1][0])}</span><span class="nr-ga-n${red ? ' red' : ''}" lang="ja">${esc(c.t)}</span><span class="nr-ga-m">${esc(c.m)}</span>${note ? `<span class="nr-ga-x" lang="ja">${esc(note)}</span>` : ''}</div>`;
+  function gramAfter(q, picked) {
+    $('#nr-kex').innerHTML = gBox('About this grammar', q.c, q.e.note, true) + (picked && picked !== q.c ? gBox('What you picked', picked) : '');
+    S.noteUp = true;                                       // the next question starts at the top again; a typing screen may scroll
+    const inp = $('#nr-ans');
+    if (inp && !inp.hidden && window.matchMedia('(hover:none)').matches) inp.blur();
+  }
+  function gramOptions(opts, correct, onPick) {      // wires the four options that frame() has just drawn
+    const buttons = $$('.nr-opt');
+    let answered = false;
+    const pick = b => {
+      if (answered) return; answered = true;
+      S.wordOk = b.dataset.o === correct;
+      buttons.forEach(x => { x.disabled = true; x.classList.add(x.dataset.o === correct ? 'is-right' : x === b ? 'is-wrong' : 'dim'); });
+      $('#nr-next').hidden = false; $('#nr-next').focus({ preventScroll: true });
+      onPick(S.wordOk, (opts.find(o => o.v === b.dataset.o) || {}).c);
+    };
+    buttons.forEach(b => b.onclick = () => pick(b));
+    $('#nr-next').onclick = next;
+    S.keys = e => {
+      if (!answered && /^[1-4]$/.test(e.key) && buttons[+e.key - 1]) pick(buttons[+e.key - 1]);
+      else if (answered && e.key === 'Enter') { e.preventDefault(); next(); }
+    };
+  }
+  const gOptHtml = (opts, text) => `<div class="nr-opts">${opts.map((o, n) => `<button class="nr-opt${text ? ' nr-opt-text' : ''}" data-o="${esc(o.v)}"${text ? '' : ' lang="ja"'}><span class="nr-k">${n + 1}</span><span>${esc(o.v)}</span></button>`).join('')}</div>
+      <button class="nr-btn nr-btn-primary nr-next" id="nr-next" hidden>Next →</button>
+      <div class="nr-kex" id="nr-kex"></div>`;
+  // What does it mean: the sentence with its construct in red, pick the grammar point's meaning from four
+  function gramMeaning(q) {
+    const opts = shuffle([{ v: q.c.m, c: q.c }].concat(gOthers(q, 3, c => c.m)));
+    frame(`<div class="nr-gsent" lang="ja">${gSentence(q.e, 'show')}</div>
+      <div class="nr-reveal nr-greveal" id="nr-reveal"></div>
+      <div class="nr-step">What does the red part mean?</div>${gOptHtml(opts, true)}`);
+    gramOptions(opts, q.c.m, (ok, picked) => { $('#nr-reveal').innerHTML = `<div class="nr-mn">${esc(q.e.en)}</div>`; gramAfter(q, picked); });
+  }
+  // Fill the gap, Choose: wrong options are real constructs from other points, in the same form where there is one
+  function gramGapOptions(q) {
+    const own = new Set(q.c.x.map(e => e.ans)), n = q.e.sp.length;
+    const from = loose => c => {
+      if (c === q.c) return q.e.ans;
+      const fit = c.x.filter(e => (loose || e.sp.length === n) && !own.has(e.ans)), same = fit.filter(e => e.tg === q.e.tg), list = same.length ? same : fit;
+      return list.length ? list[rnd(list.length)].ans : null;
+    };
+    const out = [{ v: q.e.ans, c: q.c }].concat(gOthers(q, 3, from(false)));
+    // a three-part answer (〜たり〜たり〜) has few look-alikes: fill up with any other grammar
+    if (out.length < 4) gOthers(q, 3, from(true)).forEach(o => { if (out.length < 4 && !out.some(x => x.v === o.v)) out.push(o); });
+    return out;
+  }
+  function gramGapChoose(q) {
+    const opts = shuffle(gramGapOptions(q));
+    frame(`<div class="nr-gen">${esc(q.e.en)}</div>
+      <div class="nr-gsent" id="nr-gsent" lang="ja">${gSentence(q.e, 'gap')}</div>
+      <div class="nr-step nr-gstep">Fill the gap</div>${gOptHtml(opts, false)}`);
+    gramOptions(opts, q.e.ans, (ok, picked) => { $('#nr-gsent').innerHTML = gSentence(q.e, 'show', ok ? 'ok' : ''); gramAfter(q, picked); });
+  }
+  // Fill the gap, Type: the tags say which form the sentence needs; the point's name is a blurred hint.
+  // Kana or the kanji form both count. Another point's construct typed here is a nudge, never a fail.
+  function gramGapType(q) {
+    const e = q.e, want = [gNorm(e.kana), gNorm(e.ans)], sib = new Map();
+    gdata().BY[q.c.ch].forEach(c => { if (c !== q.c) c.x.forEach(x => { const k = gNorm(x.kana); if (!sib.has(k)) sib.set(k, c); }); });
+    q.c.x.forEach(x => sib.delete(gNorm(x.kana)));
+    const inp = typeScreen('', 'Fill the gap', '', true, 'type the missing grammar',
+      `<div class="nr-gchips">${e.tags.map(t => ETAG(esc(t[0]), t[1])).join('')}</div>
+       <button class="nr-ghint" id="nr-ghint" aria-label="Show the grammar point">Grammar point: <b lang="ja">${esc(q.c.t)}</b> <span id="nr-ghint-tip">tap to show</span></button>`);
+    const tw = $('#nr-tword'), hint = $('#nr-ghint');
+    tw.classList.add('nr-gword');
+    tw.innerHTML = `<div class="nr-gen">${esc(e.en)}</div><div class="nr-gsent" id="nr-gsent" lang="ja">${gSentence(e, 'gap')}</div>`;
+    // tapping the hint or a kanji must not take the keyboard away (§3b)
+    const showHint = () => { hint.classList.add('on'); $('#nr-ghint-tip').textContent = ''; };
+    hint.addEventListener('mousedown', ev => ev.preventDefault());
+    hint.addEventListener('touchend', ev => { ev.preventDefault(); showHint(); });
+    hint.addEventListener('click', showHint);
+    tw.onmousedown = ev => ev.preventDefault();
+    tw.ontouchend = ev => { const fw = ev.target.closest && ev.target.closest('.nr-fw'); if (fw) { ev.preventDefault(); gFwTap(fw); } };
+    fitTyping();
+    let phase = 'answer';
+    const finish = () => {
+      phase = 'done'; markRight(inp, e.kana); $('#nr-go').textContent = 'Next →';
+      $('#nr-gsent').innerHTML = gSentence(e, 'show', S.wordOk ? 'ok' : ''); showHint(); gramAfter(q, null);
+    };
+    inp.oninput = () => { if (phase === 'done') return; inp.value = hira(kana(inp.value, true)); $('#nr-nudge').textContent = ''; };
+    const submit = () => {
+      if (phase === 'done') return next();
+      const val = gNorm(inp.value);
+      if (!val) return;
+      $('#nr-nudge').textContent = '';
+      if (/[a-z]/i.test(val)) { $('#nr-nudge').textContent = 'That still has romaji in it — finish the kana and try again.'; return; }
+      const right = want.includes(val);
+      if (phase === 'answer') {
+        if (right) return finish();
+        if (sib.has(val)) { $('#nr-nudge').textContent = `That is ${sib.get(val).t}. This sentence is looking for a different grammar point.`; inp.select(); return; }
+        S.wordOk = false; phase = 'retype';
+        $('#nr-reveal').innerHTML = `<div class="nr-rd" lang="ja"><span class="bad">${esc(inp.value.trim())}</span> → <span class="ok fix">${esc(e.kana)}</span></div>`;
+        inp.value = ''; inp.placeholder = 'type it once: ' + e.kana;
+      } else if (right) finish();
+      else { $('#nr-nudge').textContent = 'Type it exactly as shown: ' + e.kana; inp.select(); }
+    };
+    inp.onkeydown = ev => { if (ev.key === 'Enter') { ev.preventDefault(); submit(); } };
+    tapButton($('#nr-go'), submit);
+  }
+  // end screen: the grammar points you got wrong in this session
+  function gramMissed(s) {
+    const missed = Array.from(s.missed.entries()).sort((a, b) => b[1] - a[1]);
+    return missed.length ? `<div class="nr-label nr-gagain">To look at again</div><div class="nr-glist">${missed.map(m => gRow(m[0], `<span class="bad">✗${m[1]}</span>`, m[0].coord + ' · ' + m[0].m)).join('')}</div>` : '';
+  }
+
   function end() {
     const s = S;
     if (s.onDone) s.onDone(s);
     S = null; view = 'end'; setReviewing(false);
     const kskg = !s.mist && (s.mode === 'kskgm' || s.mode === 'kskgr');
-    const again = s.mist ? 'Review mistakes again' : s.mode === 'skg' ? 'Same item again' : kskg ? 'Same set again' : ['pos', 'conj', 'kana', 'kata'].includes(s.mode) ? 'Same selection again' : 'New session';
+    const again = s.mist ? 'Review mistakes again' : s.mode === 'skg' ? 'Same item again' : kskg ? 'Same set again' : ['pos', 'conj', 'kana', 'kata', 'gram'].includes(s.mode) ? 'Same selection again' : 'New session';
     let extra = '';
     if (s.mode === 'skg' && s.counts) { const r = ensureRound(), ps = pieceList(r); extra = `<p>One SKG · Round ${r.n} · ${ps.filter(p => r.done[p.id]).length} / ${ps.length}</p>`; }
     if (kskg && s.counts) { const r = ensureKRound(s.ktype), ss = kskgSets(s.ktype); extra = `<p>One SKG · ${KSKG_TYPES[s.ktype]} · Round ${r.n} · ${ss.filter(x => r.done[x.id]).length} / ${ss.length}</p>`; }
     if (!s.mist && DECK_MODES.includes(s.mode)) extra = `<p>${esc(s.label)} · ${deckLine(s.mode)}</p>`;   // like One SKG (onDone has committed the deck)
     if (s.mode === 'srs') { const ws = Object.keys(data().W); extra = srsSummary(s.moves || []) + `<p>SRS · ${ws.filter(w => srsGet(w)).length.toLocaleString('en')} / ${ws.length.toLocaleString('en')} words in</p>`; }
     // Review mistakes: what's left on the list; "again" only while the list is still open (30+ / 1+ combination)
-    if (s.mist) extra = `<p>${esc(TOUGH_TITLE[s.mist])} · ${s.mist === 'conj' ? plural(conjToughList().length, 'combination', 'combinations') + ' listed'
-      : toughCount(s.mist) + ' left'}</p>` + (mistOpen(s.mist) ? '' : `<p>Review mistakes opens again at ${s.mist === 'conj' ? '1 listed combination' : MIST_MIN}.</p>`);
+    if (s.mist) extra = `<p>${esc(TOUGH_TITLE[s.mist])} · ${s.mist === 'conj' ? plural(conjToughList().length, 'combination', 'combinations') + ' listed' : s.mist === 'gram' ? plural(gramTough().length, 'grammar point', 'grammar points') + ' listed'
+      : toughCount(s.mist) + ' left'}</p>` + (mistOpen(s.mist) ? '' : `<p>Review mistakes opens again at ${s.mist === 'conj' ? '1 listed combination' : s.mist === 'gram' ? '1 listed grammar point' : MIST_MIN}.</p>`);
     // One SKG (vocab + kanji): "Continue · 004" — the hub's Continue, i.e. the next item / set not done in
     // this round (a finished round starts the next one); it counts, like the hub's (v164, user)
     let cont = null;
@@ -42922,7 +43278,7 @@ const NR = (function() {
     root.innerHTML = `<div class="nr-wrap nr-end">
       <div class="nr-label">${esc(s.label)} · done</div>
       <div class="nr-score">${s.right}<small> / ${s.base || s.queue.length}</small></div>
-      <p>${esc(s.unit)}</p>${extra}
+      <p>${esc(s.unit)}</p>${extra}${s.mode === 'gram' ? gramMissed(s) : ''}
       <div class="nr-btns">
         ${cont ? `<button class="nr-btn nr-btn-primary" id="nr-cont">Continue · ${esc(cont.id)}</button>` : ''}
         <button class="nr-btn${cont ? '' : ' nr-btn-primary'}" id="nr-again"${s.mist && !mistOpen(s.mist) ? ' disabled' : ''}>${again}</button>
@@ -42937,6 +43293,7 @@ const NR = (function() {
       else if (s.mode === 'conj') startConj();
       else if (s.mode === 'kana') startKana();
       else if (s.mode === 'kata') startKata();
+      else if (s.mode === 'gram') startGram(s.gcards, s.queue.length, false);
       else if (s.mode === 'srs') startSrs();
       else startMode(s.mode);
     };
@@ -42962,7 +43319,7 @@ const NR = (function() {
     back() { if (pop) closePop(); else if (view === 'hub') goHome(); else hub(); },
     _test: { data, buildOptions, manyOptions, trickyOptions, gradeMeaning, kana, cleanNote, dealDeck, dealKanjiMeaning, ensureRound, pieceList, posWords,
       lookAlikes, conjOptions, conjAccepted, conjShown, conjSession, conjToughList, toughMark, srsPlan, srsAnswer, now, dueAt,
-      kskgSets, ensureKRound, setDayShift: n => { dayShift = n; }, state: () => ({ S, view, section }) },
+      kskgSets, ensureKRound, gdata, gSel, gramTough, gramGapOptions, gNorm, startGram, setDayShift: n => { dayShift = n; }, state: () => ({ S, view, section }) },
   };
 })();
 
