@@ -284,6 +284,18 @@ thead th{text-align:center !important;}
 #nrev .nr-guide p .nr-tmark{margin:0 1px;}
 #nrev .nr-stg-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:14px;}
 #nrev .nr-stg-head .nr-label{margin:0;}
+#nrev .nr-stg-top{margin:18px 0 8px;min-height:28px;align-items:center;}   /* "Words per stage" + "Show all words" above the tiles (v182) */
+/* Coming up (v182): words due per stretch of time, label · bar · count — one grid, so every bar starts at the same point */
+#nrev .nr-up{display:grid;grid-template-columns:auto minmax(40px,1fr) auto;column-gap:12px;align-items:center;background:var(--surface);
+  border:1px solid var(--border);border-radius:var(--r);padding:6px 14px;margin-bottom:8px;}
+#nrev .nr-up-row{display:contents;}
+#nrev .nr-up-l{font-size:13px;color:var(--text);white-space:nowrap;padding:6px 0;}
+#nrev .nr-up-bar{height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;}
+#nrev .nr-up-bar i{display:block;height:100%;background:var(--text-dim);border-radius:3px;}
+#nrev .nr-up-n{font-family:var(--font-num);font-size:15px;font-weight:500;text-align:right;font-variant-numeric:tabular-nums;}
+#nrev .nr-up-row.now .nr-up-bar i{background:var(--accent);}
+#nrev .nr-up-row.now .nr-up-n{color:var(--accent);}
+#nrev .nr-up-row.none .nr-up-l,#nrev .nr-up-row.none .nr-up-n{color:var(--text-dim);}
 #nrev .nr-stg-all{border:0;background:transparent;padding:4px 0;font-family:var(--font-ui);font-size:13px;color:var(--accent);cursor:pointer;white-space:nowrap;}
 #nrev .nr-srs-when small .nr-tmark{width:12px;height:9px;}
 /* Review Grammar (v181): the sentence (construct in the grammar's own red, pinned like in #grammar), the gap,
@@ -1987,7 +1999,7 @@ body.gr-reading #gr-top-btn{display:flex;}
   <!-- update_koku.py rewrites the raw "updated YYYY-MM-DD HH:MM · vNNN" text below by regex (vNNN =
        the sw.js cache number) — keep that exact format in the markup. Every shipped change updates
        it; formatHomeStamp() shows it as "Updated 5 Oct 2026 · 11:30 · v117". -->
-  <div class="home-stamp" id="home-stamp">updated 2026-11-16 22:09 · v181</div>
+  <div class="home-stamp" id="home-stamp">updated 2026-11-22 12:45 · v182</div>
 </div>
 
 <!-- NEW REVIEWS (REVIEW_DESIGN.md): hub, setup screens, questions and end screen all render into #nrev-app -->
@@ -41962,13 +41974,22 @@ const NR = (function() {
     rows.sort((a, b) => a.at - b.at || (a.w < b.w ? -1 : 1));
     const n = x => x.toLocaleString('en'), due = rows.filter(r => r.at <= t).length;
     let pick = 0;                                                     // 0 = every stage
+    // Coming up (v182, user): every word by when it's due, whatever its stage, so big batches show in advance
+    const HR = 3600000, SPANS = [['Due now', 0], ['In the next 6 hours', 6 * HR], ['In 6 to 24 hours', 24 * HR], ['In 1 to 3 days', 3 * DAY_MS],
+      ['In 3 to 7 days', 7 * DAY_MS], ['In 1 to 4 weeks', 28 * DAY_MS], ['Later', Infinity]];
+    const ups = SPANS.map(() => 0);
+    rows.forEach(r => { ups[SPANS.findIndex(sp => r.at - t <= sp[1])]++; });
+    const upMax = Math.max(1, Math.max.apply(null, ups));
     root.innerHTML = `<div class="nr-wrap">
       <h1 class="nr-h1">My SRS words</h1>
       <p class="nr-sub">${esc(PROGRESS_DESC.srswords)}</p>
-      <div class="nr-label">Words per stage</div>
+      <div class="nr-label">Coming up</div>
+      <div class="nr-up">${SPANS.map((sp, i) => `<div class="nr-up-row${ups[i] ? '' : ' none'}${i ? '' : ' now'}"><span class="nr-up-l">${sp[0]}</span><span class="nr-up-bar"><i style="width:${Math.round(ups[i] / upMax * 100)}%"></i></span><b class="nr-up-n">${n(ups[i])}</b></div>`).join('')}</div>
+      <p class="nr-hint">How many words come back in each stretch of time from now, whatever their stage.</p>
+      <div class="nr-stg-head nr-stg-top"><span class="nr-label">Words per stage</span><button class="nr-stg-all" id="nr-stg-all" hidden>Show all words</button></div>
       <div class="nr-stg">${count.slice(1).map((c, i) => `<button class="nr-stg-b" data-st="${i + 1}" aria-pressed="false"${c ? '' : ' disabled'}><b>${n(c)}</b><span>stage ${i + 1}${typeOnly(i + 1) ? TYPE_MARK : ''}</span></button>`).join('')}</div>
       <p class="nr-hint nr-stg-key">${TYPE_MARK}On these stages only Type moves a word up; a right Choose answer keeps it where it is. Tap a stage to see only its words.</p>
-      <div class="nr-stg-head"><span class="nr-label" id="nr-stg-title"></span><button class="nr-stg-all" id="nr-stg-all" hidden>Show all</button></div>
+      <div class="nr-stg-head"><span class="nr-label" id="nr-stg-title"></span></div>
       <div class="nr-tough nr-srs-list" id="nr-srs-list"></div>
     </div>`;
     const row = r => `<div class="nr-tough-row"><span class="nr-tough-w" lang="ja">${esc(r.w)}</span><span class="nr-tough-m" lang="ja">${esc(W[r.w].r[0] + ' · ' + showMeaning(W[r.w].m))}</span><span class="nr-srs-when${r.at <= t ? ' due' : ''}">${srsWhen(r.at - t)}<small>stage ${r.s}${typeOnly(r.s) ? TYPE_MARK : ''}</small></span></div>`;
